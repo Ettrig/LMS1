@@ -26,6 +26,24 @@ namespace LMS1.Controllers
         }
 
         // GET: Courses/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var course = await _context.Course
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (course == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(course);
+        //}
+
+        // GET: Courses/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,6 +52,7 @@ namespace LMS1.Controllers
             }
 
             var course = await _context.Course
+                .Include(m => m.Modules)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (course == null)
             {
