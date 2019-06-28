@@ -164,6 +164,32 @@ namespace LMS1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Courses/AddModule
+        public IActionResult AddModule( int? Id )
+        {
+            if (Id == null) return NotFound();
+            ViewBag.CourseId = Id;
+            return View();
+        }
+
+        // POST: Courses/AddModule
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddModule([Bind("Id,Name,StartDate,EndDate,Description,CourseId")] CourseModule courseModule)
+        {
+            if (ModelState.IsValid)
+            {
+                courseModule.Id = 0;
+                _context.Add(courseModule);
+                await _context.SaveChangesAsync();
+                return View( "Details", courseModule.Course);
+            }
+            ViewData["CourseId"] = new SelectList(_context.Course, "Id", "Id", courseModule.CourseId);
+            return View(courseModule);
+        }
+
         private bool CourseExists(int id)
         {
             return _context.Course.Any(e => e.Id == id);
