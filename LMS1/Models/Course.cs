@@ -34,3 +34,8 @@ namespace LMS1.Models
         public ICollection<ApplicationUser> AttendingStudents { get; set; }
     }
 }
+
+
+
+
+//        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]

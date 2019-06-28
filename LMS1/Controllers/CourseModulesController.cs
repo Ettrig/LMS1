@@ -42,25 +42,24 @@ namespace LMS1.Controllers
 
         //    return View(courseModule);
         //}
-
-        // GET: Courses/Details/5
+   
+        //GET: Courses/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var course = await _context.CourseModule
+            var courseModule = await _context.CourseModule
                 .Include(m => m.Activities)
-                
+                //.ThenInclude(m => m.Module)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (course == null)
+            if (courseModule == null)
             {
                 return NotFound();
             }
-            return View(course);
+            return View(courseModule);
         }
-
 
         // GET: CourseModules/Create
         public IActionResult Create()
