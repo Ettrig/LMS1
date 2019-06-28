@@ -4,10 +4,8 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
 <div>
-    <h4>Course</h4>
+    <h2>Course Details</h2>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -39,15 +37,9 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Start Date
-            </th>
-            <th>
-                End Date
-            </th>
+            <th>Module Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
         </tr>
     </thead>
     <tbody>
@@ -64,9 +56,9 @@
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-action="Edit" asp-controller="CourseModules" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-controller="CourseModules" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-controller="CourseModules" asp-route-id="@item.Id">Delete</a> |
                 </td>
             </tr>
         }
@@ -75,5 +67,6 @@
 
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to List</a> |
+    <a asp-area="" asp-controller="CourseModules" asp-action="Create">Create Module</a>
 </div>

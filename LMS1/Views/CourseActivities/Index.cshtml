@@ -1,10 +1,10 @@
-﻿@model IEnumerable<LMS1.Models.CourseModule>
+﻿@model IEnumerable<LMS1.Models.CourseActivity>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-    <h1>Course Modules</h1>
+    <h1>Course Activities</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -25,7 +25,10 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Course)
+                @Html.DisplayNameFor(model => model.Exercise)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Module)
             </th>
             <th></th>
         </tr>
@@ -46,7 +49,10 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Course.Id)
+                @Html.DisplayFor(modelItem => item.Exercise)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Module.Id)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
