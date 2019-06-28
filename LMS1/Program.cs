@@ -24,7 +24,7 @@ namespace LMS1
             {
                 var services = scope.ServiceProvider;
                 //Seed
-                SeedData.Initialize(services);
+                // SeedData.Initialize(services); // TODO: CJA problem
             }
 
             webHost.Run();

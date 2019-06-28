@@ -15,11 +15,11 @@ namespace LMS1.Data
             var options = services.GetRequiredService<DbContextOptions<ApplicationDbContext>>();
             using (var context = new ApplicationDbContext(options))
             {
-                if (context.Course.Any())
-                {
-                    context.Course.RemoveRange(context.Course);
-                    context.CourseModule.RemoveRange(context.CourseModule);
-                }
+                //if (context.Course.Any())
+                //{
+                //    context.Course.RemoveRange(context.Course);
+                //    context.CourseModule.RemoveRange(context.CourseModule);
+                //}
 
 
                 var courses = new List<Course>();
@@ -33,17 +33,18 @@ namespace LMS1.Data
                     };
                     courses.Add(course);
                 }
-                
 
-                foreach (var course in courses)
-                {
-                    var courseModuleName = "M";
-                    var courseModule = new CourseModule
-                    {
-                        Name = courseModuleName,
+                //int modNum = 0;
+                //foreach (var course in courses)
+                //{
+                //    modNum++;
+                //    var courseModuleName = "Module: " + modNum;
+                //    var courseModule = new CourseModule
+                //    {
+                //        Name = courseModuleName,
 
-                    };
-                }
+                //    };
+                //}
 
                 context.Course.AddRange(courses);
 
