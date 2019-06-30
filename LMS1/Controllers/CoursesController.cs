@@ -130,7 +130,14 @@ namespace LMS1.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                var courseWithAllModules = await _context.Course
+                    .Include(c => c.Modules)
+                    .FirstOrDefaultAsync(c => c.Id == course.Id);
+                if (course == null)
+                {
+                    return NotFound();
+                }
+                return View("Details", courseWithAllModules);
             }
             return View(course);
         }
@@ -186,7 +193,7 @@ namespace LMS1.Controllers
                 await _context.SaveChangesAsync();
                 var course = await _context.Course
                     .Include( c => c.Modules)
-                    .FirstOrDefaultAsync(m => m.Id == courseModule.CourseId);
+                    .FirstOrDefaultAsync(c => c.Id == courseModule.CourseId);
                 if (course == null)
                 {
                     return NotFound();
