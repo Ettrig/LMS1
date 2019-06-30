@@ -23,25 +23,6 @@ namespace LMS1.Controllers
             var applicationDbContext = _context.CourseModule.Include(c => c.Course);
             return View(await applicationDbContext.ToListAsync());
         }
-
-        //// GET: CourseModules/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var courseModule = await _context.CourseModule
-        //        .Include(c => c.Course)
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (courseModule == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(courseModule);
-        //}
    
         //GET: Courses/Details/5
         public async Task<IActionResult> Details(int? id)
