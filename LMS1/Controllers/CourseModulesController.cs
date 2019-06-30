@@ -98,8 +98,15 @@ namespace LMS1.Controllers
             {
                 return NotFound();
             }
-            ViewData["CourseId"] = new SelectList(_context.Course, "Id", "Id", courseModule.CourseId);
-            return View(courseModule);
+            // ViewData["CourseId"] = new SelectList(_context.Course, "Id", "Id", courseModule.CourseId);
+            var course = await _context.Course
+                .Include(c => c.Modules)
+                .FirstOrDefaultAsync(c => c.Id == courseModule.CourseId);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            return View("Details", course);
         }
 
         // POST: CourseModules/Edit/5
