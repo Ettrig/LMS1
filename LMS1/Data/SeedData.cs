@@ -15,41 +15,65 @@ namespace LMS1.Data
             var options = services.GetRequiredService<DbContextOptions<ApplicationDbContext>>();
             using (var context = new ApplicationDbContext(options))
             {
-                //if (context.Course.Any())
-                //{
-                //    context.Course.RemoveRange(context.Course);
-                //    context.CourseModule.RemoveRange(context.CourseModule);
-                //}
-
-
-                var courses = new List<Course>();
-                for (int i = 1; i <= 10; i++)
+                if (context.Course.Any())
                 {
-                    var courseName = "C" + i + ": " + Faker.Company.CatchPhrase();
-                    var course = new Course
-                    {
-                        Name = courseName,
-                        //Email = Faker.Internet.Email(userName)
-                    };
-                    courses.Add(course);
+                    context.Course.RemoveRange(context.Course);
+                    context.CourseModule.RemoveRange(context.CourseModule);
                 }
 
-                //int modNum = 0;
-                //foreach (var course in courses)
-                //{
-                //    modNum++;
-                //    var courseModuleName = "Module: " + modNum;
-                //    var courseModule = new CourseModule
-                //    {
-                //        Name = courseModuleName,
+                List<Course> courses = SeedCourses();
+                context.Course.AddRange(courses);
 
-                //    };
+
+                var courseModules = new List<CourseModule>();
+                int i = 0;
+                foreach (var course in courses)
+                {
+                    i++;
+                    var courseModuleName = "M-" + i + "-" + Faker.Internet.DomainWord();
+                    var courseModule = new CourseModule
+                    {
+                        Name = courseModuleName,
+                        StartDate = DateTime.Now,
+                        EndDate = DateTime.Now,
+                        Description = "M-" + i + "-desc",
+                        CourseId = course.Id
+                    };
+                    courseModules.Add(courseModule);
+                }
+                context.CourseModule.AddRange(courseModules);
+
+
+                //var courseActivity = new List<CourseActivity>();
+                //int i = 0;
+                //foreach (var module in modules)
+                //{
+                //    i++;
+                //    var courseActivityName = ""
                 //}
 
-                context.Course.AddRange(courses);
 
                 context.SaveChanges();
             }
+        }
+
+        private static List<Course> SeedCourses()
+        {
+            var courses = new List<Course>();
+            for (int i = 1; i <= 10; i++)
+            {
+                var courseName = "C-" + i + "-" + Faker.Company.CatchPhrase();
+                var course = new Course
+                {
+                    Name = courseName,
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now,
+                    Description = "C-" + i + "-desc"
+                };
+                courses.Add(course);
+            }
+
+            return courses;
         }
     }
 }

@@ -23,8 +23,7 @@ namespace LMS1
             using (var scope = webHost.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                //Seed
-                // SeedData.Initialize(services); // TODO: CJA problem
+                SeedData.Initialize(services); // TODO: CJA check if unsynched database
             }
 
             webHost.Run();
