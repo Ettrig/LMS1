@@ -19,6 +19,8 @@ namespace LMS1.Data
 
         public DbSet<CourseModule> CourseModule { get; set; }
 
-        public DbSet<LMS1.Models.CourseActivity> CourseActivity { get; set; }
+        public DbSet<CourseActivity> CourseActivity { get; set; }
+
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
     }
 }
