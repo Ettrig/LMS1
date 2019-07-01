@@ -28,10 +28,10 @@ namespace LMS1.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    Name = table.Column<string>(maxLength: 70, nullable: false),
                     StartDate = table.Column<DateTime>(nullable: false),
                     EndDate = table.Column<DateTime>(nullable: false),
-                    Description = table.Column<string>(maxLength: 500, nullable: false)
+                    Description = table.Column<string>(maxLength: 750, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -101,10 +101,10 @@ namespace LMS1.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    Name = table.Column<string>(maxLength: 70, nullable: false),
                     StartDate = table.Column<DateTime>(nullable: false),
                     EndDate = table.Column<DateTime>(nullable: false),
-                    Description = table.Column<string>(maxLength: 500, nullable: true),
+                    Description = table.Column<string>(maxLength: 750, nullable: true),
                     CourseId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -209,11 +209,11 @@ namespace LMS1.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    Name = table.Column<string>(maxLength: 70, nullable: false),
                     StartDate = table.Column<DateTime>(nullable: false),
                     EndDate = table.Column<DateTime>(nullable: false),
-                    Description = table.Column<string>(maxLength: 500, nullable: true),
-                    Exercise = table.Column<string>(maxLength: 500, nullable: true),
+                    Description = table.Column<string>(maxLength: 5000, nullable: true),
+                    Exercise = table.Column<string>(maxLength: 2500, nullable: true),
                     ModuleId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
