@@ -90,13 +90,13 @@ namespace LMS1.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500);
+                        .HasMaxLength(750);
 
                     b.Property<DateTime>("EndDate");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50);
+                        .HasMaxLength(70);
 
                     b.Property<DateTime>("StartDate");
 
@@ -112,18 +112,18 @@ namespace LMS1.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500);
+                        .HasMaxLength(5000);
 
                     b.Property<DateTime>("EndDate");
 
                     b.Property<string>("Exercise")
-                        .HasMaxLength(500);
+                        .HasMaxLength(2500);
 
                     b.Property<int>("ModuleId");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50);
+                        .HasMaxLength(70);
 
                     b.Property<DateTime>("StartDate");
 
@@ -143,13 +143,13 @@ namespace LMS1.Migrations
                     b.Property<int>("CourseId");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500);
+                        .HasMaxLength(750);
 
                     b.Property<DateTime>("EndDate");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50);
+                        .HasMaxLength(70);
 
                     b.Property<DateTime>("StartDate");
 
