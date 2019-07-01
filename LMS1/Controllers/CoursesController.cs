@@ -184,7 +184,14 @@ namespace LMS1.Controllers
                 courseModule.Id = 0;
                 _context.Add(courseModule);
                 await _context.SaveChangesAsync();
-                return View( "Details", courseModule.Course);
+                var course = await _context.Course
+                    .Include( c => c.Modules)
+                    .FirstOrDefaultAsync(m => m.Id == courseModule.CourseId);
+                if (course == null)
+                {
+                    return NotFound();
+                }
+                return View( "Details", course );
             }
             ViewData["CourseId"] = new SelectList(_context.Course, "Id", "Id", courseModule.CourseId);
             return View(courseModule);
