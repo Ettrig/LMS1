@@ -1,10 +1,10 @@
-﻿using LMS1.Data;
-using LMS1.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using LMS1.Data;
+using LMS1.Models;
 
 namespace LMS1.Controllers
 {
@@ -33,7 +33,7 @@ namespace LMS1.Controllers
             }
             var courseModule = await _context.CourseModule
                 .Include(m => m.Activities)
-                //.ThenInclude(m => m.Module)
+                .Include(m => m.Course)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (courseModule == null)
             {
@@ -160,5 +160,46 @@ namespace LMS1.Controllers
         {
             return _context.CourseModule.Any(e => e.Id == id);
         }
+
+
+        // GET: Courses/AddActivity
+        public IActionResult AddActivity(int? Id)
+        {
+            if (Id == null) return NotFound();
+            ViewBag.ModuleId = Id;
+            return View();
+        }
+
+        // POST: Courses/AddActivity
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddActivity([Bind("Id,Name,StartDate,EndDate,Description,Exercise,ModuleId")] CourseActivity courseActivity)
+        {
+            if (ModelState.IsValid)
+            {
+                courseActivity.Id = 0;
+                _context.Add(courseActivity);
+                await _context.SaveChangesAsync();
+                var course = await _context.Course
+                    .Include(c => c.Modules)
+                    .FirstOrDefaultAsync(m => m.Id == courseActivity.ModuleId);
+                if (course == null)
+                {
+                    return NotFound();
+                }
+                return View("Details", course);
+            }
+            ViewData["ModuleId"] = new SelectList(_context.Course, "Id", "Id", courseActivity.ModuleId);
+            return View(courseActivity);
+        }
+
+        private bool CourseExists(int id)
+        {
+            return _context.Course.Any(e => e.Id == id);
+        }
     }
 }
+
+
