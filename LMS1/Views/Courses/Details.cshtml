@@ -4,17 +4,12 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Course description</h1>
+<h3>Course description</h3>
+<h1>@Html.DisplayFor(model => model.Name)</h1>
 
 <div>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.StartDate)
         </dt>
@@ -36,6 +31,12 @@
     </dl>
 </div>
 
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit these data</a> |
+    <a asp-action="Index">Back to list of courses</a>
+</div>
+
+
 <h2>List of modules</h2>
 
 <p>
@@ -50,7 +51,6 @@
             <th>End Date</th>
         </tr>
     </thead>
-
 
     <tbody>
         @foreach (var item in Model.Modules)
@@ -68,14 +68,9 @@
                 <td>
                     <a asp-action="Details" asp-controller="CourseModules" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Edit" asp-controller="CourseModules" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="DeleteModule" asp-route-id="@item.Id">Delete</a> 
+                    <a asp-action="DeleteModule" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
