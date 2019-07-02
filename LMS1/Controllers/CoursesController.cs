@@ -174,7 +174,7 @@ namespace LMS1.Controllers
                 _context.Add(courseModule);
                 await _context.SaveChangesAsync();
                 var course = await _context.Course
-                    .Include( c => c.Modules)
+                    .Include( c => c.Modules)   // The modules are to be seen in the course page
                     .FirstOrDefaultAsync(c => c.Id == courseModule.CourseId);
                 if (course == null)
                 {
@@ -195,13 +195,11 @@ namespace LMS1.Controllers
             }
 
             var module = await _context.CourseModule
-                .Include( m=>m.Course)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (module == null)
             {
                 return NotFound();
             }
-
             return View(module);
         }
 
@@ -210,10 +208,17 @@ namespace LMS1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteModuleConfirmed(int id)
         {
-            var course = await _context.Course.FindAsync(id);
-            _context.Course.Remove(course);
+            var module = await _context.CourseModule.FindAsync(id);
+            _context.CourseModule.Remove(module);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var course = await _context.Course
+                .Include(c => c.Modules)   // The modules are to be seen in the course page
+                .FirstOrDefaultAsync(c => c.Id == module.CourseId);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            return View("Details", course);
         }
 
         private bool CourseExists(int id)
