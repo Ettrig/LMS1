@@ -40,7 +40,8 @@
 </div>
 
 <div>
-    | <a asp-action="Index">Back to List</a> |
+    <a asp-action="Index">Go to course list</a> |
+    <a asp-action="Details" asp-route-id="@Model.Id">Go to this course without changing it</a>
 </div>
 
 @section Scripts {
