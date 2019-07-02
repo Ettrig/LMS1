@@ -146,8 +146,10 @@ namespace LMS1.Controllers
             var courseActivity = await _context.CourseActivity.FindAsync(id);
             _context.CourseActivity.Remove(courseActivity);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            //return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), "CourseModules", new { id = courseActivity.ModuleId });
         }
+
 
         private bool CourseActivityExists(int id)
         {

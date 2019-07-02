@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LMS1.Data;
+using LMS1.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using LMS1.Data;
-using LMS1.Models;
 
 namespace LMS1.Controllers
 {
@@ -153,7 +153,8 @@ namespace LMS1.Controllers
             var courseModule = await _context.CourseModule.FindAsync(id);
             _context.CourseModule.Remove(courseModule);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), "Courses", new { id = courseModule.CourseId });
+       
         }
 
         private bool CourseModuleExists(int id)
@@ -182,14 +183,14 @@ namespace LMS1.Controllers
                 courseActivity.Id = 0;
                 _context.Add(courseActivity);
                 await _context.SaveChangesAsync();
-                var course = await _context.Course
+                var courseModule = await _context.Course
                     .Include(c => c.Modules)
                     .FirstOrDefaultAsync(m => m.Id == courseActivity.ModuleId);
-                if (course == null)
+                if (courseModule == null)
                 {
                     return NotFound();
                 }
-                return View("Details", course);
+                return View("Details", courseModule);
             }
             ViewData["ModuleId"] = new SelectList(_context.Course, "Id", "Id", courseActivity.ModuleId);
             return View(courseActivity);
