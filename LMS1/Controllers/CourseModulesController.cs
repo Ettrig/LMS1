@@ -23,25 +23,6 @@ namespace LMS1.Controllers
             var applicationDbContext = _context.CourseModule.Include(c => c.Course);
             return View(await applicationDbContext.ToListAsync());
         }
-
-        //// GET: CourseModules/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var courseModule = await _context.CourseModule
-        //        .Include(c => c.Course)
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (courseModule == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(courseModule);
-        //}
    
         //GET: Courses/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -98,8 +79,15 @@ namespace LMS1.Controllers
             {
                 return NotFound();
             }
-            ViewData["CourseId"] = new SelectList(_context.Course, "Id", "Id", courseModule.CourseId);
-            return View(courseModule);
+            // ViewData["CourseId"] = new SelectList(_context.Course, "Id", "Id", courseModule.CourseId);
+            var course = await _context.Course
+                .Include(c => c.Modules)
+                .FirstOrDefaultAsync(c => c.Id == courseModule.CourseId);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            return View("Details", course);
         }
 
         // POST: CourseModules/Edit/5

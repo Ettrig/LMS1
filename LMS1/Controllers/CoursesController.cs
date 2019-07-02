@@ -26,24 +26,6 @@ namespace LMS1.Controllers
         }
 
         // GET: Courses/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var course = await _context.Course
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (course == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(course);
-        //}
-
-        // GET: Courses/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -52,8 +34,8 @@ namespace LMS1.Controllers
             }
 
             var course = await _context.Course
-                .Include(m => m.Modules)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(c => c.Modules)
+                .FirstOrDefaultAsync(c => c.Id == id);
             if (course == null)
             {
                 return NotFound();
@@ -130,7 +112,14 @@ namespace LMS1.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                var courseWithAllModules = await _context.Course
+                    .Include(c => c.Modules)
+                    .FirstOrDefaultAsync(c => c.Id == course.Id);
+                if (course == null)
+                {
+                    return NotFound();
+                }
+                return View("Details", courseWithAllModules);
             }
             return View(course);
         }
@@ -185,8 +174,8 @@ namespace LMS1.Controllers
                 _context.Add(courseModule);
                 await _context.SaveChangesAsync();
                 var course = await _context.Course
-                    .Include( c => c.Modules)
-                    .FirstOrDefaultAsync(m => m.Id == courseModule.CourseId);
+                    .Include( c => c.Modules)   // The modules are to be seen in the course page
+                    .FirstOrDefaultAsync(c => c.Id == courseModule.CourseId);
                 if (course == null)
                 {
                     return NotFound();
@@ -195,6 +184,41 @@ namespace LMS1.Controllers
             }
             ViewData["CourseId"] = new SelectList(_context.Course, "Id", "Id", courseModule.CourseId);
             return View(courseModule);
+        }
+
+        // GET: Courses/Delete/5
+        public async Task<IActionResult> DeleteModule(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var module = await _context.CourseModule
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (module == null)
+            {
+                return NotFound();
+            }
+            return View(module);
+        }
+
+        // POST: Courses/DeleteModule/5
+        [HttpPost, ActionName("DeleteModule")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteModuleConfirmed(int id)
+        {
+            var module = await _context.CourseModule.FindAsync(id);
+            _context.CourseModule.Remove(module);
+            await _context.SaveChangesAsync();
+            var course = await _context.Course
+                .Include(c => c.Modules)   // The modules are to be seen in the course page
+                .FirstOrDefaultAsync(c => c.Id == module.CourseId);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            return View("Details", course);
         }
 
         private bool CourseExists(int id)
