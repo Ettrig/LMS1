@@ -11,7 +11,7 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" name="banan" value="@ViewBag.ModuleId" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -46,7 +46,8 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    | <a asp-action="BacktoModules" asp-route-id="@Model.Id">Back to Module</a> |
+    @*<a asp-action="Index">Back to List</a>*@
 </div>
 
 @section Scripts {

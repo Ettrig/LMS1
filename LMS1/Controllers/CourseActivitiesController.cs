@@ -38,7 +38,6 @@ namespace LMS1.Controllers
             {
                 return NotFound();
             }
-
             return View(courseActivity);
         }
 
@@ -150,6 +149,22 @@ namespace LMS1.Controllers
             return RedirectToAction(nameof(Details), "CourseModules", new { id = courseActivity.ModuleId });
         }
 
+        // GET: CourseActivities/BacktoModules/
+        public async Task<IActionResult> BacktoModules(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var CourseActivities = await _context.CourseActivity
+                .Include(m => m.Module)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (CourseActivities == null)
+            {
+                return NotFound();
+            }
+            return RedirectToAction(nameof(Details), "CourseModules", new { id = CourseActivities.ModuleId });
+        }
 
         private bool CourseActivityExists(int id)
         {

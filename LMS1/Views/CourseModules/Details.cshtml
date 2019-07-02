@@ -41,13 +41,11 @@
     </dl>
 </div>
 
-
-<h2>List of Activities</h2>
-
 <p>
     <a asp-action="AddActivity" asp-route-id="@Model.Id">Add Activity</a>
 </p>
 
+<h2>List of Activities</h2>
 <table class="table">
     <thead>
         <tr>
@@ -79,8 +77,8 @@
     </tbody>
 </table>
 
-
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a> |
+    | <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="BacktoCourse" asp-route-id="@Model.Id">Back to Course</a> |
+    @*<a asp-action="Index">Back to List</a> |*@
 </div>

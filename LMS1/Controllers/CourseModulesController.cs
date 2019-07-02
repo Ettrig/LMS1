@@ -162,7 +162,6 @@ namespace LMS1.Controllers
             return _context.CourseModule.Any(e => e.Id == id);
         }
 
-
         // GET: Courses/AddActivity
         public IActionResult AddActivity(int? Id)
         {
@@ -183,17 +182,35 @@ namespace LMS1.Controllers
                 courseActivity.Id = 0;
                 _context.Add(courseActivity);
                 await _context.SaveChangesAsync();
-                var courseModule = await _context.Course
-                    .Include(c => c.Modules)
-                    .FirstOrDefaultAsync(m => m.Id == courseActivity.ModuleId);
-                if (courseModule == null)
-                {
-                    return NotFound();
-                }
-                return View("Details", courseModule);
+                //var courseModule = await _context.Course
+                //    .Include(c => c.Modules)
+                //    .FirstOrDefaultAsync(m => m.Id == courseActivity.ModuleId);
+                //if (courseModule == null)
+                //{
+                //    return NotFound();
+                //}
+                //return View("Details", courseModule);
+                return RedirectToAction(nameof(Details), new { id = courseActivity.ModuleId });
             }
             ViewData["ModuleId"] = new SelectList(_context.Course, "Id", "Id", courseActivity.ModuleId);
             return View(courseActivity);
+        }
+
+        // GET: CourseModules/BacktoCourse/
+        public async Task<IActionResult> BacktoCourse(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var courseModule = await _context.CourseModule
+                .Include(m => m.Course)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (courseModule == null)
+            {
+                return NotFound();
+            }
+            return RedirectToAction(nameof(Details), "Courses", new { id = courseModule.CourseId });
         }
 
         private bool CourseExists(int id)
