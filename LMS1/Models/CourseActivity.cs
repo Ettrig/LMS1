@@ -32,6 +32,7 @@ namespace LMS1.Models
         [StringLength(2500, MinimumLength = 2)]
         public string Exercise { get; set; }
 
+
         public int ModuleId { get; set; }
 
         public CourseModule Module { get; set; }
