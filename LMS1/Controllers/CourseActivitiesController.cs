@@ -31,9 +31,8 @@ namespace LMS1.Controllers
             {
                 return NotFound();
             }
-
             var courseActivity = await _context.CourseActivity
-                .Include(c => c.Module)
+                .Include(m => m.Module)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (courseActivity == null)
             {
@@ -147,8 +146,10 @@ namespace LMS1.Controllers
             var courseActivity = await _context.CourseActivity.FindAsync(id);
             _context.CourseActivity.Remove(courseActivity);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            //return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), "CourseModules", new { id = courseActivity.ModuleId });
         }
+
 
         private bool CourseActivityExists(int id)
         {

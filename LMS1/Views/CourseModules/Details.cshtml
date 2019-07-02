@@ -42,6 +42,12 @@
 </div>
 
 
+<h2>List of Activities</h2>
+
+<p>
+    <a asp-action="AddActivity" asp-route-id="@Model.Id">Add Activity</a>
+</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -64,8 +70,8 @@
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-controller="CourseActivities" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-controller="CourseActivities" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Edit" asp-controller="CourseActivities" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Delete" asp-controller="CourseActivities" asp-route-id="@item.Id">Delete</a> |
                 </td>
             </tr>
@@ -74,10 +80,7 @@
 </table>
 
 
-
-
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a> |
-    <a asp-area="" asp-controller="CourseActivities" asp-action="Create">Create Activitie</a>
 </div>
