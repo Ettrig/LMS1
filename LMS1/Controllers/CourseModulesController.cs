@@ -204,7 +204,6 @@ namespace LMS1.Controllers
                 return NotFound();
             }
             var courseModule = await _context.CourseModule
-                .Include(m => m.Course)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (courseModule == null)
             {
