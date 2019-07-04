@@ -102,7 +102,7 @@ namespace LMS1.Data
             foreach (var courseModule in courseModules)
             {
                 j++;
-                var courseActivityName = Faker.Internet.DomainWord();
+                var courseActivityName = "A" + j.ToString("D2") + "_" + Faker.Internet.DomainWord();
                 var startDate = DateTime.Now.AddDays(random.Next(1, 10));
                 var endDate = startDate.AddDays(random.Next(1, 10));
                 var courseActivity = new CourseActivity
@@ -110,8 +110,8 @@ namespace LMS1.Data
                     Name = courseActivityName,
                     StartDate = startDate,
                     EndDate = endDate,
-                    Description = "A" +"_Description",
-                    Exercise = "E" +"_Description",
+                    Description = "A" + j.ToString("D2") + "_Description",
+                    Exercise = "E" + j.ToString("D2") + "_Description",
                     ModuleId = courseModule.Id
                 };
                 courseActivities.Add(courseActivity);
@@ -127,7 +127,7 @@ namespace LMS1.Data
             foreach (var course in courses)
             {
                 i++;
-                var courseModuleName = Faker.Internet.DomainWord();
+                var courseModuleName = "M" + i.ToString("D2") + "_" + Faker.Internet.DomainWord();
                 var startDate = DateTime.Now.AddDays(random.Next(1, 10));
                 var endDate = startDate.AddDays(random.Next(1, 10));
                 var courseModule = new CourseModule
@@ -135,7 +135,7 @@ namespace LMS1.Data
                     Name = courseModuleName,
                     StartDate = startDate,
                     EndDate = endDate,
-                    Description = "M" + "_Description",
+                    Description = "M" + i.ToString("D2") + "_Description",
                     CourseId = course.Id
                 };
                 courseModules.Add(courseModule);
@@ -150,7 +150,7 @@ namespace LMS1.Data
             var courses = new List<Course>();
             for (int i = 1; i <= 10; i++)
             {
-                var courseName = Faker.Company.CatchPhrase();
+                var courseName = "C" + i.ToString("D2") + "_" + Faker.Company.CatchPhrase();
                 var startDate = DateTime.Now.AddDays(random.Next(1, 10));
                 var endDate = startDate.AddDays(random.Next(1, 10));
                 var course = new Course
@@ -158,7 +158,7 @@ namespace LMS1.Data
                     Name = courseName,
                     StartDate = startDate,
                     EndDate = endDate,
-                    Description = "C" + "_Description"
+                    Description = "C" + i.ToString("D2") + "_Description"
                 };
                 courses.Add(course);
             }
