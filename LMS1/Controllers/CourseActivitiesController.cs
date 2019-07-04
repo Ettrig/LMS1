@@ -99,6 +99,7 @@ namespace LMS1.Controllers
                 try
                 {
                     _context.Update(courseActivity);
+                    _context.Entry(courseActivity).Property(m => m.ModuleId).IsModified = false; //Leave CourseId as it is in the DB
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -112,11 +113,33 @@ namespace LMS1.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                _context.Entry(courseActivity).Reload();
+                // _context.Entry(courseModule).Property(m => m.CourseId).IsModified = true; //Can this let me get proper CourseId?
+                var newModuleID = _context.CourseModule.FirstOrDefault(m => m.Id == id).CourseId;
+                //await _context.CourseModule.FindAsync(id);
+                if (newModuleID == 0)
+                {
+                    return NotFound();
+                }
+                return RedirectToAction(nameof(Details), "CourseModules", new { id = newModuleID });
             }
             ViewData["ModuleId"] = new SelectList(_context.CourseModule, "Id", "Id", courseActivity.ModuleId);
             return View(courseActivity);
         }
+
+ 
+
+
+
+        //        //return RedirectToAction(nameof(Index));
+        //        return RedirectToAction(nameof(Details), "CourseModules", new { id = courseActivity.ModuleId });
+        //    }
+        //    ViewData["ModuleId"] = new SelectList(_context.CourseModule, "Id", "Id", courseActivity.ModuleId);
+        //    return View(courseActivity);
+        //}
+
+
+
 
         // GET: CourseActivities/Delete/5
         public async Task<IActionResult> Delete(int? id)

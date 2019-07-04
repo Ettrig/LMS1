@@ -4,7 +4,7 @@
     ViewData["Title"] = "Delete";
 }
 
-<h2>Delete Activity</h2>
+<h3>Delete Activity</h3>
 <hr />
 
 <div>
@@ -40,10 +40,10 @@
             @Html.DisplayFor(model => model.Exercise)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Module)
+            @Html.DisplayNameFor(model => model.Module.Name)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Module.Id)
+            @Html.DisplayFor(model => model.Module.Name)
         </dd>
     </dl>
 
@@ -52,7 +52,7 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="BacktoModules" asp-route-id="@Model.Id">Back to Module</a> |
+        <a asp-action="BacktoModules" asp-route-id="@Model.Id">Back to Module</a>
         @*<a asp-action="Index">Back to List</a>*@
     </form>
 </div>

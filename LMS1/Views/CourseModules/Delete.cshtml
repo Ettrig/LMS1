@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Delete";
 }
-<h2>Delete Course Module</h2>
+<h3>Delete Module</h3>
 <hr />
 
 <div>
@@ -33,10 +33,10 @@
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Course)
+            @Html.DisplayNameFor(model => model.Course.Name)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Course.Id)
+            @Html.DisplayFor(model => model.Course.Name)
         </dd>
     </dl>
 
@@ -45,7 +45,7 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="BacktoCourse" asp-route-id="@Model.Id">Back to Course</a> |
+        <a asp-action="BacktoCourse" asp-route-id="@Model.Id">Back to Course</a>
         @*<a asp-action="Index">Back to List</a>*@
     </form>
 </div>
