@@ -4,8 +4,9 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Module Details</h2>
+<h3>Module Details</h3>
 <hr />
+
 <div>
     <dl class="row">
         <dt class="col-sm-2">
@@ -45,7 +46,7 @@
     <a asp-action="AddActivity" asp-route-id="@Model.Id">Add Activity</a>
 </p>
 
-<h2>List of Activities</h2>
+<h3>List of Activities</h3>
 <table class="table">
     <thead>
         <tr>
@@ -70,7 +71,7 @@
                 <td>
                     <a asp-action="Details" asp-controller="CourseActivities" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Edit" asp-controller="CourseActivities" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Delete" asp-controller="CourseActivities" asp-route-id="@item.Id">Delete</a> 
+                    <a asp-action="Delete" asp-controller="CourseActivities" asp-route-id="@item.Id">Delete</a> |
                 </td>
             </tr>
         }
@@ -78,7 +79,7 @@
 </table>
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="BacktoCourse" asp-route-id="@Model.Id">Back to Course</a> 
+    | <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="BacktoCourse" asp-route-id="@Model.Id">Back to Course</a> |
     @*<a asp-action="Index">Back to List</a> |*@
 </div>
