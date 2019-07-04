@@ -43,18 +43,22 @@
     <a asp-action="AddModule" asp-route-id="@Model.Id">Add Module</a>
 </p>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Module Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var item in Model.Modules)
-        {
+@if (Model.Modules.Count > 0)
+{
+    <table class="table">
+        <thead>
+            @*<table class="table table-striped table-bordered">
+                <thead style="background-color:antiquewhite">*@
+            <tr>
+                <th>Module Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Modules)
+            {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
@@ -68,9 +72,50 @@
                 <td>
                     <a asp-action="Details" asp-controller="CourseModules" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Edit" asp-controller="CourseModules" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Delete" asp-controller="CourseModules" asp-route-id="@item.Id">Delete</a> 
+                    <a asp-action="Delete" asp-controller="CourseModules" asp-route-id="@item.Id">Delete</a>
                 </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Activity Name</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item2 in item.Activities)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item2.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item2.StartDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item2.EndDate)
+                                    </td>
+                                    <td>
+                                        <a asp-action="Details" asp-controller="CourseModules" asp-route-id="@item2.Id">Details</a> |
+                                        <a asp-action="Edit" asp-controller="CourseModules" asp-route-id="@item2.Id">Edit</a> |
+                                        <a asp-action="Delete" asp-controller="CourseModules" asp-route-id="@item2.Id">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+            </tr> 
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@*@foreach (var item2 in item.Activities)
+{@Html.DisplayFor(modelItem => item2.Name)}*@
+
+

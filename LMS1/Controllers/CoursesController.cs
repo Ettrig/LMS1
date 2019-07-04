@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LMS1.Data;
+using LMS1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using LMS1.Data;
-using LMS1.Models;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LMS1.Controllers
 {
@@ -35,6 +33,7 @@ namespace LMS1.Controllers
 
             var course = await _context.Course
                 .Include(c => c.Modules)
+                .ThenInclude(c => c.Activities)
                 .FirstOrDefaultAsync(c => c.Id == id);
             if (course == null)
             {
@@ -114,6 +113,7 @@ namespace LMS1.Controllers
                 }
                 var courseWithAllModules = await _context.Course
                     .Include(c => c.Modules)
+                    .ThenInclude(c => c.Activities)
                     .FirstOrDefaultAsync(c => c.Id == course.Id);
                 if (course == null)
                 {
@@ -175,6 +175,7 @@ namespace LMS1.Controllers
                 await _context.SaveChangesAsync();
                 var course = await _context.Course
                     .Include( c => c.Modules)   // The modules are to be seen in the course page
+                    .ThenInclude( c => c.Activities)  
                     .FirstOrDefaultAsync(c => c.Id == courseModule.CourseId);
                 if (course == null)
                 {
