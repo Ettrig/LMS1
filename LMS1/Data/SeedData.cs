@@ -1,9 +1,11 @@
 ﻿using LMS1.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace LMS1.Data
 {
@@ -16,9 +18,12 @@ namespace LMS1.Data
             {
                 if (context.Course.Any())
                 {
-                    context.Course.RemoveRange(context.Course);
-                    context.CourseModule.RemoveRange(context.CourseModule);
+                    return;
                 }
+                // Clean DB
+                context.Course.RemoveRange(context.Course);
+                context.CourseModule.RemoveRange(context.CourseModule);
+                context.CourseActivity.RemoveRange(context.CourseActivity);
 
                 List<Course> courses = SeedCourses();
                 context.Course.AddRange(courses);
@@ -28,6 +33,64 @@ namespace LMS1.Data
                 SeedActivities(context, courseModules);
 
                 context.SaveChanges();
+            }
+        }
+
+        //This is a copy of method Initialize in LexiconGym
+        public static async Task InitializeRoleManagement(IServiceProvider services, string adminPW)
+        {
+            using (var context = new ApplicationDbContext(services.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
+            {
+                //Skapar en instans av UserManager och RollManager
+                var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+                if (userManager == null || roleManager == null)
+                {
+                    throw new Exception("UserManager or RoleManager is null");
+                }
+
+                var roleNames = new[] { "Admin", "Member" };
+
+
+                foreach (var name in roleNames)
+                {
+                    //Om rollen redan finns fortsätt
+                    if (await roleManager.RoleExistsAsync(name)) continue;
+                    //Annars skapa rollen
+                    var role = new IdentityRole { Name = name };
+                    var result = await roleManager.CreateAsync(role);
+                    if (!result.Succeeded)
+                    {
+                        throw new Exception(string.Join("\n", result.Errors));
+                    }
+                }
+
+                var emails = new[] { "adminPW@gym.se" };
+
+                foreach (var email in emails)
+                {
+                    var foundUser = await userManager.FindByEmailAsync(email);
+                    if (foundUser != null) continue;
+                    //Skapa en ny användare
+                    var user = new ApplicationUser { UserName = email, Email = email };
+                    var addUserResult = await userManager.CreateAsync(user, adminPW);
+                    if (!addUserResult.Succeeded)
+                    {
+                        throw new Exception(string.Join("\n", addUserResult.Errors));
+                    }
+                }
+
+                var adminUser = await userManager.FindByEmailAsync(emails[0]);
+                foreach (var role in roleNames)
+                {
+                    //Lägg till alla roller till adminUser
+                    var addToRoleResult = await userManager.AddToRoleAsync(adminUser, role);
+                    if (!addToRoleResult.Succeeded)
+                    {
+                        throw new Exception(string.Join("\n", addToRoleResult.Errors));
+                    }
+                }
             }
         }
 

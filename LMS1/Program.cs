@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LMS1.Data;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,6 +20,32 @@ namespace LMS1
             //CreateWebHostBuilder(args).Build().Run();
 
             IWebHost webHost = CreateWebHostBuilder(args).Build();
+
+            // This code is copied from method Main in Program.cs in LexiconGym
+            using (var scope = webHost.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<ApplicationDbContext>();
+                context.Database.Migrate();
+
+                var config = webHost.Services.GetRequiredService<IConfiguration>();
+                //Behöver sättas via komandotolken i projektkatalogen.
+                // dotnet user-secrets set "Gym:AdminPW" "FooBar77!"
+
+                //Läser in lösenordet
+                var adminPW = config["Gym:AdminPW"];
+                try
+                {
+                    SeedData.InitializeRoleManagement(services, adminPW).Wait();
+                }
+                catch (Exception ex)
+                {
+                    //Om seeden inte går som tänkt logga vad som gått fel
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex.Message, "Seed fail");
+                }
+
+            }
 
             using (var scope = webHost.Services.CreateScope())
             {

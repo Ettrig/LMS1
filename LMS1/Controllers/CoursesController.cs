@@ -3,6 +3,9 @@ using LMS1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using LMS1.Data;
+using LMS1.Models;
+using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -125,6 +128,7 @@ namespace LMS1.Controllers
         }
 
         // GET: Courses/Delete/5
+        [Authorize (Roles="Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
