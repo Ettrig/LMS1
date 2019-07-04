@@ -17,9 +17,12 @@ namespace LMS1.Data
             {
                 if (context.Course.Any())
                 {
-                    context.Course.RemoveRange(context.Course);
-                    context.CourseModule.RemoveRange(context.CourseModule);
+                    return;
                 }
+                // Clean DB
+                context.Course.RemoveRange(context.Course);
+                context.CourseModule.RemoveRange(context.CourseModule);
+                context.CourseActivity.RemoveRange(context.CourseActivity);
 
                 List<Course> courses = SeedCourses();
                 context.Course.AddRange(courses);
