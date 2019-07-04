@@ -4,9 +4,10 @@
     ViewData["Title"] = "Delete";
 }
 
+<h3>Delete Course</h3>
+<hr />
+
 <div>
-    <h3>Delete Course</h3>
-    <hr />
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
@@ -39,6 +40,6 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a> 
+        <a asp-action="Index">Back to List</a>
     </form>
 </div>
