@@ -117,16 +117,17 @@ namespace LMS1.Controllers
                 _context.Entry(courseModule).Reload();
                 // _context.Entry(courseModule).Property(m => m.CourseId).IsModified = true; //Can this let me get proper CourseId?
                 var newModuleID = _context.CourseModule.FirstOrDefault(m => m.Id == id).CourseId;
-                    //await _context.CourseModule.FindAsync(id);
+                //await _context.CourseModule.FindAsync(id);
                 if (newModuleID == 0)
                 {
                     return NotFound();
                 }
-                return RedirectToAction(nameof(Details), "Courses", new { id = newModuleID});
+                return RedirectToAction(nameof(Details), "Courses", new { id = newModuleID });
             }
             ViewData["CourseId"] = new SelectList(_context.Course, "Id", "Id", courseModule.CourseId);
             return View(courseModule);
         }
+
 
         // GET: CourseModules/Delete/5
         public async Task<IActionResult> Delete(int? id)
