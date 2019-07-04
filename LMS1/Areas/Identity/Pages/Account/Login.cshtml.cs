@@ -13,7 +13,8 @@ using LMS1.Models;
 
 namespace LMS1.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
+    //[AllowAnonymous]
+    [Authorize(Roles = "Admin")]
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
