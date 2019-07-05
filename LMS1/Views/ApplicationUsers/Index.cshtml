@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<LMS1.Models.ApplicationUser>
 
 @{
-    ViewData["Title"] = "List of courses";
+    ViewData["Title"] = "List of users";
 }
 
-<h1>List of Application Users</h1>
+<h1>List of Users</h1>
 
 <p>
     <a asp-action="Create">Add User</a>
@@ -15,6 +15,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -22,6 +25,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

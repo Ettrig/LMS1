@@ -51,7 +51,7 @@ namespace LMS1.Data
                 }
 
                 var roleNames = new[] { "Teacher", "Student" };
-
+               
 
                 foreach (var name in roleNames)
                 {
@@ -162,7 +162,7 @@ namespace LMS1.Data
                 };
                 courses.Add(course);
             }
-
+            
             return courses;
         }
     }

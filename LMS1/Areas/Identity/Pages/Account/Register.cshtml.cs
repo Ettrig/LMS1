@@ -67,8 +67,12 @@ namespace LMS1.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
+               
                 var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
+                //Assigns the role "Student" to each user that registers
+                var resultAddRole = await _userManager.AddToRoleAsync(user, "Student");
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
