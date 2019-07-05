@@ -1,19 +1,16 @@
-﻿@model IEnumerable<LMS1.Models.ApplicationUser>
+﻿@model IEnumerable<LMS1.ViewModels.UserToShow>
 
 @{
     ViewData["Title"] = "List of users";
 }
 
-<h1>List of Users</h1>
+<h1>List of Registered Users</h1>
 
-<p>
-    <a asp-action="Create">Add User</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                @Html.DisplayNameFor(model => model.UserName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Role)
@@ -24,15 +21,15 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
+                @Html.DisplayFor(modelItem => item.UserName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Role)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" @*asp-route-id="@item.Id"*@>Edit</a> |
+                <a asp-action="Details" @*asp-route-id="@item.Id"*@>Details</a> |
+                <a asp-action="Delete" @*asp-route-id="@item.Id"*@>Delete</a>
             </td>
         </tr>
 }

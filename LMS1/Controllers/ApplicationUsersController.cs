@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LMS1.Data;
 using LMS1.Models;
+using LMS1.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,17 +30,20 @@ namespace LMS1.Controllers
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-            //var listOfUsers = await _context.ApplicationUser.ToListAsync();
+            List<UserToShow> usersToShow = new List<UserToShow>(); 
             var listOfUsers = await _userManager.Users.ToListAsync(); 
 
             foreach (ApplicationUser u in listOfUsers)
             {
-                bool teacher = await _userManager.IsInRoleAsync(u, "Teacher");
-                if (teacher) u.Role = "Teacher";
-                else u.Role = "Student";
+                var appUser = new UserToShow();
+                if (await _userManager.IsInRoleAsync(u, "Teacher")) appUser.Role = "Teacher";
+                else appUser.Role = "Student";
+                appUser.UserName = u.UserName;
+
+                usersToShow.Add(appUser);
             }
 
-            return View(listOfUsers);
+            return View(usersToShow);
         }
     }
 }
