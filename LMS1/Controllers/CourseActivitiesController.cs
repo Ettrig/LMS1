@@ -33,6 +33,7 @@ namespace LMS1.Controllers
             }
             var courseActivity = await _context.CourseActivity
                 .Include(m => m.Module)
+                .ThenInclude(m => m.Course)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (courseActivity == null)
             {
