@@ -50,7 +50,7 @@ namespace LMS1.Data
                     throw new Exception("UserManager or RoleManager is null");
                 }
 
-                var roleNames = new[] { "Admin", "Member" };
+                var roleNames = new[] { "Teacher", "Student" };
 
 
                 foreach (var name in roleNames)

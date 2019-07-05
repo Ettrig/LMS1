@@ -128,7 +128,7 @@ namespace LMS1.Controllers
         }
 
         // GET: Courses/Delete/5
-        [Authorize (Roles="Admin")]
+        [Authorize (Roles="Teacher")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
