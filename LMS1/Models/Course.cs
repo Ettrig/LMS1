@@ -31,7 +31,6 @@ namespace LMS1.Models
 
 
         public ICollection<CourseModule> Modules { get; set; }
-        //public ICollection<CourseActivity> Activities { get; set; }
         public ICollection<ApplicationUser> AttendingStudents { get; set; }
     }
 }
