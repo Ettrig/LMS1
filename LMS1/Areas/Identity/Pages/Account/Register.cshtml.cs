@@ -40,6 +40,12 @@ namespace LMS1.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            //Lägg till Name till InputModelen 2/4
+            [Required]
+            [StringLength(40)]
+            [Display(Name = "Name")]
+            public string Name { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -68,7 +74,7 @@ namespace LMS1.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+                var user = new ApplicationUser { UserName = Input.Name, Email = Input.Email };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 //Assigns the role "Student" to each user that registers
                 var resultAddRole = await _userManager.AddToRoleAsync(user, "Student");
