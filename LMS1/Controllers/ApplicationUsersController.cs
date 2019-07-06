@@ -35,15 +35,36 @@ namespace LMS1.Controllers
 
             foreach (ApplicationUser u in listOfUsers)
             {
-                var appUser = new UserToShow();
-                if (await _userManager.IsInRoleAsync(u, "Teacher")) appUser.Role = "Teacher";
-                else appUser.Role = "Student";
-                appUser.UserName = u.UserName;
+                var uts = new UserToShow();
 
-                usersToShow.Add(appUser);
+                uts.Id = u.Id; 
+                uts.UserName = u.UserName;
+                if (await _userManager.IsInRoleAsync(u, "Teacher")) uts.Role = "Teacher";
+                else uts.Role = "Student";
+
+                usersToShow.Add(uts);
             }
 
             return View(usersToShow);
+        }
+
+        public async Task<IActionResult> Details(string id)
+        {
+            var appUser = await _context.ApplicationUser.FindAsync(id);
+
+            var user2Show = new UserToShow();
+
+            user2Show.UserName = appUser.UserName;
+            user2Show.Email = appUser.Email;
+
+            var course = await _context.Course.FindAsync(appUser.CourseId);
+            //user2Show.CourseName = course.Name;
+            user2Show.CourseName = "Bra kurs";
+
+            if (await _userManager.IsInRoleAsync(appUser, "Teacher")) user2Show.Role = "Teacher";
+            else user2Show.Role = "Student";
+
+            return View(user2Show);
         }
     }
 }
