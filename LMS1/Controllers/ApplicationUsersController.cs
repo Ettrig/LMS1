@@ -57,9 +57,8 @@ namespace LMS1.Controllers
             user2Show.Email = appUser.Email;
 
             var course = await _context.Course.FindAsync(appUser.CourseId);
-            //The following line can be activated when the system handles courseId for students
-            //user2Show.CourseName = course.Name;
-            user2Show.CourseName = "Bra kurs";
+            // Check if the course was found
+            user2Show.CourseName = course.Name;
 
             if (await _userManager.IsInRoleAsync(appUser, "Teacher")) user2Show.Role = "Teacher";
             else user2Show.Role = "Student";
