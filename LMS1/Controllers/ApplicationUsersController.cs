@@ -85,7 +85,7 @@ namespace LMS1.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userToStore = new ApplicationUser { UserName = user.UserName, Email = user.Email, CourseId= user.CourseId };
+                var userToStore = new ApplicationUser { LmsName=user.LmsName, UserName = user.Email, Email = user.Email, CourseId= user.CourseId };
                 var result = await _userManager.CreateAsync(userToStore, user.PasswordHash);
                 var resultAddRole = await _userManager.AddToRoleAsync(userToStore, "Student");
 
@@ -119,7 +119,7 @@ namespace LMS1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("Id,UserName,Email")] UserToEdit user)
+        public async Task<IActionResult> Edit([Bind("Id,UserName,Email,ChangePassword,Password")] UserToEdit user)
         {
             if (ModelState.IsValid)
             {
@@ -130,8 +130,7 @@ namespace LMS1.Controllers
 
                 try
                 {
-                    _context.Update(user2Store);
-                    await _context.SaveChangesAsync();
+                    var result = await _userManager.UpdateAsync(user2Store);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -150,6 +149,13 @@ namespace LMS1.Controllers
                 {
                     return NotFound();
                 }
+
+                if (user.ChangePassword)
+                {
+                    var result = await _userManager.RemovePasswordAsync(user2Store);
+                    result = await _userManager.AddPasswordAsync(user2Store, user.Password); 
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             return RedirectToAction(nameof(Index));

@@ -6,9 +6,10 @@ namespace LMS1.Models
     {
         public string Role { get; set; }  // This must be handled better, to support restrictions by role to actions
                                           // Maybe we can use roles that are defined for IdentityUser
+        public string EmailAddress { get; set; }
+        public string LmsName { get; set; }
         public string FirstName { get; set; }
         public string SecondName { get; set; }
-        public string EmailAddress { get; set; }
         public int? CourseId { get; set; }
 
         public Course Course { get; set; }

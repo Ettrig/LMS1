@@ -40,11 +40,10 @@ namespace LMS1.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            //Lägg till Name till InputModelen 2/4
             [Required]
             [StringLength(40)]
-            [Display(Name = "Name")]
-            public string Name { get; set; }
+            [Display(Name = "LmsName")]
+            public string LmsName { get; set; }
 
             [Required]
             [EmailAddress]
@@ -73,10 +72,9 @@ namespace LMS1.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-               
-                var user = new ApplicationUser { UserName = Input.Name, Email = Input.Email };
+                // Adding CourseId=1 for debugging purposes. Default registering does not exist in the "real" system. 
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, LmsName=Input.LmsName, CourseId=1 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                //Assigns the role "Student" to each user that registers
                 var resultAddRole = await _userManager.AddToRoleAsync(user, "Student");
 
                 if (result.Succeeded)
