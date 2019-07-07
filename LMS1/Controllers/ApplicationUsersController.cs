@@ -85,14 +85,74 @@ namespace LMS1.Controllers
         {
             if (ModelState.IsValid)
             {
-                // How do we save user? Look in Register in Pages ... 
                 var userToStore = new ApplicationUser { UserName = user.UserName, Email = user.Email, CourseId= user.CourseId };
                 var result = await _userManager.CreateAsync(userToStore, user.PasswordHash);
                 var resultAddRole = await _userManager.AddToRoleAsync(userToStore, "Student");
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Courses", new { id = user.CourseId });
             }
             return View(user);
+        }
+
+        // GET: ApplicationUser/Edit/#¤%¤#"!"#)=
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.ApplicationUser.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var u2e = new UserToEdit();
+            u2e.Id = user.Id;
+            u2e.UserName = user.UserName;
+            u2e.Email = user.Email;
+            return View(u2e);
+        }
+
+        // POST: ApplicationUser/Edit/#¤%¤#"!"#)=
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit([Bind("Id,UserName,Email")] UserToEdit user)
+        {
+            if (ModelState.IsValid)
+            {
+                var user2Store = await _context.ApplicationUser.FindAsync(user.Id);
+
+                user2Store.UserName = user.UserName;
+                user2Store.Email = user.Email; 
+
+                try
+                {
+                    _context.Update(user2Store);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    // What is this for? Check in Course Edit
+                    if (user.Id=="hej")
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
+                if (user2Store == null)
+                {
+                    return NotFound();
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(Index));
         }
 
     }
