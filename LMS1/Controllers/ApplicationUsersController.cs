@@ -112,13 +112,17 @@ namespace LMS1.Controllers
             u2e.Id = user.Id;
             u2e.LmsName = user.LmsName;
             u2e.Email = user.Email;
+
+            u2e.AllCourseNames = await _context.Course
+                .Select( c=> new SelectListItem { Selected = user.CourseId == c.Id, Text = c.Name, Value = c.Name})
+                .ToListAsync();
+
             u2e.AllRoles = new List<SelectListItem>(); 
             foreach (IdentityRole ir in _roleManager.Roles)
             {
                 string usersCurrentRole = ""; 
                 if (await _userManager.IsInRoleAsync(user, "Teacher")) usersCurrentRole = "Teacher";
                 else usersCurrentRole = "Student"; 
-
                 u2e.AllRoles.Add(new SelectListItem { Selected = ir.Name == usersCurrentRole, Text = ir.Name, Value = ir.Name }); 
             }
 
@@ -130,7 +134,7 @@ namespace LMS1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("Id,LmsName,Email,Role,ChangePassword,Password")] UserToEdit user)
+        public async Task<IActionResult> Edit([Bind("Id,LmsName,Email,CourseName,Role,ChangePassword,Password")] UserToEdit user)
         {
             if (ModelState.IsValid)
             {
@@ -139,6 +143,11 @@ namespace LMS1.Controllers
                 user2Store.LmsName = user.LmsName;
                 user2Store.Email = user.Email;
                 user2Store.UserName = user.Email;
+
+                // Do we need to make this aynchronous? 
+                user2Store.CourseId = _context.Course
+                    .FirstOrDefault(c => c.Name == user.CourseName)
+                    .Id;
 
                 try
                 {

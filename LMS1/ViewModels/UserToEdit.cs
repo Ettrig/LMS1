@@ -8,7 +8,8 @@ namespace LMS1.ViewModels
         public string Id { get; set; }
         public string LmsName { get; set; }
         public string Email { get; set; }
-        public int CourseId { get; set; }
+        public List<SelectListItem> AllCourseNames { get; set; }
+        public string CourseName { get; set; }
         public List<SelectListItem> AllRoles { get; set; }
         public string Role { get; set; }
         public bool ChangePassword { get; set; }
