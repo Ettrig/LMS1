@@ -7,6 +7,7 @@ using LMS1.Models;
 using LMS1.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace LMS1.Controllers
@@ -37,7 +38,7 @@ namespace LMS1.Controllers
                 var uts = new UserToShow();
 
                 uts.Id = u.Id;
-                uts.UserName = u.UserName;
+                uts.LmsName = u.LmsName;
                 if (await _userManager.IsInRoleAsync(u, "Teacher")) uts.Role = "Teacher";
                 else uts.Role = "Student";
 
@@ -53,7 +54,7 @@ namespace LMS1.Controllers
 
             var user2Show = new UserToShow();
 
-            user2Show.UserName = appUser.UserName;
+            user2Show.LmsName = appUser.LmsName;
             user2Show.Email = appUser.Email;
 
             var course = await _context.Course.FindAsync(appUser.CourseId);
@@ -109,8 +110,18 @@ namespace LMS1.Controllers
             }
             var u2e = new UserToEdit();
             u2e.Id = user.Id;
-            u2e.UserName = user.UserName;
+            u2e.LmsName = user.LmsName;
             u2e.Email = user.Email;
+            u2e.AllRoles = new List<SelectListItem>(); 
+            foreach (IdentityRole ir in _roleManager.Roles)
+            {
+                string usersCurrentRole = ""; 
+                if (await _userManager.IsInRoleAsync(user, "Teacher")) usersCurrentRole = "Teacher";
+                else usersCurrentRole = "Student"; 
+
+                u2e.AllRoles.Add(new SelectListItem { Selected = ir.Name == usersCurrentRole, Text = ir.Name, Value = ir.Name }); 
+            }
+
             return View(u2e);
         }
 
@@ -119,14 +130,15 @@ namespace LMS1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("Id,UserName,Email,ChangePassword,Password")] UserToEdit user)
+        public async Task<IActionResult> Edit([Bind("Id,LmsName,Email,Role,ChangePassword,Password")] UserToEdit user)
         {
             if (ModelState.IsValid)
             {
                 var user2Store = await _context.ApplicationUser.FindAsync(user.Id);
 
-                user2Store.UserName = user.UserName;
-                user2Store.Email = user.Email; 
+                user2Store.LmsName = user.LmsName;
+                user2Store.Email = user.Email;
+                user2Store.UserName = user.Email;
 
                 try
                 {
@@ -154,6 +166,16 @@ namespace LMS1.Controllers
                 {
                     var result = await _userManager.RemovePasswordAsync(user2Store);
                     result = await _userManager.AddPasswordAsync(user2Store, user.Password); 
+                }
+
+                if (user.Role == "Teacher")
+                {
+                    var resultAddRole = await _userManager.AddToRoleAsync(user2Store, "Teacher");
+                }
+                else // Role == "Student", therefore remove "Teacher"
+                {
+                    var resulRemovRole = await _userManager.RemoveFromRoleAsync(user2Store, "Teacher");
+
                 }
 
                 return RedirectToAction(nameof(Index));

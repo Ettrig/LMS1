@@ -73,7 +73,7 @@ namespace LMS1.Data
                     var foundUser = await userManager.FindByEmailAsync(email);
                     if (foundUser != null) continue;
                     //Skapa en ny användare
-                    var user = new ApplicationUser { UserName = email, Email = email };
+                    var user = new ApplicationUser { UserName = email, Email = email, LmsName="SuperTeacher" };
                     var addUserResult = await userManager.CreateAsync(user, adminPW);
                     if (!addUserResult.Succeeded)
                     {

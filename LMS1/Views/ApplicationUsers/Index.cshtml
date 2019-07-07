@@ -10,7 +10,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.UserName)
+                @Html.DisplayNameFor(model => model.LmsName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Role)
@@ -21,7 +21,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.UserName)
+                @Html.DisplayFor(modelItem => item.LmsName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Role)
