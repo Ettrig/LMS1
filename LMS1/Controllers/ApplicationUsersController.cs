@@ -30,7 +30,7 @@ namespace LMS1.Controllers
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-            List<UserToShow> usersToShow = new List<UserToShow>();
+            var usersToShow = new List<UserToShow>();
             var listOfUsers = await _userManager.Users.ToListAsync();
 
             foreach (ApplicationUser u in listOfUsers)
@@ -192,5 +192,38 @@ namespace LMS1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: ApplicationUser/StudentList/+¤%¤#"!"#+*^
+        public async Task<IActionResult> ListStudents(int? id)
+        {
+            //The list is for a course and id is key for the course
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var course = await _context.Course.FindAsync(id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            var listOfUsers = await _userManager.Users
+                .Where(u => u.CourseId==course.Id)
+                .ToListAsync();
+
+            var usersToShow = new List<UserToShow>();
+            foreach (ApplicationUser u in listOfUsers)
+            {
+                var uts = new UserToShow();
+
+                uts.Id = u.Id;
+                uts.LmsName = u.LmsName;
+                if (await _userManager.IsInRoleAsync(u, "Teacher")) uts.Role = "Teacher";
+                else uts.Role = "Student";
+
+                usersToShow.Add(uts);
+            }
+            return View("Index", usersToShow);
+        }
     }
 }
