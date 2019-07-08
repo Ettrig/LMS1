@@ -82,7 +82,7 @@ namespace LMS1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserName,Email,CourseId,PasswordHash")] ApplicationUser user)
+        public async Task<IActionResult> Create([Bind("LmsName,Email,CourseId,PasswordHash")] ApplicationUser user)
         {
             if (ModelState.IsValid)
             {
