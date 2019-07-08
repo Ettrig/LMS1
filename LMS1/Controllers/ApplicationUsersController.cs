@@ -31,7 +31,10 @@ namespace LMS1.Controllers
         public async Task<IActionResult> Index()
         {
             var usersToShow = new List<UserToShow>();
-            var listOfUsers = await _userManager.Users.ToListAsync();
+            var listOfUsers = await _userManager
+                .Users
+                .Include( u => u.Course )
+                .ToListAsync();
 
             foreach (ApplicationUser u in listOfUsers)
             {
@@ -39,6 +42,7 @@ namespace LMS1.Controllers
 
                 uts.Id = u.Id;
                 uts.LmsName = u.LmsName;
+                uts.CourseName = u.Course.Name; 
                 if (await _userManager.IsInRoleAsync(u, "Teacher")) uts.Role = "Teacher";
                 else uts.Role = "Student";
 
@@ -55,7 +59,10 @@ namespace LMS1.Controllers
         public async Task<IActionResult> ResortIndex( string columnToSort, ApplicationDbContext.UserSortState sortState)
         {
             var usersToShow = new List<UserToShow>();
-            var listOfUsers = await _userManager.Users.ToListAsync();
+            var listOfUsers = await _userManager
+                .Users
+                .Include( u => u.Course )
+                .ToListAsync();
 
             foreach (ApplicationUser u in listOfUsers)
             {
@@ -63,14 +70,12 @@ namespace LMS1.Controllers
 
                 uts.Id = u.Id;
                 uts.LmsName = u.LmsName;
+                uts.CourseName = u.Course.Name; 
                 if (await _userManager.IsInRoleAsync(u, "Teacher")) uts.Role = "Teacher";
                 else uts.Role = "Student";
 
                 usersToShow.Add(uts);
             }
-
-            //usersToShow = usersToShow.OrderBy(u => u.LmsName).ToList();
-            //ViewBag.SortState = ApplicationDbContext.UserSortState.UserAscend;
 
             switch (columnToSort)
             {
@@ -84,7 +89,18 @@ namespace LMS1.Controllers
                     {
                         usersToShow = usersToShow.OrderBy(u => u.LmsName).ToList();
                         ViewBag.SortState = ApplicationDbContext.UserSortState.UserAscend;
-
+                    }
+                    break;
+                case "Course":
+                    if (sortState == ApplicationDbContext.UserSortState.CourseAscend)
+                    {
+                        usersToShow = usersToShow.OrderByDescending(u => u.CourseName).ToList();
+                        ViewBag.SortState = ApplicationDbContext.UserSortState.CourseDescend;
+                    }
+                    else
+                    {
+                        usersToShow = usersToShow.OrderBy(u => u.CourseName).ToList();
+                        ViewBag.SortState = ApplicationDbContext.UserSortState.CourseAscend;
                     }
                     break;
                 case "Role":
@@ -97,7 +113,6 @@ namespace LMS1.Controllers
                     {
                         usersToShow = usersToShow.OrderBy(u => u.Role).ToList();
                         ViewBag.SortState = ApplicationDbContext.UserSortState.RoleAscend;
-
                     }
                     break;
             }

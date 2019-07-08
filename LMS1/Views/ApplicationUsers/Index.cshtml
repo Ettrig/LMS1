@@ -13,9 +13,11 @@
                 @Html.ActionLink("Name", "ResortIndex", new { columnToSort = "User", sortState = ViewBag.SortState })
             </th>
             <th>
+                @Html.ActionLink("Course", "ResortIndex", new { columnToSort = "Course", sortState = ViewBag.SortState })
+            </th>
+            <th>
                 @Html.ActionLink("Role", "ResortIndex", new { columnToSort = "Role", sortState = ViewBag.SortState })
             </th>
-
         </tr>
     </thead>
     <tbody>
@@ -23,6 +25,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.LmsName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CourseName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Role)
