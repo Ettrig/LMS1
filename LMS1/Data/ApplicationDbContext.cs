@@ -15,6 +15,12 @@ namespace LMS1.Data
         {
         }
 
+        public enum UserSortState
+        {
+            UserAscend, CourseAscend, RoleAscend, UserDescend, CourseDescend, RoleDescend
+        };
+
+
         public DbSet<Course> Course { get; set; }
 
         public DbSet<CourseModule> CourseModule { get; set; }

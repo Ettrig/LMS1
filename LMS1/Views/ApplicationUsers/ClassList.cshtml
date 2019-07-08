@@ -1,0 +1,31 @@
+﻿@model LMS1.ViewModels.ClassList
+
+@{
+    ViewData["Title"] = "List of users";
+}
+
+<h3>List of Students in Class</h3>
+<h2>@Model.CourseName</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Students) {
+        <tr>
+            <td>
+                @item
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<div>
+    <a asp-controller="Courses" asp-action="Details" asp-route-id="@Model.CourseId">Back to course</a>
+</div>

@@ -45,7 +45,64 @@ namespace LMS1.Controllers
                 usersToShow.Add(uts);
             }
 
+            usersToShow = usersToShow.OrderBy(u => u.LmsName).ToList();
+            ViewBag.SortState = ApplicationDbContext.UserSortState.UserAscend; 
+
             return View(usersToShow);
+        }
+
+        // GET: Courses
+        public async Task<IActionResult> ResortIndex( string columnToSort, ApplicationDbContext.UserSortState sortState)
+        {
+            var usersToShow = new List<UserToShow>();
+            var listOfUsers = await _userManager.Users.ToListAsync();
+
+            foreach (ApplicationUser u in listOfUsers)
+            {
+                var uts = new UserToShow();
+
+                uts.Id = u.Id;
+                uts.LmsName = u.LmsName;
+                if (await _userManager.IsInRoleAsync(u, "Teacher")) uts.Role = "Teacher";
+                else uts.Role = "Student";
+
+                usersToShow.Add(uts);
+            }
+
+            //usersToShow = usersToShow.OrderBy(u => u.LmsName).ToList();
+            //ViewBag.SortState = ApplicationDbContext.UserSortState.UserAscend;
+
+            switch (columnToSort)
+            {
+                case "User":
+                    if (sortState== ApplicationDbContext.UserSortState.UserAscend)
+                    {
+                        usersToShow = usersToShow.OrderByDescending(u => u.LmsName).ToList();
+                        ViewBag.SortState = ApplicationDbContext.UserSortState.UserDescend; 
+                    }
+                    else
+                    {
+                        usersToShow = usersToShow.OrderBy(u => u.LmsName).ToList();
+                        ViewBag.SortState = ApplicationDbContext.UserSortState.UserAscend;
+
+                    }
+                    break;
+                case "Role":
+                    if (sortState == ApplicationDbContext.UserSortState.RoleAscend)
+                    {
+                        usersToShow = usersToShow.OrderByDescending(u => u.Role).ToList();
+                        ViewBag.SortState = ApplicationDbContext.UserSortState.RoleDescend;
+                    }
+                    else
+                    {
+                        usersToShow = usersToShow.OrderBy(u => u.Role).ToList();
+                        ViewBag.SortState = ApplicationDbContext.UserSortState.RoleAscend;
+
+                    }
+                    break;
+            }
+
+            return View(nameof(Index), usersToShow);
         }
 
         public async Task<IActionResult> Details(string id)
@@ -58,8 +115,8 @@ namespace LMS1.Controllers
             user2Show.Email = appUser.Email;
 
             var course = await _context.Course.FindAsync(appUser.CourseId);
-            // Check if the course was found
-            user2Show.CourseName = course.Name;
+            
+            user2Show.CourseName = course==null ? "no course" : course.Name;
 
             if (await _userManager.IsInRoleAsync(appUser, "Teacher")) user2Show.Role = "Teacher";
             else user2Show.Role = "Student";
@@ -216,22 +273,14 @@ namespace LMS1.Controllers
             }
 
             var listOfUsers = await _userManager.Users
-                .Where(u => u.CourseId==course.Id)
+                .Where( u => u.CourseId==course.Id )
+                .OrderBy( u => u.LmsName )
+                .Select( u => u.LmsName )
                 .ToListAsync();
 
-            var usersToShow = new List<UserToShow>();
-            foreach (ApplicationUser u in listOfUsers)
-            {
-                var uts = new UserToShow();
+            var cl = new ClassList { CourseId = course.Id, CourseName=course.Name, Students = listOfUsers };
 
-                uts.Id = u.Id;
-                uts.LmsName = u.LmsName;
-                if (await _userManager.IsInRoleAsync(u, "Teacher")) uts.Role = "Teacher";
-                else uts.Role = "Student";
-
-                usersToShow.Add(uts);
-            }
-            return View("Index", usersToShow);
+            return View("ClassList", cl);
         }
     }
 }

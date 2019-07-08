@@ -10,11 +10,12 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.LmsName)
+                @Html.ActionLink("Name", "ResortIndex", new { columnToSort = "User", sortState = ViewBag.SortState })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Role)
+                @Html.ActionLink("Role", "ResortIndex", new { columnToSort = "Role", sortState = ViewBag.SortState })
             </th>
+
         </tr>
     </thead>
     <tbody>
