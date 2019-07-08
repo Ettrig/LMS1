@@ -25,6 +25,7 @@ namespace LMS1.Controllers
         }
 
         // GET: Courses/Details/5
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,6 +46,7 @@ namespace LMS1.Controllers
         }
 
         // GET: Courses/Create
+        [Authorize(Roles = "Teacher")]
         public IActionResult Create()
         {
             return View();
@@ -55,6 +57,7 @@ namespace LMS1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Create([Bind("Id,Name,StartDate,EndDate,Description")] Course course)
         {
             if (ModelState.IsValid)
@@ -67,6 +70,7 @@ namespace LMS1.Controllers
         }
 
         // GET: Courses/Edit/5
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -87,6 +91,7 @@ namespace LMS1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartDate,EndDate,Description")] Course course)
         {
             if (id != course.Id)
@@ -126,7 +131,7 @@ namespace LMS1.Controllers
         }
 
         // GET: Courses/Delete/5
-        [Authorize (Roles="Teacher")]
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -147,6 +152,7 @@ namespace LMS1.Controllers
         // POST: Courses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var course = await _context.Course.FindAsync(id);
@@ -156,6 +162,7 @@ namespace LMS1.Controllers
         }
 
         // GET: Courses/AddModule
+        [Authorize(Roles = "Teacher")]
         public IActionResult AddModule( int? Id )
         {
             if (Id == null) return NotFound();
@@ -168,6 +175,7 @@ namespace LMS1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> AddModule([Bind("Id,Name,StartDate,EndDate,Description,CourseId")] CourseModule courseModule)
         {
             if (ModelState.IsValid)
@@ -190,6 +198,7 @@ namespace LMS1.Controllers
         }
 
         // GET: Courses/Delete/5
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> DeleteModule(int? id)
         {
             if (id == null)
@@ -209,6 +218,7 @@ namespace LMS1.Controllers
         // POST: Courses/DeleteModule/5
         [HttpPost, ActionName("DeleteModule")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> DeleteModuleConfirmed(int id)
         {
             var module = await _context.CourseModule.FindAsync(id);

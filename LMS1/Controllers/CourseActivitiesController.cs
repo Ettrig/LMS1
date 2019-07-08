@@ -33,6 +33,7 @@ namespace LMS1.Controllers
             }
             var courseActivity = await _context.CourseActivity
                 .Include(m => m.Module)
+                .ThenInclude(m => m.Course)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (courseActivity == null)
             {
@@ -78,7 +79,6 @@ namespace LMS1.Controllers
             {
                 return NotFound();
             }
-            ViewData["ModuleId"] = new SelectList(_context.CourseModule, "Id", "Id", courseActivity.ModuleId);
             return View(courseActivity);
         }
 
@@ -99,7 +99,7 @@ namespace LMS1.Controllers
                 try
                 {
                     _context.Update(courseActivity);
-                    _context.Entry(courseActivity).Property(m => m.ModuleId).IsModified = false; //Leave CourseId as it is in the DB
+                    _context.Entry(courseActivity).Property(m => m.ModuleId).IsModified = false;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -114,9 +114,7 @@ namespace LMS1.Controllers
                     }
                 }
                 _context.Entry(courseActivity).Reload();
-                // _context.Entry(courseModule).Property(m => m.CourseId).IsModified = true; //Can this let me get proper CourseId?
-                var newModuleID = _context.CourseModule.FirstOrDefault(m => m.Id == id).CourseId;
-                //await _context.CourseModule.FindAsync(id);
+                var newModuleID = _context.CourseActivity.FirstOrDefault(m => m.Id == id).ModuleId;
                 if (newModuleID == 0)
                 {
                     return NotFound();
@@ -126,20 +124,6 @@ namespace LMS1.Controllers
             ViewData["ModuleId"] = new SelectList(_context.CourseModule, "Id", "Id", courseActivity.ModuleId);
             return View(courseActivity);
         }
-
- 
-
-
-
-        //        //return RedirectToAction(nameof(Index));
-        //        return RedirectToAction(nameof(Details), "CourseModules", new { id = courseActivity.ModuleId });
-        //    }
-        //    ViewData["ModuleId"] = new SelectList(_context.CourseModule, "Id", "Id", courseActivity.ModuleId);
-        //    return View(courseActivity);
-        //}
-
-
-
 
         // GET: CourseActivities/Delete/5
         public async Task<IActionResult> Delete(int? id)
