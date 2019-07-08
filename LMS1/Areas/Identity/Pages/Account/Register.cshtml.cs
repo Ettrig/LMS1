@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
@@ -75,10 +76,9 @@ namespace LMS1.Areas.Identity.Pages.Account
                 // Adding CourseId=1 for debugging purposes. Default registering does not exist in the "real" system. 
                 var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, LmsName=Input.LmsName, CourseId=1 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                var resultAddRole = await _userManager.AddToRoleAsync(user, "Student");
-
                 if (result.Succeeded)
                 {
+                    var resultAddRole = await _userManager.AddToRoleAsync(user, "Student");
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

@@ -88,9 +88,16 @@ namespace LMS1.Controllers
             {
                 var userToStore = new ApplicationUser { LmsName=user.LmsName, UserName = user.Email, Email = user.Email, CourseId= user.CourseId };
                 var result = await _userManager.CreateAsync(userToStore, user.PasswordHash);
-                var resultAddRole = await _userManager.AddToRoleAsync(userToStore, "Student");
-
-                return RedirectToAction("Details", "Courses", new { id = user.CourseId });
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                // var resultAddRole = new IdentityResult();
+                if (result.Succeeded)
+                {
+                    var resultAddRole = await _userManager.AddToRoleAsync(userToStore, "Student");
+                    return RedirectToAction("Details", "Courses", new { id = user.CourseId });
+                }
             }
             return View(user);
         }
@@ -115,6 +122,7 @@ namespace LMS1.Controllers
 
             u2e.AllCourseNames = await _context.Course
                 .Select( c=> new SelectListItem { Selected = user.CourseId == c.Id, Text = c.Name, Value = c.Name})
+                .OrderBy( sli => sli.Value)
                 .ToListAsync();
 
             u2e.AllRoles = new List<SelectListItem>(); 
