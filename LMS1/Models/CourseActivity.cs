@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace LMS1.Models
@@ -34,7 +35,10 @@ namespace LMS1.Models
 
 
         public int ModuleId { get; set; }
-
         public CourseModule Module { get; set; }
+
+        public ICollection<Document> Documents { get; set; }
+        public ICollection<Exercises> Exercises { get; set; }
+
     }
 }

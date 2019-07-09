@@ -1,9 +1,9 @@
 ﻿using LMS1.Data;
 using LMS1.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,6 +27,27 @@ namespace LMS1.Controllers
         // GET: Courses/Details/5
         [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var course = await _context.Course
+                .Include(c => c.Modules)
+                .ThenInclude(c => c.Activities)
+                .FirstOrDefaultAsync(c => c.Id == id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            return View(course);
+        }
+
+        // GET: Courses/DetailsForStudent/5
+        [Authorize(Roles = "Teacher")]
+        public async Task<IActionResult> DetailsForStudent(int? id)
         {
             if (id == null)
             {
@@ -69,7 +90,7 @@ namespace LMS1.Controllers
             return View(course);
         }
 
-        // GET: Courses/Edit/5
+        // GET: Courses/Edit/5Add-migration Init
         [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -163,7 +184,7 @@ namespace LMS1.Controllers
 
         // GET: Courses/AddModule
         [Authorize(Roles = "Teacher")]
-        public IActionResult AddModule( int? Id )
+        public IActionResult AddModule(int? Id)
         {
             if (Id == null) return NotFound();
             ViewBag.CourseId = Id;
@@ -184,14 +205,14 @@ namespace LMS1.Controllers
                 _context.Add(courseModule);
                 await _context.SaveChangesAsync();
                 var course = await _context.Course
-                    .Include( c => c.Modules)   // The modules are to be seen in the course page
-                    .ThenInclude( c => c.Activities)  
+                    .Include(c => c.Modules)   // The modules are to be seen in the course page
+                    .ThenInclude(c => c.Activities)
                     .FirstOrDefaultAsync(c => c.Id == courseModule.CourseId);
                 if (course == null)
                 {
                     return NotFound();
                 }
-                return View( "Details", course );
+                return View("Details", course);
             }
             ViewData["CourseId"] = new SelectList(_context.Course, "Id", "Id", courseModule.CourseId);
             return View(courseModule);

@@ -23,9 +23,27 @@ namespace LMS1.Controllers
             var applicationDbContext = _context.CourseModule.Include(c => c.Course);
             return View(await applicationDbContext.ToListAsync());
         }
-   
+
         //GET: Courses/Details/5
         public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var courseModule = await _context.CourseModule
+                .Include(m => m.Activities)
+                .Include(m => m.Course)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (courseModule == null)
+            {
+                return NotFound();
+            }
+            return View(courseModule);
+        }
+
+        //GET: Courses/Details/5
+        public async Task<IActionResult> DetailsForStudent(int? id)
         {
             if (id == null)
             {
@@ -156,7 +174,7 @@ namespace LMS1.Controllers
             var courseModule = await _context.CourseModule.FindAsync(id);
             _context.CourseModule.Remove(courseModule);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Details), "Courses", new { id = courseModule.CourseId });       
+            return RedirectToAction(nameof(Details), "Courses", new { id = courseModule.CourseId });
         }
 
         private bool CourseModuleExists(int id)
