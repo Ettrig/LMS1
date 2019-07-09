@@ -1,6 +1,7 @@
 ﻿using LMS1.Data;
 using LMS1.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,14 +13,27 @@ namespace LMS1.Controllers
     public class CoursesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CoursesController(ApplicationDbContext context)
+        public CoursesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+        }
+
+        public async Task<ActionResult> StudentOrTeacher()
+        {
+            if (User.IsInRole("Teacher")) return RedirectToAction("Index");
+            else
+            {
+                var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+                var course = await _context.Course.FirstOrDefaultAsync(c => c.Id == user.CourseId); 
+                return RedirectToAction("Details", course);
+            }
         }
 
         // GET: Courses
-        [Authorize(Roles = "Teacher")]
+        // [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Course.ToListAsync());
