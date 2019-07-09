@@ -33,7 +33,7 @@ namespace LMS1.Controllers
             var usersToShow = new List<UserToShow>();
             var listOfUsers = await _userManager
                 .Users
-                .Include( u => u.Course )
+                .Include(u => u.Course)
                 .ToListAsync();
 
             foreach (ApplicationUser u in listOfUsers)
@@ -42,7 +42,8 @@ namespace LMS1.Controllers
 
                 uts.Id = u.Id;
                 uts.LmsName = u.LmsName;
-                uts.CourseName = u.Course.Name; 
+                if (u.Course == null) uts.CourseName = "no course";
+                else uts.CourseName = u.Course.Name;
                 if (await _userManager.IsInRoleAsync(u, "Teacher")) uts.Role = "Teacher";
                 else uts.Role = "Student";
 
@@ -50,18 +51,18 @@ namespace LMS1.Controllers
             }
 
             usersToShow = usersToShow.OrderBy(u => u.LmsName).ToList();
-            ViewBag.SortState = ApplicationDbContext.UserSortState.UserAscend; 
+            ViewBag.SortState = ApplicationDbContext.UserSortState.UserAscend;
 
             return View(usersToShow);
         }
 
         // GET: Courses
-        public async Task<IActionResult> ResortIndex( string columnToSort, ApplicationDbContext.UserSortState sortState)
+        public async Task<IActionResult> ResortIndex(string columnToSort, ApplicationDbContext.UserSortState sortState)
         {
             var usersToShow = new List<UserToShow>();
             var listOfUsers = await _userManager
                 .Users
-                .Include( u => u.Course )
+                .Include(u => u.Course)
                 .ToListAsync();
 
             foreach (ApplicationUser u in listOfUsers)
@@ -70,7 +71,8 @@ namespace LMS1.Controllers
 
                 uts.Id = u.Id;
                 uts.LmsName = u.LmsName;
-                uts.CourseName = u.Course.Name; 
+                if (u.Course == null) uts.CourseName = "no course";
+                else uts.CourseName = u.Course.Name;
                 if (await _userManager.IsInRoleAsync(u, "Teacher")) uts.Role = "Teacher";
                 else uts.Role = "Student";
 
@@ -80,10 +82,10 @@ namespace LMS1.Controllers
             switch (columnToSort)
             {
                 case "User":
-                    if (sortState== ApplicationDbContext.UserSortState.UserAscend)
+                    if (sortState == ApplicationDbContext.UserSortState.UserAscend)
                     {
                         usersToShow = usersToShow.OrderByDescending(u => u.LmsName).ToList();
-                        ViewBag.SortState = ApplicationDbContext.UserSortState.UserDescend; 
+                        ViewBag.SortState = ApplicationDbContext.UserSortState.UserDescend;
                     }
                     else
                     {
@@ -130,8 +132,8 @@ namespace LMS1.Controllers
             user2Show.Email = appUser.Email;
 
             var course = await _context.Course.FindAsync(appUser.CourseId);
-            
-            user2Show.CourseName = course==null ? "no course" : course.Name;
+
+            user2Show.CourseName = course == null ? "no course" : course.Name;
 
             if (await _userManager.IsInRoleAsync(appUser, "Teacher")) user2Show.Role = "Teacher";
             else user2Show.Role = "Student";
@@ -144,7 +146,7 @@ namespace LMS1.Controllers
         {
             //I am cheating a bit by using route-id as CourseId. 
             //But it is the only integer I need. 
-            ViewBag.CourseId = id; 
+            ViewBag.CourseId = id;
 
             return View();
         }
@@ -158,7 +160,7 @@ namespace LMS1.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userToStore = new ApplicationUser { LmsName=user.LmsName, UserName = user.Email, Email = user.Email, CourseId= user.CourseId };
+                var userToStore = new ApplicationUser { LmsName = user.LmsName, UserName = user.Email, Email = user.Email, CourseId = user.CourseId };
                 var result = await _userManager.CreateAsync(userToStore, user.PasswordHash);
                 foreach (var error in result.Errors)
                 {
@@ -193,17 +195,17 @@ namespace LMS1.Controllers
             u2e.Email = user.Email;
 
             u2e.AllCourseNames = await _context.Course
-                .Select( c=> new SelectListItem { Selected = user.CourseId == c.Id, Text = c.Name, Value = c.Name})
-                .OrderBy( sli => sli.Value)
+                .Select(c => new SelectListItem { Selected = user.CourseId == c.Id, Text = c.Name, Value = c.Name })
+                .OrderBy(sli => sli.Value)
                 .ToListAsync();
 
-            u2e.AllRoles = new List<SelectListItem>(); 
+            u2e.AllRoles = new List<SelectListItem>();
             foreach (IdentityRole ir in _roleManager.Roles)
             {
-                string usersCurrentRole = ""; 
+                string usersCurrentRole = "";
                 if (await _userManager.IsInRoleAsync(user, "Teacher")) usersCurrentRole = "Teacher";
-                else usersCurrentRole = "Student"; 
-                u2e.AllRoles.Add(new SelectListItem { Selected = ir.Name == usersCurrentRole, Text = ir.Name, Value = ir.Name }); 
+                else usersCurrentRole = "Student";
+                u2e.AllRoles.Add(new SelectListItem { Selected = ir.Name == usersCurrentRole, Text = ir.Name, Value = ir.Name });
             }
 
             return View(u2e);
@@ -236,7 +238,7 @@ namespace LMS1.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     // What is this for? Check in Course Edit
-                    if (user.Id=="hej")
+                    if (user.Id == "hej")
                     {
                         return NotFound();
                     }
@@ -254,7 +256,7 @@ namespace LMS1.Controllers
                 if (user.ChangePassword)
                 {
                     var result = await _userManager.RemovePasswordAsync(user2Store);
-                    result = await _userManager.AddPasswordAsync(user2Store, user.Password); 
+                    result = await _userManager.AddPasswordAsync(user2Store, user.Password);
                 }
 
                 if (user.Role == "Teacher")
@@ -288,12 +290,12 @@ namespace LMS1.Controllers
             }
 
             var listOfUsers = await _userManager.Users
-                .Where( u => u.CourseId==course.Id )
-                .OrderBy( u => u.LmsName )
-                .Select( u => u.LmsName )
+                .Where(u => u.CourseId == course.Id)
+                .OrderBy(u => u.LmsName)
+                .Select(u => u.LmsName)
                 .ToListAsync();
 
-            var cl = new ClassList { CourseId = course.Id, CourseName=course.Name, Students = listOfUsers };
+            var cl = new ClassList { CourseId = course.Id, CourseName = course.Name, Students = listOfUsers };
 
             return View("ClassList", cl);
         }

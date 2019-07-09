@@ -162,6 +162,7 @@ namespace LMS1.Data
                 };
                 courses.Add(course);
             }
+            courses.Add(new Course { Name = "no course", StartDate = DateTime.Now, EndDate = DateTime.Now, Description = "no description" });
             
             return courses;
         }

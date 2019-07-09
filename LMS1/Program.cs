@@ -29,9 +29,15 @@ namespace LMS1
                 context.Database.Migrate();
 
                 var config = webHost.Services.GetRequiredService<IConfiguration>();
+
+                using (var innerScope = webHost.Services.CreateScope())
+                {
+                    var innerServices = innerScope.ServiceProvider;
+                    SeedData.Initialize(innerServices); // TODO: CJA check if unsynched database
+                }
+
                 //Behöver sättas via komandotolken i projektkatalogen.
                 // dotnet user-secrets set "Gym:AdminPW" "FooBar77!"
-
                 //Läser in lösenordet
                 var adminPW = config["Gym:AdminPW"];
                 try
@@ -47,11 +53,11 @@ namespace LMS1
 
             }
 
-            using (var scope = webHost.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                SeedData.Initialize(services); // TODO: CJA check if unsynched database
-            }
+            //using (var scope = webHost.Services.CreateScope())
+            //{
+            //    var services = scope.ServiceProvider;
+            //    SeedData.Initialize(services); // TODO: CJA check if unsynched database
+            //}
 
             webHost.Run();
         }
