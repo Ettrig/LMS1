@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using LMS1.Data;
+﻿using LMS1.Data;
 using LMS1.Models;
 using LMS1.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LMS1.Controllers
 {
@@ -28,6 +28,7 @@ namespace LMS1.Controllers
         }
 
         // GET: Courses
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Index()
         {
             var usersToShow = new List<UserToShow>();
