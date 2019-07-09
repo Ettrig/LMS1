@@ -32,5 +32,6 @@ namespace LMS1.Models
 
         public Course Course { get; set; }
         public ICollection<CourseActivity> Activities { get; set; }
+        public ICollection<Document> Documents { get; set; }
     }
 }
