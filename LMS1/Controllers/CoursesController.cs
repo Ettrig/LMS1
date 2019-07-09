@@ -28,7 +28,7 @@ namespace LMS1.Controllers
             {
                 var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
                 var course = await _context.Course.FirstOrDefaultAsync(c => c.Id == user.CourseId); 
-                return RedirectToAction("Details", course);
+                return RedirectToAction("DetailsForStudent", course);
             }
         }
 
@@ -61,7 +61,7 @@ namespace LMS1.Controllers
         }
 
         // GET: Courses/DetailsForStudent/5
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> DetailsForStudent(int? id)
         {
             if (id == null)
