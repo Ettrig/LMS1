@@ -1,11 +1,11 @@
 ﻿using LMS1.Data;
 using LMS1.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace LMS1.Controllers
 {
@@ -232,6 +232,22 @@ namespace LMS1.Controllers
                 return NotFound();
             }
             return RedirectToAction(nameof(Details), "Courses", new { id = courseModule.CourseId });
+        }
+
+        // GET: CourseModules/StudentBacktoModules/
+        public async Task<IActionResult> StudentBacktoModules(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var courseModule = await _context.CourseModule
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (courseModule == null)
+            {
+                return NotFound();
+            }
+            return RedirectToAction(nameof(DetailsForStudent), "Courses", new { id = courseModule.CourseId });
         }
 
         private bool CourseExists(int id)

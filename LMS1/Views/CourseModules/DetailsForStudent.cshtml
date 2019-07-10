@@ -43,7 +43,7 @@
 </div>
 
 <div>
-    <a asp-action="BacktoCourse" asp-route-id="@Model.Id">Back to Course</a>
+    <a asp-action="StudentBacktoModules" asp-route-id="@Model.Id">Back to Course</a>
 </div>
 <p>
 
@@ -73,7 +73,7 @@
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-controller="CourseActivities" asp-route-id="@item.Id">Details</a>
+                    <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item.Id">Details</a>
                 </td>
             </tr>
             }

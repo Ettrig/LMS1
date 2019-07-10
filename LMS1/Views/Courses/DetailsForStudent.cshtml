@@ -64,7 +64,7 @@
                 @Html.DisplayFor(modelItem => item.EndDate)
             </td>
             <td>
-                <a asp-action="Details" asp-controller="CourseModules" asp-route-id="@item.Id">Details</a>
+                <a asp-action="DetailsForStudent" asp-controller="CourseModules" asp-route-id="@item.Id">Details</a>
             </td>
         </tr>
         @foreach (var item2 in item.Activities)

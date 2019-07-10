@@ -192,9 +192,28 @@ namespace LMS1.Controllers
             return RedirectToAction(nameof(Details), "CourseModules", new { id = CourseActivities.ModuleId });
         }
 
+
+        // GET: CourseActivities/StudentBacktoModules/
+        public async Task<IActionResult> StudentBacktoModules(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var CourseActivities = await _context.CourseActivity
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (CourseActivities == null)
+            {
+                return NotFound();
+            }
+            return RedirectToAction(nameof(DetailsForStudent), "CourseModules", new { id = CourseActivities.ModuleId });
+        }
+
         private bool CourseActivityExists(int id)
         {
             return _context.CourseActivity.Any(e => e.Id == id);
         }
+
+
     }
 }

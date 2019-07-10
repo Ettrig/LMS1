@@ -34,7 +34,7 @@ namespace LMS1.Controllers
         }
 
         // GET: Courses
-        // [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Course.ToListAsync());
