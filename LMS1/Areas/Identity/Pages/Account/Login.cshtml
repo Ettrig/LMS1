@@ -38,15 +38,21 @@
                     <p>
                         <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
                     </p>
-                    <p>
+                    @*<p>
                         <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    </p>
+                    </p>*@
                 </div>
             </form>
         </section>
     </div>
     <div class="col-md-6 col-md-offset-2">
         <section>
+
+            <div class="text-center">
+                <h4>Welcome to the Learning Management System</h4>
+            </div>
+            <br>
+
             <h4>Use another service to log in.</h4>
             <hr />
             @{
