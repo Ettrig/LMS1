@@ -68,7 +68,7 @@ namespace LMS1
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Courses}/{action=Index}/{id?}");
+                    template: "{controller=Courses}/{action=StudentOrTeacher}/{id?}");
             });
         }
     }
