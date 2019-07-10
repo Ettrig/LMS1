@@ -1,5 +1,6 @@
 ﻿using LMS1.Data;
 using LMS1.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ namespace LMS1.Controllers
         }
 
         // GET: CourseActivities
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.CourseActivity.Include(c => c.Module);
