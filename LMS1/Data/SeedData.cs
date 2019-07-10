@@ -17,10 +17,7 @@ namespace LMS1.Data
             var options = services.GetRequiredService<DbContextOptions<ApplicationDbContext>>();
             using (var context = new ApplicationDbContext(options))
             {
-                if (false /*context.Course.Any()*/) // TODO: FIX
-                {
-                    return;
-                }
+                if (context.Course.Any()) return;
                 CleanDB(context);
 
                 List<Course> courses = SeedCourses();
