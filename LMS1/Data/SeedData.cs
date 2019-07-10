@@ -73,7 +73,7 @@ namespace LMS1.Data
                     var foundUser = await userManager.FindByEmailAsync(email);
                     if (foundUser != null) continue;
                     //Skapa en ny användare
-                    var user = new ApplicationUser { UserName = email, Email = email, LmsName="SuperTeacher" };
+                    var user = new ApplicationUser { UserName = email, Email = email, LmsName="SuperTeacher", CourseId=null }; // CourseId==null
                     var addUserResult = await userManager.CreateAsync(user, adminPW);
                     if (!addUserResult.Succeeded)
                     {
@@ -148,6 +148,9 @@ namespace LMS1.Data
         {
             Random random = new Random();
             var courses = new List<Course>();
+            // Create dummy course to assign users to, who are not enrolled in any real course
+            // There should be a global variable that stores the Id of the dummy course
+            courses.Add(new Course { Name = "no course", StartDate = DateTime.Now, EndDate = DateTime.Now, Description = "no description" });
             for (int i = 1; i <= 10; i++)
             {
                 var courseName = "C" + i.ToString("D2") + "_" + Faker.Company.CatchPhrase();
@@ -162,7 +165,6 @@ namespace LMS1.Data
                 };
                 courses.Add(course);
             }
-            courses.Add(new Course { Name = "no course", StartDate = DateTime.Now, EndDate = DateTime.Now, Description = "no description" });
             
             return courses;
         }
