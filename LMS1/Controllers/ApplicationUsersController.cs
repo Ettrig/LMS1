@@ -301,7 +301,6 @@ namespace LMS1.Controllers
             var listOfUsers = await _userManager.Users
                 .Where(u => u.CourseId == course.Id)
                 .OrderBy(u => u.LmsName)
-                .Select(u => u.LmsName)
                 .ToListAsync();
 
             var cl = new ClassList { CourseId = course.Id, CourseName = course.Name, Students = listOfUsers };

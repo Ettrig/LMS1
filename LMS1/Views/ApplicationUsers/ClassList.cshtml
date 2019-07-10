@@ -14,13 +14,19 @@
             <th>
                 Name
             </th>
+            <th>
+                Email address
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model.Students) {
         <tr>
             <td>
-                @item
+                @item.LmsName
+            </td>
+            <td>
+                @item.Email
             </td>
         </tr>
 }
