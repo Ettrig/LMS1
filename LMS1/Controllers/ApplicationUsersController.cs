@@ -28,7 +28,7 @@ namespace LMS1.Controllers
         }
 
         // GET: Courses
-        [Authorize(Roles = "Teacher")]
+        //[Authorize(Roles = "Teacher")]  Currently Navbar ClassMates goes here
         public async Task<IActionResult> Index()
         {
             var usersToShow = new List<UserToShow>();
@@ -275,10 +275,19 @@ namespace LMS1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        public async Task<IActionResult> ClassMates()
+        {
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+            //           return View("ListStudents", new { id=}); 
+            return RedirectToAction("ListStudents", new { id = user.CourseId }); 
+        }
+
+
         // GET: ApplicationUser/StudentList/+¤%¤#"!"#+*^
         public async Task<IActionResult> ListStudents(int? id)
         {
-            //The list is for a course and id is key for the course
+            //The list is to be for a course and id is key for the course
             if (id == null)
             {
                 return NotFound();

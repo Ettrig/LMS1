@@ -24,12 +24,13 @@ namespace LMS1.Controllers
         public async Task<ActionResult> StudentOrTeacher()
         {
             if (User.IsInRole("Teacher")) return RedirectToAction("Index");
-            else
+            else if (User.IsInRole("Student"))
             {
                 var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
-                var course = await _context.Course.FirstOrDefaultAsync(c => c.Id == user.CourseId); 
+                var course = await _context.Course.FirstOrDefaultAsync(c => c.Id == user.CourseId);
                 return RedirectToAction("DetailsForStudent", course);
             }
+            else return RedirectToAction("Index", "Home"); 
         }
 
         // GET: Courses
