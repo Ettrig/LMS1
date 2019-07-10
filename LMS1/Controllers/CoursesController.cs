@@ -24,13 +24,17 @@ namespace LMS1.Controllers
         public async Task<ActionResult> StudentOrTeacher()
         {
             if (User.IsInRole("Teacher")) return RedirectToAction("Index");
-            else if (User.IsInRole("Student"))
+            if (User.IsInRole("Student"))
             {
                 var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
-                var course = await _context.Course.FirstOrDefaultAsync(c => c.Id == user.CourseId);
-                return RedirectToAction("DetailsForStudent", course);
+                Course course;
+                if (user.CourseId != null)
+                {
+                    course = await _context.Course.FirstOrDefaultAsync(c => c.Id == user.CourseId);
+                    return RedirectToAction("DetailsForStudent", course);
+                }
             }
-            else return RedirectToAction("Index", "Home"); 
+            return RedirectToAction("Index", "Home"); 
         }
 
         // GET: Courses
@@ -192,7 +196,13 @@ namespace LMS1.Controllers
         [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var course = await _context.Course.FindAsync(id);
+            var course = await _context.Course
+                .Include(c => c.AttendingStudents)
+                .FirstOrDefaultAsync(c => c.Id==id);
+            foreach (ApplicationUser student in course.AttendingStudents) {
+                student.CourseId = null; // null == no course
+                _context.Update(student);
+            }
             _context.Course.Remove(course);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
