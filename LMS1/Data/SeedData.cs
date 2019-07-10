@@ -11,19 +11,17 @@ namespace LMS1.Data
 {
     public class SeedData
     {
+        static readonly int maxCourses = 4;
         internal static void Initialize(IServiceProvider services)
         {
             var options = services.GetRequiredService<DbContextOptions<ApplicationDbContext>>();
             using (var context = new ApplicationDbContext(options))
             {
-                if (context.Course.Any())
+                if (false /*context.Course.Any()*/) // TODO: FIX
                 {
                     return;
                 }
-                // Clean DB
-                context.Course.RemoveRange(context.Course);
-                context.CourseModule.RemoveRange(context.CourseModule);
-                context.CourseActivity.RemoveRange(context.CourseActivity);
+                CleanDB(context);
 
                 List<Course> courses = SeedCourses();
                 context.Course.AddRange(courses);
@@ -34,6 +32,14 @@ namespace LMS1.Data
 
                 context.SaveChanges();
             }
+        }
+
+        private static void CleanDB(ApplicationDbContext context)
+        {
+            // Clean DB
+            context.Course.RemoveRange(context.Course);
+            context.CourseModule.RemoveRange(context.CourseModule);
+            context.CourseActivity.RemoveRange(context.CourseActivity);
         }
 
         //This is a copy of method Initialize in LexiconGym
@@ -51,7 +57,7 @@ namespace LMS1.Data
                 }
 
                 var roleNames = new[] { "Teacher", "Student" };
-               
+
 
                 foreach (var name in roleNames)
                 {
@@ -73,7 +79,7 @@ namespace LMS1.Data
                     var foundUser = await userManager.FindByEmailAsync(email);
                     if (foundUser != null) continue;
                     //Skapa en ny användare
-                    var user = new ApplicationUser { UserName = email, Email = email, LmsName="SuperTeacher" };
+                    var user = new ApplicationUser { UserName = email, Email = email, LmsName = "SuperTeacher" };
                     var addUserResult = await userManager.CreateAsync(user, adminPW);
                     if (!addUserResult.Succeeded)
                     {
@@ -98,23 +104,28 @@ namespace LMS1.Data
         {
             Random random = new Random();
             var courseActivities = new List<CourseActivity>();
-            int j = 0;
+            int maxCourseActivities = 0;
             foreach (var courseModule in courseModules)
             {
-                j++;
-                var courseActivityName = "A" + j.ToString("D2") + "_" + Faker.Internet.DomainWord();
-                var startDate = DateTime.Now.AddDays(random.Next(1, 10));
-                var endDate = startDate.AddDays(random.Next(1, 10));
-                var courseActivity = new CourseActivity
+                int j = 0;
+                maxCourseActivities++;
+                for (int tempCourseActivity = 1; tempCourseActivity <= maxCourseActivities; tempCourseActivity++)
                 {
-                    Name = courseActivityName,
-                    StartDate = startDate,
-                    EndDate = endDate,
-                    Description = "A" + j.ToString("D2") + "_Description",
-                    Exercise = "E" + j.ToString("D2") + "_Description",
-                    ModuleId = courseModule.Id
-                };
-                courseActivities.Add(courseActivity);
+                    j++;
+                    var courseActivityName = "A" + j.ToString("D2") + "_" + Faker.Internet.DomainWord();
+                    var startDate = DateTime.Now.AddDays(random.Next(1, 10));
+                    var endDate = startDate.AddDays(random.Next(1, 10));
+                    var courseActivity = new CourseActivity
+                    {
+                        Name = courseActivityName,
+                        StartDate = startDate,
+                        EndDate = endDate,
+                        Description = "A" + j.ToString("D2") + "_Description",
+                        Exercise = "E" + j.ToString("D2") + "_Description",
+                        ModuleId = courseModule.Id
+                    };
+                    courseActivities.Add(courseActivity);
+                }
             }
             context.CourseActivity.AddRange(courseActivities);
         }
@@ -123,22 +134,27 @@ namespace LMS1.Data
         {
             Random random = new Random();
             var courseModules = new List<CourseModule>();
-            int i = 0;
+            int maxCourseModules = -1;
             foreach (var course in courses)
             {
-                i++;
-                var courseModuleName = "M" + i.ToString("D2") + "_" + Faker.Internet.DomainWord();
-                var startDate = DateTime.Now.AddDays(random.Next(1, 10));
-                var endDate = startDate.AddDays(random.Next(1, 10));
-                var courseModule = new CourseModule
+                int i = 0;
+                maxCourseModules++;
+                for (int tempCourseModule = 1; tempCourseModule <= maxCourseModules; tempCourseModule++)
                 {
-                    Name = courseModuleName,
-                    StartDate = startDate,
-                    EndDate = endDate,
-                    Description = "M" + i.ToString("D2") + "_Description",
-                    CourseId = course.Id
-                };
-                courseModules.Add(courseModule);
+                    i++;
+                    var courseModuleName = "M" + i.ToString("D2") + "_" + Faker.Internet.DomainWord();
+                    var startDate = DateTime.Now.AddDays(random.Next(1, 10));
+                    var endDate = startDate.AddDays(random.Next(1, 10));
+                    var courseModule = new CourseModule
+                    {
+                        Name = courseModuleName,
+                        StartDate = startDate,
+                        EndDate = endDate,
+                        Description = "M" + i.ToString("D2") + "_Description",
+                        CourseId = course.Id
+                    };
+                    courseModules.Add(courseModule);
+                }
             }
             context.CourseModule.AddRange(courseModules);
             return courseModules;
@@ -148,7 +164,7 @@ namespace LMS1.Data
         {
             Random random = new Random();
             var courses = new List<Course>();
-            for (int i = 1; i <= 10; i++)
+            for (int i = 1; i <= maxCourses; i++)
             {
                 var courseName = "C" + i.ToString("D2") + "_" + Faker.Company.CatchPhrase();
                 var startDate = DateTime.Now.AddDays(random.Next(1, 10));
@@ -162,8 +178,6 @@ namespace LMS1.Data
                 };
                 courses.Add(course);
             }
-            courses.Add(new Course { Name = "no course", StartDate = DateTime.Now, EndDate = DateTime.Now, Description = "no description" });
-            
             return courses;
         }
     }
