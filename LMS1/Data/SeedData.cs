@@ -17,7 +17,19 @@ namespace LMS1.Data
             var options = services.GetRequiredService<DbContextOptions<ApplicationDbContext>>();
             using (var context = new ApplicationDbContext(options))
             {
-                if (context.Course.Any()) return;
+                //////////////////////////   
+                ///
+                /// 
+                /// 
+                /// 
+                /// 
+                /// 
+                /// 
+                /// 
+                /// 
+                /// 
+                /// 
+                /// if (context.Course.Any()) return;
                 CleanDB(context);
 
                 List<Course> courses = SeedCourses();
@@ -55,7 +67,6 @@ namespace LMS1.Data
 
                 var roleNames = new[] { "Teacher", "Student" };
 
-
                 foreach (var name in roleNames)
                 {
                     //Om rollen redan finns fortsätt
@@ -76,13 +87,15 @@ namespace LMS1.Data
                     var foundUser = await userManager.FindByEmailAsync(email);
                     if (foundUser != null) continue;
                     //Skapa en ny användare
-                    var user = new ApplicationUser { UserName = email, Email = email, LmsName="SuperTeacher", CourseId=null }; // CourseId==null
+                    var user = new ApplicationUser { UserName = email, Email = email, LmsName = "SuperTeacher", CourseId = null }; // CourseId==null
                     var addUserResult = await userManager.CreateAsync(user, adminPW);
                     if (!addUserResult.Succeeded)
                     {
                         throw new Exception(string.Join("\n", addUserResult.Errors));
                     }
                 }
+
+                await SeedStudents(userManager);
 
                 var adminUser = await userManager.FindByEmailAsync(emails[0]);
                 foreach (var role in roleNames)
@@ -95,6 +108,23 @@ namespace LMS1.Data
                     }
                 }
             }
+        }
+
+        private static async Task SeedStudents(UserManager<ApplicationUser> userManager)
+        {
+            // TODO: Add course to all new student seeds
+            //var userToStore = new ApplicationUser { LmsName = user.LmsName, UserName = user.Email, Email = user.Email, CourseId = user.CourseId };
+            var userToStore = new ApplicationUser { LmsName = "Carl-Johan A", UserName = "carl-johana@mail.com", Email = "carl-johana@mail.com", CourseId = null };
+            var result2 = await userManager.CreateAsync(userToStore, "Aaa111!!!" /*user.PasswordHash*/);
+            var resultAddRole = await userManager.AddToRoleAsync(userToStore, "Student");
+
+            userToStore = new ApplicationUser { LmsName = "Alkaka A", UserName = "alkaka@mail.com", Email = "alkaka@mail.com", CourseId = null };
+            result2 = await userManager.CreateAsync(userToStore, "Aaa111!!!" /*user.PasswordHash*/);
+            resultAddRole = await userManager.AddToRoleAsync(userToStore, "Student");
+
+            userToStore = new ApplicationUser { LmsName = "Rolf E", UserName = "rolfe@mail.com", Email = "rolfe@mail.com", CourseId = null };
+            result2 = await userManager.CreateAsync(userToStore, "Aaa111!!!" /*user.PasswordHash*/);
+            resultAddRole = await userManager.AddToRoleAsync(userToStore, "Student");
         }
 
         private static void SeedActivities(ApplicationDbContext context, List<CourseModule> courseModules)
