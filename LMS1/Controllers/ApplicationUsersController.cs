@@ -279,7 +279,6 @@ namespace LMS1.Controllers
         public async Task<IActionResult> ClassMates()
         {
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
-            //           return View("ListStudents", new { id=}); 
             return RedirectToAction("ListStudents", new { id = user.CourseId }); 
         }
 

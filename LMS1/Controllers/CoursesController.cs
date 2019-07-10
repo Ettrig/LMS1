@@ -31,7 +31,7 @@ namespace LMS1.Controllers
                 if (user.CourseId != null)
                 {
                     course = await _context.Course.FirstOrDefaultAsync(c => c.Id == user.CourseId);
-                    return RedirectToAction("DetailsForStudent", course);
+                    if (course!=null) return RedirectToAction("DetailsForStudent", new { id=course.Id } );
                 }
             }
             return RedirectToAction("Index", "Home"); 
