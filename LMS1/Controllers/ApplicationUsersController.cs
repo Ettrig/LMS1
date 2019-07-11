@@ -270,7 +270,7 @@ namespace LMS1.Controllers
 
                 }
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index)); // TODO CJA: Why duplicate returns here?
             }
             return RedirectToAction(nameof(Index));
         }

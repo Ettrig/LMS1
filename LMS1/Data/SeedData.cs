@@ -11,41 +11,24 @@ namespace LMS1.Data
 {
     public class SeedData
     {
-        static readonly int maxCourses = 4;
+        static readonly int maxCourses = 5;
         internal static void Initialize(IServiceProvider services)
         {
             var options = services.GetRequiredService<DbContextOptions<ApplicationDbContext>>();
             using (var context = new ApplicationDbContext(options))
             {
-                //////////////////////////   
-                ///
-                /// 
-                /// 
-                /// 
-                /// 
-                /// 
-                /// 
-                /// 
-                /// 
-                /// 
-                /// 
-                /// if (context.Course.Any()) return;
+                if (context.Course.Any()) return;
                 CleanDB(context);
-
                 List<Course> courses = SeedCourses();
                 context.Course.AddRange(courses);
-
                 List<CourseModule> courseModules = SeedModules(context, courses);
-
                 SeedActivities(context, courseModules);
-
                 context.SaveChanges();
             }
         }
 
         private static void CleanDB(ApplicationDbContext context)
         {
-            // Clean DB
             context.Course.RemoveRange(context.Course);
             context.CourseModule.RemoveRange(context.CourseModule);
             context.CourseActivity.RemoveRange(context.CourseActivity);
@@ -112,18 +95,23 @@ namespace LMS1.Data
 
         private static async Task SeedStudents(UserManager<ApplicationUser> userManager)
         {
-            // TODO: Add course to all new student seeds
-            //var userToStore = new ApplicationUser { LmsName = user.LmsName, UserName = user.Email, Email = user.Email, CourseId = user.CourseId };
-            var userToStore = new ApplicationUser { LmsName = "Carl-Johan A", UserName = "carl-johana@mail.com", Email = "carl-johana@mail.com", CourseId = null };
-            var result2 = await userManager.CreateAsync(userToStore, "Aaa111!!!" /*user.PasswordHash*/);
+            // TODO CJA: Validate returns
+            // TODO CJA: Make for loop
+            // TODO CJA: Avoid hardcoded courseid's
+            var userToStore = new ApplicationUser { LmsName = "Carl-Johan A", UserName = "carl-johana@mail.com", Email = "carl-johana@mail.com", CourseId = 1 };
+            var result = await userManager.CreateAsync(userToStore, "Aaa111!!!" /*user.PasswordHash*/);
             var resultAddRole = await userManager.AddToRoleAsync(userToStore, "Student");
 
-            userToStore = new ApplicationUser { LmsName = "Alkaka A", UserName = "alkaka@mail.com", Email = "alkaka@mail.com", CourseId = null };
-            result2 = await userManager.CreateAsync(userToStore, "Aaa111!!!" /*user.PasswordHash*/);
+            userToStore = new ApplicationUser { LmsName = "Alkaka A", UserName = "alkakaa@mail.com", Email = "alkakaa@mail.com", CourseId = 2 };
+            result = await userManager.CreateAsync(userToStore, "Aaa111!!!" /*user.PasswordHash*/);
             resultAddRole = await userManager.AddToRoleAsync(userToStore, "Student");
 
-            userToStore = new ApplicationUser { LmsName = "Rolf E", UserName = "rolfe@mail.com", Email = "rolfe@mail.com", CourseId = null };
-            result2 = await userManager.CreateAsync(userToStore, "Aaa111!!!" /*user.PasswordHash*/);
+            userToStore = new ApplicationUser { LmsName = "Rolf E", UserName = "rolfe@mail.com", Email = "rolfe@mail.com", CourseId = 3 };
+            result = await userManager.CreateAsync(userToStore, "Aaa111!!!" /*user.PasswordHash*/);
+            resultAddRole = await userManager.AddToRoleAsync(userToStore, "Student");
+
+            userToStore = new ApplicationUser { LmsName = "Ghazala A", UserName = "ghazalaa@mail.com", Email = "ghazalaa@mail.com", CourseId = 4 };
+            result = await userManager.CreateAsync(userToStore, "Aaa111!!!" /*user.PasswordHash*/);
             resultAddRole = await userManager.AddToRoleAsync(userToStore, "Student");
         }
 

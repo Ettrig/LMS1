@@ -29,7 +29,7 @@ namespace LMS1
                 using (var innerScope = webHost.Services.CreateScope())
                 {
                     var innerServices = innerScope.ServiceProvider;
-                    SeedData.Initialize(innerServices); // TODO: CJA check if unsynched database
+                    SeedData.Initialize(innerServices); // TODO CJA: check if this may cause unsynched database and corrupt DB.
                 }
 
                 //Behöver sättas via komandotolken i projektkatalogen.
