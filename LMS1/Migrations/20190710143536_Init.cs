@@ -79,10 +79,7 @@ namespace LMS1.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     Role = table.Column<string>(nullable: true),
-                    EmailAddress = table.Column<string>(nullable: true),
                     LmsName = table.Column<string>(nullable: true),
-                    FirstName = table.Column<string>(nullable: true),
-                    SecondName = table.Column<string>(nullable: true),
                     CourseId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>

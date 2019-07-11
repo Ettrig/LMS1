@@ -63,8 +63,11 @@
             @foreach (var item in Model.Activities)
             {
             <tr>
+                @*<td>
+                    
+                </td>*@
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.StartDate)
@@ -72,9 +75,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
-                <td>
+                @*<td>
                     <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item.Id">Details</a>
-                </td>
+                </td>*@
             </tr>
             }
         </tbody>

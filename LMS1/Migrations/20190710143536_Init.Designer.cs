@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190709090821_Init")]
+    [Migration("20190710143536_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,11 +36,7 @@ namespace LMS1.Migrations
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
-                    b.Property<string>("EmailAddress");
-
                     b.Property<bool>("EmailConfirmed");
-
-                    b.Property<string>("FirstName");
 
                     b.Property<string>("LmsName");
 
@@ -61,8 +57,6 @@ namespace LMS1.Migrations
                     b.Property<bool>("PhoneNumberConfirmed");
 
                     b.Property<string>("Role");
-
-                    b.Property<string>("SecondName");
 
                     b.Property<string>("SecurityStamp");
 
