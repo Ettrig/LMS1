@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,7 +49,7 @@ namespace LMS1.Data
                     throw new Exception("UserManager or RoleManager is null");
                 }
 
-                var roleNames = new[] { "Teacher", "Student" };
+                var roleNames = new[] { "Teacher", "Student" }; // TODO CJA: Make these fixed roles Enums in project. Also add a 3rd Admin role.
 
                 foreach (var name in roleNames)
                 {
@@ -78,8 +79,6 @@ namespace LMS1.Data
                     }
                 }
 
-                await SeedStudents(userManager);
-
                 var adminUser = await userManager.FindByEmailAsync(emails[0]);
                 foreach (var role in roleNames)
                 {
@@ -90,29 +89,31 @@ namespace LMS1.Data
                         throw new Exception(string.Join("\n", addToRoleResult.Errors));
                     }
                 }
+
+                await SeedStudents(userManager);
             }
         }
 
         private static async Task SeedStudents(UserManager<ApplicationUser> userManager)
         {
             // TODO CJA: Validate returns
-            // TODO CJA: Make for loop
             // TODO CJA: Avoid hardcoded courseid's
-            var userToStore = new ApplicationUser { LmsName = "Carl-Johan A", UserName = "carl-johana@mail.com", Email = "carl-johana@mail.com", CourseId = 1 };
-            var result = await userManager.CreateAsync(userToStore, "Aaa111!!!" /*user.PasswordHash*/);
-            var resultAddRole = await userManager.AddToRoleAsync(userToStore, "Student");
+            // TODO CJA: Default password for students "Aaa111!!!" needs to be handled so that student must specify new password after first login
 
-            userToStore = new ApplicationUser { LmsName = "Alkaka A", UserName = "alkakaa@mail.com", Email = "alkakaa@mail.com", CourseId = 2 };
-            result = await userManager.CreateAsync(userToStore, "Aaa111!!!" /*user.PasswordHash*/);
-            resultAddRole = await userManager.AddToRoleAsync(userToStore, "Student");
+            const string userPassword = "Aaa111!!!";
+            ApplicationUser[] usersToStore =
+                {
+                new ApplicationUser { LmsName = "Carl-Johan A", UserName = "carl-johana@mail.com", Email = "carl-johana@mail.com", CourseId = 1 },
+                new ApplicationUser { LmsName = "Alkaka A", UserName = "alkakaa@mail.com", Email = "alkakaa@mail.com", CourseId = 2 },
+                new ApplicationUser { LmsName = "Rolf E", UserName = "rolfe@mail.com", Email = "rolfe@mail.com", CourseId = 3},
+                new ApplicationUser { LmsName = "Gazala A", UserName = "gazalaa@mail.com", Email = "gazalaa@mail.com", CourseId = 4 }
+            };
 
-            userToStore = new ApplicationUser { LmsName = "Rolf E", UserName = "rolfe@mail.com", Email = "rolfe@mail.com", CourseId = 3 };
-            result = await userManager.CreateAsync(userToStore, "Aaa111!!!" /*user.PasswordHash*/);
-            resultAddRole = await userManager.AddToRoleAsync(userToStore, "Student");
-
-            userToStore = new ApplicationUser { LmsName = "Ghazala A", UserName = "ghazalaa@mail.com", Email = "ghazalaa@mail.com", CourseId = 4 };
-            result = await userManager.CreateAsync(userToStore, "Aaa111!!!" /*user.PasswordHash*/);
-            resultAddRole = await userManager.AddToRoleAsync(userToStore, "Student");
+            foreach (var userToStore in usersToStore)
+            {
+                var result = await userManager.CreateAsync(userToStore, userPassword);
+                var resultAddRole = await userManager.AddToRoleAsync(userToStore, "Student");
+            }
         }
 
         private static void SeedActivities(ApplicationDbContext context, List<CourseModule> courseModules)
