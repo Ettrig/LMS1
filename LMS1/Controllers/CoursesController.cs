@@ -62,6 +62,11 @@ namespace LMS1.Controllers
                 return NotFound();
             }
 
+            foreach (CourseModule m in course.Modules)
+                m.Activities = m.Activities
+                    .OrderBy(a => a.StartDate.Date)
+                    .ThenBy(a => a.EndDate).ToList();
+
             return View(course);
         }
 
@@ -82,6 +87,10 @@ namespace LMS1.Controllers
             {
                 return NotFound();
             }
+            foreach (CourseModule m in course.Modules)
+                m.Activities = m.Activities
+                    .OrderBy(a => a.StartDate.Date)
+                    .ThenBy(a => a.EndDate).ToList();
 
             return View(course);
         }
