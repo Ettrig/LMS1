@@ -1,5 +1,6 @@
 ﻿using LMS1.Data;
 using LMS1.Models;
+using LMS1.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -92,7 +93,10 @@ namespace LMS1.Controllers
                     .OrderBy(a => a.StartDate.Date)
                     .ThenBy(a => a.EndDate).ToList();
 
-            return View(course);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+            var cfs = new CourseForStudent() { activeActivityId = user.CourseActivityId, course = course };
+
+            return View(cfs);
         }
 
         // GET: Courses/Create

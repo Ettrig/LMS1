@@ -1,100 +1,111 @@
-﻿@model LMS1.Models.Course
+﻿@model LMS1.ViewModels.CourseForStudent
 
 @{
     ViewData["Title"] = "Details";
 }
 
 <h3>Course description</h3>
-<h2>@Html.DisplayFor(model => model.Name)</h2>
+<h2>@Html.DisplayFor(model => model.course.Name)</h2>
 
 <div>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
+            @Html.DisplayNameFor(model => model.course.StartDate)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
+            @Html.DisplayFor(model => model.course.StartDate)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
+            @Html.DisplayNameFor(model => model.course.EndDate)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
+            @Html.DisplayFor(model => model.course.EndDate)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.course.Description)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.course.Description)
         </dd>
     </dl>
 </div>
 
 <div>
-    <a asp-controller="ApplicationUsers" asp-action="ListStudents" asp-route-id="@Model.Id">Show students</a>
+    <a asp-controller="ApplicationUsers" asp-action="ListStudents" asp-route-id="@Model.course.Id">Show students</a>
 </div>
 
 <br>
 
-@if (Model.Modules.Count > 0)
+@if (Model.course.Modules.Count > 0)
 {
     <h3>List of modules</h3>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Module Name</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th></th>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Module Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.course.Modules)
+        {
+            <tr class="p-3 mb-2 bg-light text-dark">
+                <td>
+                    <h5>@Html.DisplayFor(modelItem => item.Name)</h5>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    <a asp-action="DetailsForStudent" asp-controller="CourseModules" asp-route-id="@item.Id">Details</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Modules)
+            @foreach (var item2 in item.Activities)
             {
-                <tr class="p-3 mb-2 bg-light text-dark">
-                    @*<td>
-                            <h5>@Html.DisplayFor(modelItem => item.Name)</h5>
-                        </td>*@
-                    <td>
-                        <a asp-action="DetailsForStudent" asp-controller="CourseModules" asp-route-id="@item.Id"><h5>@Html.DisplayFor(modelItem => item.Name)</h5></a>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StartDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EndDate)
-                    </td>
-                    @*<td>
-                            <a asp-action="DetailsForStudent" asp-controller="CourseModules" asp-route-id="@item.Id">Details</a>
-                        </td>*@
-                </tr>
-                @foreach (var item2 in item.Activities)
+                if (item2.Id == Model.activeActivityId)
                 {
-                    <tr>
-                        @*<td>
-                                <h7>@Html.DisplayFor(modelItem => item2.Name)</h7>
-                            </td>*@
-
+                    <tr class="bg-success">
                         <td>
-                            <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item2.Id"><h7>@Html.DisplayFor(modelItem => item2.Name)</h7></a>
+                            <h7>@Html.DisplayFor(modelItem => item2.Name)</h7>
                         </td>
-
                         <td>
                             @Html.DisplayFor(modelItem => item2.StartDate)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item2.EndDate)
                         </td>
-                        @*<td>
-                                <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item2.Id">Details</a>
-                            </td>*@
+                        <td>
+                            <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item2.Id">Details</a>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td>
+                            <h7>@Html.DisplayFor(modelItem => item2.Name)</h7>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item2.StartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item2.EndDate)
+                        </td>
+                        <td>
+                            <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item2.Id">Details</a>
+                        </td>
                     </tr>
                 }
             }
-        </tbody>
-    </table>
+    </tbody>
+</table>
 }
 
 

@@ -1,6 +1,7 @@
 ﻿using LMS1.Data;
 using LMS1.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,11 +12,14 @@ namespace LMS1.Controllers
 {
     public class CourseActivitiesController : Controller
     {
-        private readonly ApplicationDbContext _context;
 
-        public CourseActivitiesController(ApplicationDbContext context)
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public CourseActivitiesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: CourseActivities
@@ -59,6 +63,12 @@ namespace LMS1.Controllers
             {
                 return NotFound();
             }
+
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+            user.CourseActivityId = courseActivity.Id;
+            _context.Update(user);
+            _context.SaveChanges();  
+
             return View(courseActivity);
         }
 
@@ -94,6 +104,7 @@ namespace LMS1.Controllers
                 if (a.Id == thisActivity.Id) foundThisActivity = true;
             }
 
+            //Would be even better to go to next module if there is one
             if (nextActivityId == null) return RedirectToAction("StudentOrTeacher", "Courses");
 
             return RedirectToAction("DetailsForStudent", new { id = nextActivityId }); 
