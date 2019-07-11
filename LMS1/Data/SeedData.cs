@@ -12,7 +12,8 @@ namespace LMS1.Data
 {
     public class SeedData
     {
-        static readonly int maxCourses = 5;
+        const int maxCourses = 5;
+        const int maxUsersRandom = 20;
         internal static void Initialize(IServiceProvider services)
         {
             var options = services.GetRequiredService<DbContextOptions<ApplicationDbContext>>();
@@ -96,13 +97,11 @@ namespace LMS1.Data
 
         private static async Task SeedStudents(UserManager<ApplicationUser> userManager)
         {
-            // TODO CJA: Validate returns
             // TODO CJA: Avoid hardcoded courseid's
             // TODO CJA: Default password for students "Aaa111!!!" needs to be handled so that student must specify new password after first login
-
             const string userPassword = "Aaa111!!!";
             ApplicationUser[] usersToStore =
-                {
+            {
                 new ApplicationUser { LmsName = "Carl-Johan A", UserName = "carl-johana@mail.com", Email = "carl-johana@mail.com", CourseId = 1 },
                 new ApplicationUser { LmsName = "Alkaka A", UserName = "alkakaa@mail.com", Email = "alkakaa@mail.com", CourseId = 2 },
                 new ApplicationUser { LmsName = "Rolf E", UserName = "rolfe@mail.com", Email = "rolfe@mail.com", CourseId = 3},
@@ -112,7 +111,30 @@ namespace LMS1.Data
             foreach (var userToStore in usersToStore)
             {
                 var result = await userManager.CreateAsync(userToStore, userPassword);
-                var resultAddRole = await userManager.AddToRoleAsync(userToStore, "Student");
+                var addToRoleResult = await userManager.AddToRoleAsync(userToStore, "Student");
+                if (!addToRoleResult.Succeeded)
+                {
+                    throw new Exception(string.Join("\n", addToRoleResult.Errors));
+                }
+            }
+
+            Random random = new Random();
+            for (var userNum = 0; userNum < maxUsersRandom; userNum++)
+            {
+                var lmsName = Faker.Internet.UserName();
+                var userToStore = new ApplicationUser
+                {
+                    LmsName = lmsName,
+                    UserName = lmsName + "@mail.com",
+                    Email = lmsName + "@mail.com",
+                    CourseId = random.Next(1, maxCourses)
+                };
+                var result = await userManager.CreateAsync(userToStore, userPassword);
+                var addToRoleResult = await userManager.AddToRoleAsync(userToStore, "Student");
+                if (!addToRoleResult.Succeeded)
+                {
+                    throw new Exception(string.Join("\n", addToRoleResult.Errors));
+                }
             }
         }
 
