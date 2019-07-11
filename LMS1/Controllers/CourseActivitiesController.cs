@@ -94,6 +94,8 @@ namespace LMS1.Controllers
                 if (a.Id == thisActivity.Id) foundThisActivity = true;
             }
 
+            if (nextActivityId == null) return RedirectToAction("StudentOrTeacher", "Courses");
+
             return RedirectToAction("DetailsForStudent", new { id = nextActivityId }); 
         }
 
