@@ -8,6 +8,7 @@ namespace LMS1.ViewModels
 {
     public class CourseForStudent
     {
+        public int? activeModuleId { get; set; }
         public int? activeActivityId { get; set; }
         public Course course { get; set; } 
     }
