@@ -62,6 +62,42 @@ namespace LMS1.Controllers
             return View(courseActivity);
         }
 
+        // GET NextActivityForStudent/5
+        public async Task<IActionResult> NextActivityForStudent(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var thisActivity = _context.CourseActivity.FirstOrDefault(a => a.Id == id);
+            if (thisActivity == null)
+            {
+                return NotFound();
+            }
+
+            var sisterActivities = _context.CourseModule
+                .Include(m => m.Activities)
+                .FirstOrDefault(m => m.Id == thisActivity.ModuleId)
+                .Activities
+                .OrderBy(a => a.StartDate.Date)
+                .ThenBy(a => a.EndDate);
+
+            bool foundThisActivity = false;
+            int? nextActivityId = null; 
+            foreach( CourseActivity a in sisterActivities)
+            {
+                if (foundThisActivity)
+                {
+                    nextActivityId = a.Id;
+                    break;
+                }
+                if (a.Id == thisActivity.Id) foundThisActivity = true;
+            }
+
+            return RedirectToAction("DetailsForStudent", new { id = nextActivityId }); 
+        }
+
+            
         // GET: CourseActivities/Create
         public IActionResult Create()
         {
