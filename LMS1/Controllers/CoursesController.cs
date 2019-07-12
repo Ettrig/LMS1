@@ -109,6 +109,17 @@ namespace LMS1.Controllers
                 if (currentModuleId != null) break; 
             }
 
+            // Check for existence after each of the following steps
+            if (user.CourseActivityId == null)
+            {
+                var firstModule = course.Modules.FirstOrDefault(m => true);
+                currentModuleId = firstModule.Id;
+                var firstActivity = firstModule.Activities.FirstOrDefault(a => true);
+                user.CourseActivityId = firstActivity.Id;
+                _context.Update(user);
+                _context.SaveChanges();
+            }
+
             var cfs = new CourseForStudent() { activeModuleId= currentModuleId, activeActivityId = user.CourseActivityId, course = course };
 
             return View(cfs);
