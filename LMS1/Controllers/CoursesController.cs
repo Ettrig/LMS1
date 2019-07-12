@@ -279,7 +279,7 @@ namespace LMS1.Controllers
 
             //Find the proper courseId to send
             //This crashes, but the copying usually works
-            return View("Details", new { id = courseId });
+            return RedirectToAction( "Details", new {id=courseId });
         }
 
 
