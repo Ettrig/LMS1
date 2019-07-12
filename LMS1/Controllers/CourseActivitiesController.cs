@@ -91,11 +91,13 @@ namespace LMS1.Controllers
                 .FirstOrDefault(m => m.Id == thisActivity.ModuleId);
 
             if (thisModule==null) return RedirectToAction("StudentOrTeacher", "Courses");
+
             var sisterActivities = thisModule
                 .Activities
                 .OrderBy(a => a.StartDate.Date)
                 .ThenBy(a => a.EndDate);
 
+            // Find the following activity (in chronological sequence) 
             bool foundThisActivity = false;
             int? nextActivityId = null; 
             foreach( CourseActivity a in sisterActivities)
@@ -108,12 +110,19 @@ namespace LMS1.Controllers
                 if (a.Id == thisActivity.Id) foundThisActivity = true;
             }
 
-            //Would be even better to go to next module if there is one
             if (nextActivityId == null)
             {
+
+                //Find the module that follows
                 bool foundThisModule = false;
                 int? nextModuleId = null;
-                foreach (CourseModule mod in thisModule.Course.Modules)
+                var modulesInCourse = thisModule.Course
+                    .Modules.OrderBy(m => m.StartDate.Date)
+                    .ThenBy(m => m.EndDate)
+                    .ToList();
+
+
+                foreach (CourseModule mod in modulesInCourse)
                 {
                     if (foundThisModule)
                     {
@@ -125,11 +134,31 @@ namespace LMS1.Controllers
 
                 if (nextModuleId==null) return RedirectToAction("StudentOrTeacher", "Courses");
 
+                // Set current activity to first activity in "nextModule"
+                thisModule = _context.CourseModule
+                .Include(m => m.Activities)
+                .FirstOrDefault(m => m.Id == nextModuleId);
+
+                if (thisModule == null)
+                {
+                    var aUser = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+                    aUser.CourseActivityId = null;
+                    _context.Update(aUser);
+                    _context.SaveChanges();
+                    return RedirectToAction("StudentOrTeacher", "Courses");
+                }
+
+                sisterActivities = thisModule
+                    .Activities
+                    .OrderBy(a => a.StartDate.Date)
+                    .ThenBy(a => a.EndDate);
+
                 var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
-                user.CourseActivityId = null;
+                user.CourseActivityId = sisterActivities.FirstOrDefault(a => true).Id;
                 _context.Update(user);
                 _context.SaveChanges();
-                return RedirectToAction("DetailsForStudent", "CourseModules", new { id = nextModuleId });
+
+                return RedirectToAction("StudentOrTeacher", "Courses");
             }
             return RedirectToAction("DetailsForStudent", new { id = nextActivityId }); 
         }
