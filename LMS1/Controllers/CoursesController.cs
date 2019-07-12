@@ -94,7 +94,22 @@ namespace LMS1.Controllers
                     .ThenBy(a => a.EndDate).ToList();
 
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
-            var cfs = new CourseForStudent() { activeActivityId = user.CourseActivityId, course = course };
+
+            int? currentModuleId = null;
+            foreach (CourseModule mod in course.Modules)
+            {
+                foreach (CourseActivity act in mod.Activities)
+                {
+                    if (act.Id==user.CourseActivityId)
+                    {
+                        currentModuleId = act.ModuleId;
+                        break; 
+                    }
+                }
+                if (currentModuleId != null) break; 
+            }
+
+            var cfs = new CourseForStudent() { activeModuleId= currentModuleId, activeActivityId = user.CourseActivityId, course = course };
 
             return View(cfs);
         }

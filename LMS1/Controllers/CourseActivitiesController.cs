@@ -85,9 +85,13 @@ namespace LMS1.Controllers
                 return NotFound();
             }
 
-            var sisterActivities = _context.CourseModule
+            var thisModule = _context.CourseModule
                 .Include(m => m.Activities)
-                .FirstOrDefault(m => m.Id == thisActivity.ModuleId)
+                .Include(m => m.Course.Modules)
+                .FirstOrDefault(m => m.Id == thisActivity.ModuleId);
+
+            if (thisModule==null) return RedirectToAction("StudentOrTeacher", "Courses");
+            var sisterActivities = thisModule
                 .Activities
                 .OrderBy(a => a.StartDate.Date)
                 .ThenBy(a => a.EndDate);
@@ -105,11 +109,30 @@ namespace LMS1.Controllers
             }
 
             //Would be even better to go to next module if there is one
-            if (nextActivityId == null) return RedirectToAction("StudentOrTeacher", "Courses");
+            if (nextActivityId == null)
+            {
+                bool foundThisModule = false;
+                int? nextModuleId = null;
+                foreach (CourseModule mod in thisModule.Course.Modules)
+                {
+                    if (foundThisModule)
+                    {
+                        nextModuleId = mod.Id;
+                        break;
+                    }
+                    if (mod.Id == thisModule.Id) foundThisModule = true;
+                }
 
+                if (nextModuleId==null) return RedirectToAction("StudentOrTeacher", "Courses");
+
+                var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+                user.CourseActivityId = null;
+                _context.Update(user);
+                _context.SaveChanges();
+                return RedirectToAction("DetailsForStudent", "CourseModules", new { id = nextModuleId });
+            }
             return RedirectToAction("DetailsForStudent", new { id = nextActivityId }); 
         }
-
             
         // GET: CourseActivities/Create
         public IActionResult Create()
