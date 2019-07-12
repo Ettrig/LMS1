@@ -29,14 +29,8 @@ namespace LMS1.Models
         [StringLength(750, MinimumLength = 2)]
         public string Description { get; set; }
 
-
         public ICollection<CourseModule> Modules { get; set; }
         public ICollection<ApplicationUser> AttendingStudents { get; set; }
         public ICollection<Document> Documents { get; set; }
     }
 }
-
-
-
-
-//[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]

@@ -2,10 +2,13 @@
 using LMS1.Models;
 using LMS1.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -246,6 +249,39 @@ namespace LMS1.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        // GET: Courses/AddFile
+        [Authorize(Roles = "Teacher")]
+        public IActionResult AddFile(int? id)
+        {
+            if (id == null) return NotFound();
+            ViewBag.CourseId = id;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddFile(List<IFormFile> files, int courseId)
+        {
+            foreach (var formFile in files)
+            {
+                if (formFile.Length > 0)
+                {
+                    using (var stream = new FileStream(
+                        "wwwroot/Documents/" + formFile.FileName,
+                        FileMode.Create)
+                    )
+                    {
+                        await formFile.CopyToAsync(stream);
+                    }
+                }
+            }
+
+            //Find the proper courseId to send
+            //This crashes, but the copying usually works
+            return View("Details", new { id = courseId });
+        }
+
 
         // GET: Courses/AddModule
         [Authorize(Roles = "Teacher")]
