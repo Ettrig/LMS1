@@ -58,6 +58,7 @@ namespace LMS1.Controllers
             }
 
             var course = await _context.Course
+                .Include(c => c.CourseDocuments)
                 .Include(c => c.Modules)
                 .ThenInclude(c => c.Activities)
                 .FirstOrDefaultAsync(c => c.Id == id);
@@ -261,8 +262,11 @@ namespace LMS1.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddFile(List<IFormFile> files, int courseId)
+        public async Task<IActionResult> AddFile(List<IFormFile> files, int courseId, string InternalName)
         {
+            // We handle only one file at a time, so this foreach should not be needed. 
+            // Maybe just take the first item in the list. 
+            // Maybe change the .cshtml so that it does not return a list. 
             foreach (var formFile in files)
             {
                 if (formFile.Length > 0)
@@ -274,14 +278,30 @@ namespace LMS1.Controllers
                     {
                         await formFile.CopyToAsync(stream);
                     }
+                    var docRec = new CourseDocument() { FileName = formFile.FileName, CourseId = courseId, InternalName = InternalName };
+                    _context.CourseDocument.Add(docRec);
+                    _context.SaveChanges();
                 }
             }
-
-            //Find the proper courseId to send
-            //This crashes, but the copying usually works
-            return RedirectToAction( "Details", new {id=courseId });
+            return RedirectToAction("Details", new { id = courseId });
         }
 
+        public async Task<IActionResult> DeleteCourseFile(int? id, int CourseId)
+        {
+            if (id == null) return NotFound();
+
+            var fil = await _context.CourseDocument.FirstOrDefaultAsync(d => d.Id == id);
+            if (fil == null) return NotFound();
+
+            //Not nice that EF reuses the name "File" in the controller
+            System.IO.File.Delete("wwwroot/Documents/" + fil.FileName);
+
+            int courseId = fil.CourseId;
+            _context.CourseDocument.Remove(fil);
+            _context.SaveChanges(); 
+
+            return RedirectToAction( "Details", new { id = courseId });
+        }
 
         // GET: Courses/AddModule
         [Authorize(Roles = "Teacher")]
