@@ -1,10 +1,15 @@
 ﻿using LMS1.Data;
 using LMS1.Models;
+using LMS1.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -38,7 +43,9 @@ namespace LMS1.Controllers
                 return NotFound();
             }
             var courseActivity = await _context.CourseActivity
-                .Include(m => m.Module)
+                .Include(a => a.Submissions)
+                .ThenInclude(s => s.User)
+                .Include(a => a.Module)
                 .ThenInclude(m => m.Course)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (courseActivity == null)
@@ -56,7 +63,8 @@ namespace LMS1.Controllers
                 return NotFound();
             }
             var courseActivity = await _context.CourseActivity
-                .Include(m => m.Module)
+                .Include(a => a.Submissions)
+                .Include(a => a.Module)
                 .ThenInclude(m => m.Course)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (courseActivity == null)
@@ -65,11 +73,16 @@ namespace LMS1.Controllers
             }
 
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+
+            var submissions = courseActivity.Submissions.Where(s => s.ApplicationUserId == user.Id).ToList(); 
+
             user.CourseActivityId = courseActivity.Id;
             _context.Update(user);
-            _context.SaveChanges();  
+            _context.SaveChanges();
 
-            return View(courseActivity);
+            var afs = new ActivityForStudent() { activity = courseActivity, submissions = submissions };
+
+            return View(afs);
         }
 
         // GET NextActivityForStudent/5
@@ -90,7 +103,7 @@ namespace LMS1.Controllers
                 .Include(m => m.Course.Modules)
                 .FirstOrDefault(m => m.Id == thisActivity.ModuleId);
 
-            if (thisModule==null) return RedirectToAction("StudentOrTeacher", "Courses");
+            if (thisModule == null) return RedirectToAction("StudentOrTeacher", "Courses");
 
             var sisterActivities = thisModule
                 .Activities
@@ -99,8 +112,8 @@ namespace LMS1.Controllers
 
             // Find the following activity (in chronological sequence) 
             bool foundThisActivity = false;
-            int? nextActivityId = null; 
-            foreach( CourseActivity a in sisterActivities)
+            int? nextActivityId = null;
+            foreach (CourseActivity a in sisterActivities)
             {
                 if (foundThisActivity)
                 {
@@ -132,7 +145,7 @@ namespace LMS1.Controllers
                     if (mod.Id == thisModule.Id) foundThisModule = true;
                 }
 
-                if (nextModuleId==null) return RedirectToAction("StudentOrTeacher", "Courses");
+                if (nextModuleId == null) return RedirectToAction("StudentOrTeacher", "Courses");
 
                 // Set current activity to first activity in "nextModule"
                 thisModule = _context.CourseModule
@@ -160,9 +173,9 @@ namespace LMS1.Controllers
 
                 return RedirectToAction("StudentOrTeacher", "Courses");
             }
-            return RedirectToAction("DetailsForStudent", new { id = nextActivityId }); 
+            return RedirectToAction("DetailsForStudent", new { id = nextActivityId });
         }
-            
+
         // GET: CourseActivities/Create
         public IActionResult Create()
         {
@@ -308,6 +321,93 @@ namespace LMS1.Controllers
                 return NotFound();
             }
             return RedirectToAction(nameof(DetailsForStudent), "CourseModules", new { id = CourseActivities.ModuleId });
+        }
+
+        public async Task<IActionResult> UploadExercise(int? id)
+        {
+            ViewBag.ActivityId = id;
+            return View();
+        }
+
+        public async Task<IActionResult> UploadExercise2(List<IFormFile> files, int? activityId)
+        {
+            if (activityId == null)
+            {
+                return NotFound();
+            }
+            var activity 
+                = await _context.CourseActivity
+                .Include(a => a.Module)
+                .ThenInclude(m => m.Course)
+                .FirstOrDefaultAsync(a => a.Id == activityId);
+
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+
+            // We handle only one file at a time, so this foreach should not be needed. 
+            // Maybe just take the first item in the list. 
+            // Maybe change the .cshtml so that it does not return a list. 
+            string fileName = "";
+            foreach (var formFile in files)
+            {
+                if (formFile.Length > 0)
+                {
+                    string[] splitFileName = formFile.FileName.Split('.');
+                    string fileExtension = splitFileName[splitFileName.Length - 1];
+                    fileName = "a" + activity.Id + "u" + user.Id + "." + fileExtension;
+
+                    using (var stream = new FileStream("wwwroot/Exercises/" + fileName, FileMode.Create))
+                    {
+                        await formFile.CopyToAsync(stream);
+                    }
+                }
+                // Need to check that file was created OK. 
+            }
+            var docRec = new ExerciseSubmission()
+            { FileName = fileName,
+                SubmissionTime = DateTime.Now,
+                ApplicationUserId =user.Id,
+                CourseActivityId =activity.Id
+            };
+            _context.ExerciseSubmission.Add(docRec);
+            _context.SaveChanges();
+
+            return RedirectToAction("DetailsForStudent", new { id = activity.Id });
+        }
+
+        public async Task<IActionResult> StudentDeleteSubmission(int? id)
+        {
+            if (id == null) return NotFound();
+
+            // the following 7 lines are common with DeleteSubmission(), the following method
+            var submission = await _context.ExerciseSubmission
+                .FirstOrDefaultAsync(s => s.Id==id);
+            if (submission == null) return NotFound();
+
+            System.IO.File.Delete("wwwroot/Exercises/" + submission.FileName);
+
+            int activityId = submission.CourseActivityId;
+            _context.ExerciseSubmission.Remove(submission);
+            _context.SaveChanges();
+
+            return RedirectToAction("DetailsForStudent", new { id = activityId }); 
+        }
+
+        public async Task<IActionResult> DeleteSubmission(int? id)
+        {
+            // Much change is needed here
+            if (id == null) return NotFound();
+
+            var submission = await _context.ExerciseSubmission
+                .FirstOrDefaultAsync(s => s.Id == id);
+            if (submission == null) return NotFound();
+
+            System.IO.File.Delete("wwwroot/Exercises/" + submission.FileName);
+
+            int activityId = submission.CourseActivityId;
+            _context.ExerciseSubmission.Remove(submission);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", new { id = activityId });
         }
 
         private bool CourseActivityExists(int id)

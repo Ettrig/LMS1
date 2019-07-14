@@ -53,6 +53,38 @@
         </dd>
     </dl>
 </div>
+
+@if (Model.Submissions.Count > 0)
+{
+    string completeFilePath = "";
+    <h3>Exercise Submissions</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>File link</th>
+                <th>Student</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Submissions)
+            {
+                completeFilePath = "/Exercises/" + item.FileName;
+                <tr class="p-3 mb-2 bg-light text-dark">
+                    <td>
+                        <a href=@completeFilePath>@item.FileName</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.User.LmsName)
+                    </td>
+                    <td>
+                        <a asp-action="DeleteSubmission" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="BacktoModules" asp-route-id="@Model.Id">Back to Module</a>

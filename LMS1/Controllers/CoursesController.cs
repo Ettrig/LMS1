@@ -32,7 +32,7 @@ namespace LMS1.Controllers
             {
                 var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
                 Course course;
-                if (user.CourseId != null)
+                if (user!=null && user.CourseId != null)
                 {
                     course = await _context.Course.FirstOrDefaultAsync(c => c.Id == user.CourseId);
                     if (course!=null) return RedirectToAction("DetailsForStudent", new { id=course.Id } );
@@ -113,18 +113,19 @@ namespace LMS1.Controllers
                 if (currentModuleId != null) break; 
             }
 
-            // Check for existence after each of the following steps
             if (user.CourseActivityId == null)
             {
                 var firstModule = course.Modules.FirstOrDefault(m => true);
+                if (firstModule==null) return View(new CourseForStudent() { activeModuleId = null, activeActivityId = null, course = course }); 
                 currentModuleId = firstModule.Id;
                 var firstActivity = firstModule.Activities.FirstOrDefault(a => true);
+                if (firstActivity==null) return View(new CourseForStudent() { activeModuleId = currentModuleId, activeActivityId = null, course = course });
                 user.CourseActivityId = firstActivity.Id;
                 _context.Update(user);
                 _context.SaveChanges();
             }
 
-            var cfs = new CourseForStudent() { activeModuleId= currentModuleId, activeActivityId = user.CourseActivityId, course = course };
+            var cfs = new CourseForStudent() { activeModuleId=currentModuleId, activeActivityId = user.CourseActivityId, course = course };
 
             return View(cfs);
         }
@@ -286,7 +287,7 @@ namespace LMS1.Controllers
             return RedirectToAction("Details", new { id = courseId });
         }
 
-        public async Task<IActionResult> DeleteCourseFile(int? id, int CourseId)
+        public async Task<IActionResult> DeleteCourseFile(int? id)
         {
             if (id == null) return NotFound();
 
