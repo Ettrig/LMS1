@@ -43,10 +43,12 @@ namespace LMS1.Controllers
                 return NotFound();
             }
             var courseActivity = await _context.CourseActivity
+                .Include(a => a.ActivityDocuments)
                 .Include(a => a.Submissions)
                 .ThenInclude(s => s.User)
                 .Include(a => a.Module)
                 .ThenInclude(m => m.Course)
+
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (courseActivity == null)
             {
@@ -63,6 +65,7 @@ namespace LMS1.Controllers
                 return NotFound();
             }
             var courseActivity = await _context.CourseActivity
+                .Include(a => a.ActivityDocuments)
                 .Include(a => a.Submissions)
                 .Include(a => a.Module)
                 .ThenInclude(m => m.Course)
@@ -304,6 +307,59 @@ namespace LMS1.Controllers
                 return NotFound();
             }
             return RedirectToAction(nameof(Details), "CourseModules", new { id = CourseActivities.ModuleId });
+        }
+
+
+        // GET: CourseActivities/AddFile
+        [Authorize(Roles = "Teacher")]
+        public IActionResult AddFile(int? id)
+        {
+            if (id == null) return NotFound();
+            ViewBag.ActivityId = id;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddFile(List<IFormFile> files, int activityId, string InternalName)
+        {
+            // We handle only one file at a time, so this foreach should not be needed. 
+            // Maybe just take the first item in the list. 
+            // Maybe change the .cshtml so that it does not return a list. 
+            foreach (var formFile in files)
+            {
+                if (formFile.Length > 0)
+                {
+                    using (var stream = new FileStream(
+                        "wwwroot/Documents/" + formFile.FileName,
+                        FileMode.Create)
+                    )
+                    {
+                        await formFile.CopyToAsync(stream);
+                    }
+                    var docRec = new ActivityDocument() { FileName = formFile.FileName, ActivityId = activityId, InternalName = InternalName };
+                    _context.ActivityDocument.Add(docRec);
+                    _context.SaveChanges();
+                }
+            }
+            return RedirectToAction("Details", new { id = activityId });
+        }
+
+        public async Task<IActionResult> DeleteModuleFile(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var fil = await _context.ActivityDocument.FirstOrDefaultAsync(d => d.Id == id);
+            if (fil == null) return NotFound();
+
+            //Not nice that EF reuses the name "File" in the controller
+            System.IO.File.Delete("wwwroot/Documents/" + fil.FileName);
+
+            int moduleId = fil.ActivityId;
+            _context.ActivityDocument.Remove(fil);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", new { id = moduleId });
         }
 
 

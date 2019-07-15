@@ -49,6 +49,42 @@
 </div>
 <p>
 
+
+ <br>
+
+<p>
+    <a asp-action="AddFile" asp-route-id="@Model.Id">Add File</a>
+</p>
+@if (Model.ModuleDocuments.Count > 0)
+{
+    string completeFilePath = "";
+<h3>Files for the Module</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>File link</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ModuleDocuments)
+            {
+                completeFilePath = "/Documents/" + item.FileName;
+                <tr class="p-3 mb-2 bg-light text-dark">
+                    <td>
+                        <a href=@completeFilePath>@item.FileName</a><p>@item.InternalName</p>
+                    </td>
+                    <td>
+                        <a asp-action="DeleteModuleFile" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br>
+
+
 <p>
     <a asp-action="AddActivity" asp-route-id="@Model.Id">Add Activity</a>
 </p>
