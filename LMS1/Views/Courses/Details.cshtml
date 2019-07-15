@@ -51,6 +51,7 @@
         <thead>
             <tr>
                 <th>File link</th>
+                <th>Document name</th>
             </tr>
         </thead>
         <tbody>
@@ -59,10 +60,13 @@
                 completeFilePath = "/Documents/" + item.FileName;
             <tr class="p-3 mb-2 bg-light text-dark">
                 <td>
-                    <a href=@completeFilePath>@item.FileName</a><p>@item.InternalName</p>
+                    <a href=@completeFilePath>@item.FileName</a>
                 </td>
                 <td>
-                    <a asp-action="DeleteCourseFile" asp-route-id="@item.Id">Delete</a> 
+                    <h7>@item.InternalName</h7>
+                </td>
+                <td>
+                    <a asp-action="DeleteCourseFile" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
             }
