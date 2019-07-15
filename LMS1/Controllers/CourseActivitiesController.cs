@@ -76,7 +76,7 @@ namespace LMS1.Controllers
 
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
 
-            var submissions = courseActivity.Submissions.Where(s => s.ApplicationUserId == user.Id).ToList(); 
+            var submissions = courseActivity.Submissions.Where(s => s.ApplicationUserId == user.Id).ToList();
 
             user.CourseActivityId = courseActivity.Id;
             _context.Update(user);
@@ -381,7 +381,16 @@ namespace LMS1.Controllers
 
         public async Task<IActionResult> UploadExercise(int? id)
         {
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+            var activity = await _context.CourseActivity
+                .Include(a => a.Submissions)
+                .FirstOrDefaultAsync(a => a.Id == id);
+            var submission = activity.Submissions.FirstOrDefault(s => s.ApplicationUserId == user.Id);
+
             ViewBag.ActivityId = id;
+            // If there is a submission: show error message
+            if (submission != null) return View("SecondSubmission", id); 
+
             return View();
         }
 
@@ -391,7 +400,7 @@ namespace LMS1.Controllers
             {
                 return NotFound();
             }
-            var activity 
+            var activity
                 = await _context.CourseActivity
                 .Include(a => a.Module)
                 .ThenInclude(m => m.Course)
@@ -419,10 +428,11 @@ namespace LMS1.Controllers
                 // Need to check that file was created OK. 
             }
             var docRec = new ExerciseSubmission()
-            { FileName = fileName,
+            {
+                FileName = fileName,
                 SubmissionTime = DateTime.Now,
-                ApplicationUserId =user.Id,
-                CourseActivityId =activity.Id
+                ApplicationUserId = user.Id,
+                CourseActivityId = activity.Id
             };
             _context.ExerciseSubmission.Add(docRec);
             _context.SaveChanges();
@@ -436,7 +446,7 @@ namespace LMS1.Controllers
 
             // the following 7 lines are common with DeleteSubmission(), the following method
             var submission = await _context.ExerciseSubmission
-                .FirstOrDefaultAsync(s => s.Id==id);
+                .FirstOrDefaultAsync(s => s.Id == id);
             if (submission == null) return NotFound();
 
             System.IO.File.Delete("wwwroot/Exercises/" + submission.FileName);
@@ -445,7 +455,7 @@ namespace LMS1.Controllers
             _context.ExerciseSubmission.Remove(submission);
             _context.SaveChanges();
 
-            return RedirectToAction("DetailsForStudent", new { id = activityId }); 
+            return RedirectToAction("DetailsForStudent", new { id = activityId });
         }
 
         public async Task<IActionResult> DeleteSubmission(int? id)

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190715143307_Init")]
+    [Migration("20190715114928_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,7 +27,9 @@ namespace LMS1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CourseActivityId");
+                    b.Property<int>("ActivityId");
+
+                    b.Property<int?>("CourseActivityId");
 
                     b.Property<string>("FileName");
 
@@ -227,11 +229,13 @@ namespace LMS1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CourseModuleId");
+                    b.Property<int?>("CourseModuleId");
 
                     b.Property<string>("FileName");
 
                     b.Property<string>("InternalName");
+
+                    b.Property<int>("ModuleId");
 
                     b.HasKey("Id");
 
@@ -358,8 +362,7 @@ namespace LMS1.Migrations
                 {
                     b.HasOne("LMS1.Models.CourseActivity")
                         .WithMany("ActivityDocuments")
-                        .HasForeignKey("CourseActivityId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CourseActivityId");
                 });
 
             modelBuilder.Entity("LMS1.Models.ApplicationUser", b =>
@@ -413,8 +416,7 @@ namespace LMS1.Migrations
                 {
                     b.HasOne("LMS1.Models.CourseModule")
                         .WithMany("ModuleDocuments")
-                        .HasForeignKey("CourseModuleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CourseModuleId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
