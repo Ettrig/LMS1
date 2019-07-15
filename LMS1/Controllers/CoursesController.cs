@@ -85,6 +85,7 @@ namespace LMS1.Controllers
             }
 
             var course = await _context.Course
+                .Include(c => c.CourseDocuments)
                 .Include(c => c.Modules)
                 .ThenInclude(c => c.Activities)
                 .FirstOrDefaultAsync(c => c.Id == id);

@@ -28,6 +28,7 @@ namespace LMS1.Data
 
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<CourseDocument> CourseDocument { get; set; }
+        public DbSet<CourseActivityDocument> CourseActivityDocument { get; set; }
         public DbSet<ExerciseSubmission> ExerciseSubmission { get; set; }
     }
 }
