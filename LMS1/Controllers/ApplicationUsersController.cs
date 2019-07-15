@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -306,6 +307,30 @@ namespace LMS1.Controllers
             var cl = new ClassList { CourseId = course.Id, CourseName = course.Name, Students = listOfUsers };
 
             return View("ClassList", cl);
+        }
+
+        public async Task<IActionResult> RemoveUser( string id )
+        {
+            if (id == null) return NotFound();
+
+            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+
+            if (loggedInUser.Id == id) return View("DontRemoveYourself");
+
+            var user = await _context.ApplicationUser.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+            var userId = await _userManager.GetUserIdAsync(user);
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException($"Unexpected error occurred deleteing user with ID '{userId}'.");
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }
