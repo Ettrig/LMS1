@@ -20,6 +20,11 @@ namespace LMS1.Data
             UserAscend, CourseAscend, RoleAscend, UserDescend, CourseDescend, RoleDescend
         };
 
+        public enum CourseUnitType
+        {
+            Course, Module, Activity
+        }; 
+
         public DbSet<Course> Course { get; set; }
 
         public DbSet<CourseModule> CourseModule { get; set; }
