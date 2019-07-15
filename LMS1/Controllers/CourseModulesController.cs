@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace LMS1.Controllers
 {
@@ -36,6 +39,7 @@ namespace LMS1.Controllers
             var courseModule = await _context.CourseModule
                 .Include(m => m.Activities)
                 .Include(m => m.Course)
+                .Include(c => c.ModuleDocuments)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (courseModule == null)
             {
@@ -54,6 +58,7 @@ namespace LMS1.Controllers
             var courseModule = await _context.CourseModule
                 .Include(m => m.Activities)
                 .Include(m => m.Course)
+                .Include(c => c.ModuleDocuments)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (courseModule == null)
             {
@@ -182,6 +187,58 @@ namespace LMS1.Controllers
         private bool CourseModuleExists(int id)
         {
             return _context.CourseModule.Any(e => e.Id == id);
+        }
+
+        // GET: Courses/AddFile
+        [Authorize(Roles = "Teacher")]
+        public IActionResult AddFile(int? id)
+        {
+            if (id == null) return NotFound();
+            ViewBag.ModuleId = id;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddFile(List<IFormFile> files, int moduleId, string InternalName)
+        {
+            // We handle only one file at a time, so this foreach should not be needed. 
+            // Maybe just take the first item in the list. 
+            // Maybe change the .cshtml so that it does not return a list. 
+            foreach (var formFile in files)
+            {
+                if (formFile.Length > 0)
+                {
+                    using (var stream = new FileStream(
+                        "wwwroot/Documents/" + formFile.FileName,
+                        FileMode.Create)
+                    )
+                    {
+                        await formFile.CopyToAsync(stream);
+                    }
+                    var docRec = new ModuleDocument() { FileName = formFile.FileName, ModuleId = moduleId, InternalName = InternalName };
+                    _context.ModuleDocument.Add(docRec);
+                    _context.SaveChanges();
+                }
+            }
+            return RedirectToAction("Details", new { id = moduleId });
+        }
+
+        public async Task<IActionResult> DeleteModuleFile(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var fil = await _context.ModuleDocument.FirstOrDefaultAsync(d => d.Id == id);
+            if (fil == null) return NotFound();
+
+            //Not nice that EF reuses the name "File" in the controller
+            System.IO.File.Delete("wwwroot/Documents/" + fil.FileName);
+
+            int moduleId = fil.ModuleId;
+            _context.ModuleDocument.Remove(fil);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", new { id = moduleId });
         }
 
         // GET: Courses/AddActivity

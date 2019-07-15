@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LMS1.Models;
+﻿using LMS1.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +24,13 @@ namespace LMS1.Data
         public DbSet<CourseActivity> CourseActivity { get; set; }
 
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
+
         public DbSet<CourseDocument> CourseDocument { get; set; }
+
+        public DbSet<ModuleDocument> ModuleDocument { get; set; }
+
+        public DbSet<ActivityDocument> ActivityDocument { get; set; }
+
         public DbSet<ExerciseSubmission> ExerciseSubmission { get; set; }
     }
 }

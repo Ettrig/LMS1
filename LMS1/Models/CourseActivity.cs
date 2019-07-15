@@ -37,7 +37,7 @@ namespace LMS1.Models
         public int ModuleId { get; set; }
         public CourseModule Module { get; set; }
 
-        public ICollection<Document> Documents { get; set; }
+        public ICollection<ActivityDocument> ActivityDocuments { get; set; }
         public ICollection<ExerciseSubmission> Submissions { get; set; }
 
     }

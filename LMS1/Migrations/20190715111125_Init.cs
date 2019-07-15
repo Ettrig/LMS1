@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LMS1.Migrations
 {
-    public partial class RedoForDocumentHandling : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -128,6 +128,48 @@ namespace LMS1.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ModuleDocument",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    InternalName = table.Column<string>(nullable: true),
+                    FileName = table.Column<string>(nullable: true),
+                    ModuleId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ModuleDocument", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ModuleDocument_CourseModule_ModuleId",
+                        column: x => x.ModuleId,
+                        principalTable: "CourseModule",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ActivityDocument",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    InternalName = table.Column<string>(nullable: true),
+                    FileName = table.Column<string>(nullable: true),
+                    ActivityId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActivityDocument", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ActivityDocument_CourseActivity_ActivityId",
+                        column: x => x.ActivityId,
+                        principalTable: "CourseActivity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
@@ -163,71 +205,6 @@ namespace LMS1.Migrations
                         name: "FK_AspNetUsers_Course_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Course",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Document",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    FileName = table.Column<string>(nullable: true),
-                    DisplayName = table.Column<string>(nullable: true),
-                    Filepath = table.Column<string>(nullable: true),
-                    CourseId = table.Column<int>(nullable: true),
-                    ModuleId = table.Column<int>(nullable: true),
-                    ActivityId = table.Column<int>(nullable: true),
-                    CourseModuleId = table.Column<int>(nullable: true),
-                    CourseActivityId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Document", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Document_CourseActivity_CourseActivityId",
-                        column: x => x.CourseActivityId,
-                        principalTable: "CourseActivity",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Document_Course_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Course",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Document_CourseModule_CourseModuleId",
-                        column: x => x.CourseModuleId,
-                        principalTable: "CourseModule",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Exercises",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    FileName = table.Column<string>(nullable: true),
-                    DisplayName = table.Column<string>(nullable: true),
-                    Filepath = table.Column<string>(nullable: true),
-                    SubmissionTime = table.Column<DateTime>(nullable: false),
-                    User = table.Column<string>(nullable: true),
-                    CourseId = table.Column<int>(nullable: true),
-                    ModuleId = table.Column<int>(nullable: true),
-                    ActivityId = table.Column<int>(nullable: false),
-                    CourseActivityId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Exercises", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Exercises_CourseActivity_CourseActivityId",
-                        column: x => x.CourseActivityId,
-                        principalTable: "CourseActivity",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -317,6 +294,39 @@ namespace LMS1.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ExerciseSubmission",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    FileName = table.Column<string>(nullable: true),
+                    SubmissionTime = table.Column<DateTime>(nullable: false),
+                    ApplicationUserId = table.Column<string>(nullable: true),
+                    CourseActivityId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExerciseSubmission", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExerciseSubmission_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ExerciseSubmission_CourseActivity_CourseActivityId",
+                        column: x => x.CourseActivityId,
+                        principalTable: "CourseActivity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ActivityDocument_ActivityId",
+                table: "ActivityDocument",
+                column: "ActivityId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -382,28 +392,26 @@ namespace LMS1.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Document_CourseActivityId",
-                table: "Document",
+                name: "IX_ExerciseSubmission_ApplicationUserId",
+                table: "ExerciseSubmission",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExerciseSubmission_CourseActivityId",
+                table: "ExerciseSubmission",
                 column: "CourseActivityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Document_CourseId",
-                table: "Document",
-                column: "CourseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Document_CourseModuleId",
-                table: "Document",
-                column: "CourseModuleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Exercises_CourseActivityId",
-                table: "Exercises",
-                column: "CourseActivityId");
+                name: "IX_ModuleDocument_ModuleId",
+                table: "ModuleDocument",
+                column: "ModuleId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ActivityDocument");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -423,10 +431,10 @@ namespace LMS1.Migrations
                 name: "CourseDocument");
 
             migrationBuilder.DropTable(
-                name: "Document");
+                name: "ExerciseSubmission");
 
             migrationBuilder.DropTable(
-                name: "Exercises");
+                name: "ModuleDocument");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
