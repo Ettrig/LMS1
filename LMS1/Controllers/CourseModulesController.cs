@@ -1,14 +1,14 @@
 ﻿using LMS1.Data;
 using LMS1.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.AspNetCore.Http;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LMS1.Controllers
 {
@@ -37,9 +37,9 @@ namespace LMS1.Controllers
                 return NotFound();
             }
             var courseModule = await _context.CourseModule
-                .Include(m => m.Activities)
-                .Include(m => m.Course)
-                .Include(c => c.ModuleDocuments)
+                 .Include(m => m.ModuleDocuments)
+                 .Include(m => m.Activities)
+                 .Include(m => m.Course)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (courseModule == null)
             {
@@ -216,7 +216,7 @@ namespace LMS1.Controllers
                     {
                         await formFile.CopyToAsync(stream);
                     }
-                    var docRec = new ModuleDocument() { FileName = formFile.FileName, ModuleId = moduleId, InternalName = InternalName };
+                    var docRec = new ModuleDocument() { FileName = formFile.FileName, CourseModuleId = moduleId, InternalName = InternalName };
                     _context.ModuleDocument.Add(docRec);
                     _context.SaveChanges();
                 }
@@ -234,7 +234,7 @@ namespace LMS1.Controllers
             //Not nice that EF reuses the name "File" in the controller
             System.IO.File.Delete("wwwroot/Documents/" + fil.FileName);
 
-            int moduleId = fil.ModuleId;
+            int moduleId = fil.CourseModuleId;
             _context.ModuleDocument.Remove(fil);
             _context.SaveChanges();
 

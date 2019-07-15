@@ -7,7 +7,7 @@ namespace LMS1.Models
 {
     public class ActivityDocument : Document
     {
-        public int ActivityId { get; set; }
+        public int CourseActivityId { get; set; }
 
     }
 }

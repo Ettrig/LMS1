@@ -6,7 +6,7 @@
 <h1>Add File to Activity</h1>
 
 <form method="post" enctype="multipart/form-data" asp-controller="CourseActivities" asp-action="AddFile">
-    <input type="hidden" name="ModuleId" value="@ViewBag.ActivityId" />
+    <input type="hidden" name="ActivityId" value="@ViewBag.ActivityId" />
     <div class="form-group">
         <p>Give the file a descriptive name</p>
         <input type="text" name="InternalName" />

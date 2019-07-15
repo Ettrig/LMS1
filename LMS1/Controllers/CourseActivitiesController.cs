@@ -45,10 +45,9 @@ namespace LMS1.Controllers
             var courseActivity = await _context.CourseActivity
                 .Include(a => a.ActivityDocuments)
                 .Include(a => a.Submissions)
-                .ThenInclude(s => s.User)
+                .ThenInclude(a => a.User)
                 .Include(a => a.Module)
-                .ThenInclude(m => m.Course)
-
+                .ThenInclude(a => a.Course)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (courseActivity == null)
             {
@@ -337,7 +336,7 @@ namespace LMS1.Controllers
                     {
                         await formFile.CopyToAsync(stream);
                     }
-                    var docRec = new ActivityDocument() { FileName = formFile.FileName, ActivityId = activityId, InternalName = InternalName };
+                    var docRec = new ActivityDocument() { FileName = formFile.FileName, CourseActivityId = activityId, InternalName = InternalName };
                     _context.ActivityDocument.Add(docRec);
                     _context.SaveChanges();
                 }
@@ -345,7 +344,8 @@ namespace LMS1.Controllers
             return RedirectToAction("Details", new { id = activityId });
         }
 
-        public async Task<IActionResult> DeleteModuleFile(int? id)
+        //public async Task<IActionResult> DeleteModuleFile(int? id)
+          public async Task<IActionResult> DeleteActivityFile(int? id)
         {
             if (id == null) return NotFound();
 
@@ -355,7 +355,7 @@ namespace LMS1.Controllers
             //Not nice that EF reuses the name "File" in the controller
             System.IO.File.Delete("wwwroot/Documents/" + fil.FileName);
 
-            int moduleId = fil.ActivityId;
+            int moduleId = fil.CourseActivityId;
             _context.ActivityDocument.Remove(fil);
             _context.SaveChanges();
 

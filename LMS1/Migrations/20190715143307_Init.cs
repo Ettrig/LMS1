@@ -135,8 +135,7 @@ namespace LMS1.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     InternalName = table.Column<string>(nullable: true),
                     FileName = table.Column<string>(nullable: true),
-                    ModuleId = table.Column<int>(nullable: false),
-                    CourseModuleId = table.Column<int>(nullable: true)
+                    CourseModuleId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -146,7 +145,7 @@ namespace LMS1.Migrations
                         column: x => x.CourseModuleId,
                         principalTable: "CourseModule",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,8 +156,7 @@ namespace LMS1.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     InternalName = table.Column<string>(nullable: true),
                     FileName = table.Column<string>(nullable: true),
-                    ActivityId = table.Column<int>(nullable: false),
-                    CourseActivityId = table.Column<int>(nullable: true)
+                    CourseActivityId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -168,7 +166,7 @@ namespace LMS1.Migrations
                         column: x => x.CourseActivityId,
                         principalTable: "CourseActivity",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

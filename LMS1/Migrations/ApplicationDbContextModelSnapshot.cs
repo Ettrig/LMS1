@@ -25,9 +25,7 @@ namespace LMS1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ActivityId");
-
-                    b.Property<int?>("CourseActivityId");
+                    b.Property<int>("CourseActivityId");
 
                     b.Property<string>("FileName");
 
@@ -227,13 +225,11 @@ namespace LMS1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CourseModuleId");
+                    b.Property<int>("CourseModuleId");
 
                     b.Property<string>("FileName");
 
                     b.Property<string>("InternalName");
-
-                    b.Property<int>("ModuleId");
 
                     b.HasKey("Id");
 
@@ -360,7 +356,8 @@ namespace LMS1.Migrations
                 {
                     b.HasOne("LMS1.Models.CourseActivity")
                         .WithMany("ActivityDocuments")
-                        .HasForeignKey("CourseActivityId");
+                        .HasForeignKey("CourseActivityId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("LMS1.Models.ApplicationUser", b =>
@@ -414,7 +411,8 @@ namespace LMS1.Migrations
                 {
                     b.HasOne("LMS1.Models.CourseModule")
                         .WithMany("ModuleDocuments")
-                        .HasForeignKey("CourseModuleId");
+                        .HasForeignKey("CourseModuleId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
