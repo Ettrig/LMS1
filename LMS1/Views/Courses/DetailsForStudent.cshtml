@@ -36,6 +36,38 @@
 </div>
 
 <br>
+@if (Model.course.CourseDocuments.Count > 0)
+{
+    string completeFilePath = "";
+    <h3>Files for the course</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>File link</th>
+                <th>Document name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.course.CourseDocuments)
+            {
+                completeFilePath = "/Documents/" + item.FileName;
+                <tr class="p-3 mb-2 bg-light text-dark">
+                    <td>
+                        <a href=@completeFilePath>@item.FileName</a>
+                    </td>
+                    <td>
+                        @item.InternalName
+                    </td>
+                    <td>
+                        <a asp-action="DeleteCourseFile" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<br>
 
 @if (Model.course.Modules.Count > 0)
 {

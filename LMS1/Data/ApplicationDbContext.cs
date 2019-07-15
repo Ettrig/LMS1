@@ -17,6 +17,11 @@ namespace LMS1.Data
             UserAscend, CourseAscend, RoleAscend, UserDescend, CourseDescend, RoleDescend
         };
 
+        public enum CourseUnitType
+        {
+            Course, Module, Activity
+        }; 
+
         public DbSet<Course> Course { get; set; }
 
         public DbSet<CourseModule> CourseModule { get; set; }
@@ -26,6 +31,7 @@ namespace LMS1.Data
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
 
         public DbSet<CourseDocument> CourseDocument { get; set; }
+        public DbSet<CourseActivityDocument> CourseActivityDocument { get; set; }
 
         public DbSet<ModuleDocument> ModuleDocument { get; set; }
 
