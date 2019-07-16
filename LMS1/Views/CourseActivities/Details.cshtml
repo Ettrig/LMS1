@@ -1,4 +1,4 @@
-﻿@model LMS1.Models.CourseActivity
+﻿@model LMS1.ViewModels.ActivityForTeacher
 
 @{
     ViewData["Title"] = "Details";
@@ -10,88 +10,92 @@
 <div>
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Module.Course.Name)
+            @Html.DisplayNameFor(model => model.activity.Module.Course.Name)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Module.Course.Name)
+            @Html.DisplayFor(model => model.activity.Module.Course.Name)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Module.Name)
+            @Html.DisplayNameFor(model => model.activity.Module.Name)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Module.Name)
+            @Html.DisplayFor(model => model.activity.Module.Name)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.activity.Name)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.activity.Name)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
+            @Html.DisplayNameFor(model => model.activity.StartDate)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
+            @Html.DisplayFor(model => model.activity.StartDate)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
+            @Html.DisplayNameFor(model => model.activity.EndDate)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
+            @Html.DisplayFor(model => model.activity.EndDate)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.activity.Description)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.activity.Description)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Exercise)
+            @Html.DisplayNameFor(model => model.activity.Exercise)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Exercise)
+            @Html.DisplayFor(model => model.activity.Exercise)
         </dd>
     </dl>
 </div>
 
-<br>
+@if (Model.activity.ExerciseSubmissionRequired)
+{
+    string completeFilePath = "";
+    <h3>Exercise Submissions</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>File link</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.studentSubmissions)
+            {
+            <tr class="p-3 mb-2 bg-light text-dark">
+                <td>
+                    @Html.DisplayFor(model => item.student.LmsName)
+                </td>
+                <td>
+                    @if (item.submission != null)
+                    {
+                        completeFilePath = "/Exercises/" + item.submission.FileName;
+                        <a href=@completeFilePath>@item.submission.FileName</a>
+                    }
+                    else
+                    {
+                        <span>Nothing submitted</span>
+                    }
+                </td>
+                <td>
+                    @if (item.submission != null)
+                    {
+                        <a asp-action="DeleteSubmission" asp-route-id="@item.submission.Id">Delete file</a>
+                    }
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="AddFile" asp-route-id="@Model.Id">Add File</a> |
-    <a asp-action="BacktoModules" asp-route-id="@Model.Id">Back to Module</a>
-
+    <a asp-action="Edit" asp-route-id="@Model.activity.Id">Edit</a> |
+    <a asp-action="BacktoModules" asp-route-id="@Model.activity.Id">Back to Module</a>
 </div>
-
-    <br>
-    <div>
-
-        @if (Model.ActivityDocuments.Count > 0)
-        {
-            string completeFilePath = "";
-        <h3>Files for the Activity</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>File link</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.ActivityDocuments)
-                    {
-                        completeFilePath = "/Documents/" + item.FileName;
-                        <tr class="p-3 mb-2 bg-light text-dark">
-                            <td>
-                                <a href=@completeFilePath>@item.FileName</a><p>@item.InternalName</p>
-                            </td>
-                            <td>
-                                <a asp-action="DeleteActivityFile" asp-route-id="@item.Id">Delete</a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-    </div>
-
-

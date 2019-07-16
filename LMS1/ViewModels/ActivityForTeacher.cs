@@ -1,4 +1,5 @@
 ﻿using LMS1.Models;
+using LMS1.OtherClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace LMS1.ViewModels
 {
-    public class ActivityForStudent
+
+
+    public class ActivityForTeacher
     {
         public CourseActivity activity { get; set; }
-        //We have limited the number to 1, so a list is not needed
-        public List<ExerciseSubmission> submissions { get; set; }
+        public List<StudentSubmission> studentSubmissions { get; set; }
     }
 }
