@@ -57,16 +57,16 @@
 <br>
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="AddFile" asp-route-id="@Model.Id">Add File</a> |
-    <a asp-action="BacktoModules" asp-route-id="@Model.Id">Back to Module</a>
+    <a asp-action="Edit" asp-route-id="@Model.activity.Id">Edit</a> |
+    <a asp-action="AddFile" asp-route-id="@Model.activity.Id">Add File</a> |
+    <a asp-action="BacktoModules" asp-route-id="@Model.activity.Id">Back to Module</a>
 
 </div>
 
     <br>
     <div>
 
-        @if (Model.ActivityDocuments.Count > 0)
+        @if (Model.activity.ActivityDocuments.Count > 0)
         {
             string completeFilePath = "";
         <h3>Files for the Activity</h3>
@@ -77,7 +77,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.ActivityDocuments)
+                    @foreach (var item in Model.activity.ActivityDocuments)
                     {
                         completeFilePath = "/Documents/" + item.FileName;
                         <tr class="p-3 mb-2 bg-light text-dark">
