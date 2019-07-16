@@ -40,6 +40,10 @@
 
 <br>
 
+
+
+<h3>Files for the course</h3>
+
 <p>
     <a asp-action="AddFile" asp-route-id="@Model.Id">Add File</a>
 </p>
@@ -47,7 +51,7 @@
 @if (Model.CourseDocuments?.Count > 0)
 {
     string completeFilePath = "";
-    <h3>Files for the course</h3>
+    @*<h3>Files for the course</h3>*@
     <table class="table">
         <thead>
             <tr>
@@ -59,17 +63,17 @@
             @foreach (var item in Model.CourseDocuments)
             {
                 completeFilePath = "/Documents/" + item.FileName;
-            <tr class="p-3 mb-2 bg-light text-dark">
-                <td>
-                    <a href=@completeFilePath>@item.FileName</a>
-                </td>
-                <td>
-                    <h7>@item.InternalName</h7>
-                </td>
-                <td>
-                    <a asp-action="DeleteCourseFile" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
+                <tr class="p-3 mb-2 bg-light text-dark">
+                    <td>
+                        <a href=@completeFilePath>@item.FileName</a>
+                    </td>
+                    <td>
+                        <h7>@item.InternalName</h7>
+                    </td>
+                    <td>
+                        <a asp-action="DeleteCourseFile" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -77,14 +81,15 @@
 
 <br>
 
+
+<h3>List of modules</h3>
+
 <p>
     <a asp-action="AddModule" asp-route-id="@Model.Id">Add Module</a>
 </p>
 
 @if (Model.Modules.Count > 0)
 {
-    <h3>List of modules</h3>
-
     <table class="table">
         <thead>
             <tr>

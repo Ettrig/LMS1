@@ -61,67 +61,37 @@
     <a asp-action="AddFile" asp-route-id="@Model.Id">Add File</a> |
     <a asp-action="BacktoModules" asp-route-id="@Model.Id">Back to Module</a>
 
-    <br>
-
-
-    @if (Model.ActivityDocuments.Count > 0)
-    {
-        string completeFilePath = "";
-        <h3>Files for the Module</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>File link</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.ActivityDocuments)
-                {
-                    completeFilePath = "/Documents/" + item.FileName;
-                    <tr class="p-3 mb-2 bg-light text-dark">
-                        <td>
-                            <a href=@completeFilePath>@item.FileName</a><p>@item.InternalName</p>
-                        </td>
-                        <td>
-                            <a asp-action="DeleteActivityFile" asp-route-id="@item.Id">Delete</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
 </div>
 
-<br>
+    <br>
+    <div>
 
-@if (Model.ActivityDocuments?.Count > 0)
-{
-    string completeFilePath = "";
-    <h3>Files for the course</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>File link</th>
-                <th>Document name</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.ActivityDocuments)
-            {
-                completeFilePath = "/Documents/" + item.FileName;
-                <tr class="p-3 mb-2 bg-light text-dark">
-                    <td>
-                        <a href=@completeFilePath>@item.FileName</a>
-                    </td>
-                    <td>
-                        <h7>@item.InternalName</h7>
-                    </td>
-                    <td>
-                        <a asp-action="DeleteActivityFile" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+        @if (Model.ActivityDocuments.Count > 0)
+        {
+            string completeFilePath = "";
+        <h3>Files for the Activity</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>File link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ActivityDocuments)
+                    {
+                        completeFilePath = "/Documents/" + item.FileName;
+                        <tr class="p-3 mb-2 bg-light text-dark">
+                            <td>
+                                <a href=@completeFilePath>@item.FileName</a><p>@item.InternalName</p>
+                            </td>
+                            <td>
+                                <a asp-action="DeleteActivityFile" asp-route-id="@item.Id">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
 

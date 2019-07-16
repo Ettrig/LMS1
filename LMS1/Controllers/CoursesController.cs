@@ -155,7 +155,7 @@ namespace LMS1.Controllers
             return View(course);
         }
 
-        // GET: Courses/Edit/5Add-migration Init
+        // GET: Courses/Edit/5
         [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Edit(int? id)
         {
