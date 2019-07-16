@@ -54,6 +54,11 @@
     </dl>
 </div>
 
+
+<h3>Files for the Activity</h3>
+<a asp-action="AddFile" asp-route-id="@Model.activity.Id">Add File</a>
+<hr />
+
 @if (Model.activity.ExerciseSubmissionRequired)
 {
     string completeFilePath = "";
