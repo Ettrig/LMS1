@@ -136,6 +136,8 @@ namespace LMS1.Migrations
                     b.Property<string>("Exercise")
                         .HasMaxLength(2500);
 
+                    b.Property<bool>("ExerciseSubmissionRequired");
+
                     b.Property<int>("ModuleId");
 
                     b.Property<string>("Name")

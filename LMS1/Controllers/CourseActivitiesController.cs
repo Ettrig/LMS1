@@ -1,5 +1,6 @@
 ﻿using LMS1.Data;
 using LMS1.Models;
+using LMS1.OtherClasses;
 using LMS1.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -47,13 +48,28 @@ namespace LMS1.Controllers
                 .Include(a => a.Submissions)
                 .ThenInclude(a => a.User)
                 .Include(a => a.Module)
-                .ThenInclude(a => a.Course)
+                .ThenInclude(m => m.Course)
+                .ThenInclude(c => c.AttendingStudents)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (courseActivity == null)
             {
                 return NotFound();
             }
-            return View(courseActivity);
+
+            var actForT = new ActivityForTeacher();
+            actForT.activity = courseActivity;
+            //Make list of StudentSubmissions
+            actForT.studentSubmissions = new List<StudentSubmission>(); 
+            foreach (ApplicationUser student in courseActivity.Module.Course.AttendingStudents)
+            {
+                actForT.studentSubmissions.Add(
+                    new StudentSubmission() { student = student,
+                        submission = courseActivity
+                        .Submissions
+                        .FirstOrDefault(s => s.ApplicationUserId == student.Id) });
+            }
+
+            return View(actForT);
         }
 
         // GET: CourseActivities/DetailsForStudent/5
@@ -227,7 +243,7 @@ namespace LMS1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartDate,EndDate,Description,Exercise,ModuleId")] CourseActivity courseActivity)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartDate,EndDate,Description,ExerciseSubmissionRequired,Exercise,ModuleId")] CourseActivity courseActivity)
         {
             if (id != courseActivity.Id)
             {

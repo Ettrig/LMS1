@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190716070943_Init")]
-    partial class Init
+    [Migration("20190716101238_BugInHandlingBoolInCourseActivity")]
+    partial class BugInHandlingBoolInCourseActivity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -137,6 +137,8 @@ namespace LMS1.Migrations
 
                     b.Property<string>("Exercise")
                         .HasMaxLength(2500);
+
+                    b.Property<bool>("ExerciseSubmissionRequired");
 
                     b.Property<int>("ModuleId");
 

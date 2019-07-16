@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LMS1.Migrations
 {
-    public partial class Init : Migration
+    public partial class BugInHandlingBoolInCourseActivity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -113,6 +113,7 @@ namespace LMS1.Migrations
                     StartDate = table.Column<DateTime>(nullable: false),
                     EndDate = table.Column<DateTime>(nullable: false),
                     Description = table.Column<string>(maxLength: 5000, nullable: true),
+                    ExerciseSubmissionRequired = table.Column<bool>(nullable: false),
                     Exercise = table.Column<string>(maxLength: 2500, nullable: true),
                     ModuleId = table.Column<int>(nullable: false)
                 },
