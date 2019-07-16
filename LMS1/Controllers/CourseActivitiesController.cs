@@ -221,7 +221,7 @@ namespace LMS1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartDate,EndDate,Description,Exercise,ModuleId")] CourseActivity courseActivity)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartDate,EndDate,Description,ExerciseSubmissionRequired,Exercise,ModuleId")] CourseActivity courseActivity)
         {
             if (id != courseActivity.Id)
             {
