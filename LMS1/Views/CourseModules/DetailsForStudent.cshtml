@@ -3,6 +3,11 @@
 @{
     ViewData["Title"] = "Details";
 }
+<div>
+    <a asp-action="StudentBacktoModules" asp-route-id="@Model.Id">Back to Course</a>
+</div>
+
+<hr />
 
 <h3>Module Details</h3>
 <hr />
@@ -42,45 +47,82 @@
     </dl>
 </div>
 
+
+
+
+
+
 <div>
-    <a asp-action="StudentBacktoModules" asp-route-id="@Model.Id">Back to Course</a>
+    @if (Model.ModuleDocuments?.Count > 0)
+    {
+        string completeFilePath = "";
+        <h3>Files for the Module</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>File link</th>
+                    <th>Document name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ModuleDocuments)
+                {
+                    completeFilePath = "/Documents/" + item.FileName;
+                    <tr class="p-3 mb-2 bg-light text-dark">
+                        <td>
+                            <a href=@completeFilePath>@item.FileName</a>
+                        </td>
+                        <td>
+                            <h7>@item.InternalName</h7>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>
-<p>
 
-    @if (Model.Activities.Count > 0)
-{
-    <h3>List of Activities</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Activity Name</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Activities)
-            {
-            <tr>
-                @*<td>
-                    
-                </td>*@
-                <td>
-                    <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EndDate)
-                </td>
-                @*<td>
-                    <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item.Id">Details</a>
-                </td>*@
-            </tr>
-            }
-        </tbody>
-    </table>
-}
 
+
+
+
+
+
+    <div>
+        @if (Model.Activities.Count > 0)
+        {
+            <h3>List of Activities</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Activity Name</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Activities)
+                    {
+                        <tr>
+                            @*<td>
+
+                            </td>*@
+                            <td>
+                                <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StartDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EndDate)
+                            </td>
+                            @*<td>
+                                <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item.Id">Details</a>
+                            </td>*@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>

@@ -4,6 +4,12 @@
     ViewData["Title"] = "Details";
 }
 
+<div>
+    <a asp-action="StudentBacktoModules" asp-route-id="@Model.activity.Id">Back to Module</a> |
+    <a asp-action="NextActivityForStudent" asp-route-id="@Model.activity.Id">Go to Next Activity</a>
+
+</div>
+<hr />
 <h3>Activity Details</h3>
 <hr />
 
@@ -54,41 +60,42 @@
     </dl>
 </div>
 
-<p>
-    <a asp-action="UploadExercise" asp-route-id="@Model.activity.Id">Upload Exercise Result</a>
-</p>
-@if (Model.submissions.Count > 0)
-{
-    string completeFilePath = "";
-    <h3>Exercise Submissions</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>File link</th>
-                <th>Student</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.submissions)
-            { // A cleanup could change this to not work as if there are several. There is allways just one. 
-                completeFilePath = "/Exercises/" + item.FileName;
-                <tr class="p-3 mb-2 bg-light text-dark">
-                    <td>
-                        <a href=@completeFilePath>@item.FileName</a>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => item.User.LmsName)
-                    </td>
-                    <td>
-                        <a asp-action="StudentDeleteSubmission" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
 
 <div>
-    <a asp-action="NextActivityForStudent" asp-route-id="@Model.activity.Id">Go to Next Activity</a> |
-    <a asp-action="StudentBacktoModules" asp-route-id="@Model.activity.Id">Back to Module</a>
+    @if (Model.submissions.Count > 0)
+    {
+        <p>
+            <a asp-action="UploadExercise" asp-route-id="@Model.activity.Id">Upload Exercise Result</a>
+        </p>
+        string completeFilePath = "";
+        <h3>Exercise Submissions</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>File link</th>
+                    <th>Student</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.submissions)
+                { // A cleanup could change this to not work as if there are several. There is allways just one.
+                    completeFilePath = "/Exercises/" + item.FileName;
+                    <tr class="p-3 mb-2 bg-light text-dark">
+                        <td>
+                            <a href=@completeFilePath>@item.FileName</a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.User.LmsName)
+                        </td>
+                        <td>
+                            <a asp-action="StudentDeleteSubmission" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>
+
+
+

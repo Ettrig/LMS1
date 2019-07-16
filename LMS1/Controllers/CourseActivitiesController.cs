@@ -34,7 +34,7 @@ namespace LMS1.Controllers
             var applicationDbContext = _context.CourseActivity.Include(c => c.Module);
             return View(await applicationDbContext.ToListAsync());
         }
-
+        [Authorize(Roles = "Teacher")]
         // GET: CourseActivities/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -179,6 +179,7 @@ namespace LMS1.Controllers
         }
 
         // GET: CourseActivities/Create
+        [Authorize(Roles = "Teacher")]
         public IActionResult Create()
         {
             ViewData["ModuleId"] = new SelectList(_context.CourseModule, "Id", "Id");
@@ -186,6 +187,7 @@ namespace LMS1.Controllers
         }
 
         // POST: CourseActivities/Create
+        [Authorize(Roles = "Teacher")]
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -203,6 +205,7 @@ namespace LMS1.Controllers
         }
 
         // GET: CourseActivities/Edit/5
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -219,6 +222,7 @@ namespace LMS1.Controllers
         }
 
         // POST: CourseActivities/Edit/5
+        [Authorize(Roles = "Teacher")]
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -262,6 +266,7 @@ namespace LMS1.Controllers
         }
 
         // GET: CourseActivities/Delete/5
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -281,6 +286,7 @@ namespace LMS1.Controllers
         }
 
         // POST: CourseActivities/Delete/5
+        [Authorize(Roles = "Teacher")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -345,7 +351,8 @@ namespace LMS1.Controllers
         }
 
         //public async Task<IActionResult> DeleteModuleFile(int? id)
-          public async Task<IActionResult> DeleteActivityFile(int? id)
+        [Authorize(Roles = "Teacher")]
+        public async Task<IActionResult> DeleteActivityFile(int? id)
         {
             if (id == null) return NotFound();
 

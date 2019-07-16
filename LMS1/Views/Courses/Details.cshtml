@@ -104,7 +104,7 @@
             {
                 <tr class="p-3 mb-2 bg-light text-dark">
                     <td>
-                        <h5>@Html.DisplayFor(modelItem => item.Name)</h5>
+                        <h5><a asp-action="Details" asp-controller="CourseModules" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a></h5>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.StartDate)
@@ -113,7 +113,7 @@
                         @Html.DisplayFor(modelItem => item.EndDate)
                     </td>
                     <td>
-                        <a asp-action="Details" asp-controller="CourseModules" asp-route-id="@item.Id">Details</a> |
+                        @*<a asp-action="Details" asp-controller="CourseModules" asp-route-id="@item.Id">Details</a> |*@
                         <a asp-action="Edit" asp-controller="CourseModules" asp-route-id="@item.Id">Edit</a> |
                         <a asp-action="Delete" asp-controller="CourseModules" asp-route-id="@item.Id">Delete</a> |
                         <a asp-action="AddActivity" asp-controller="CourseModules" asp-route-id="@item.Id">Add Activity</a>
@@ -123,7 +123,7 @@
                 {
                     <tr>
                         <td>
-                            <h7>@Html.DisplayFor(modelItem => item2.Name)</h7>
+                            <h7><a asp-action="Details" asp-controller="CourseActivities" asp-route-id="@item2.Id">@Html.DisplayFor(modelItem => item2.Name)</a></h7>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item2.StartDate)
@@ -132,7 +132,7 @@
                             @Html.DisplayFor(modelItem => item2.EndDate)
                         </td>
                         <td>
-                            <a asp-action="Details" asp-controller="CourseActivities" asp-route-id="@item2.Id">Details</a> |
+                            @*<a asp-action="Details" asp-controller="CourseActivities" asp-route-id="@item2.Id">Details</a> |*@
                             <a asp-action="Edit" asp-controller="CourseActivities" asp-route-id="@item2.Id">Edit</a> |
                             <a asp-action="Delete" asp-controller="CourseActivities" asp-route-id="@item2.Id">Delete</a>
                         </td>

@@ -50,76 +50,78 @@
 
 <br>
 
-@if (Model.ModuleDocuments?.Count > 0)
-{
-    string completeFilePath = "";
-<h3>Files for the Module</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>File link</th>
-                <th>Document name</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.ModuleDocuments)
-            {
-                completeFilePath = "/Documents/" + item.FileName;
-                <tr class="p-3 mb-2 bg-light text-dark">
-                    <td>
-                        <a href=@completeFilePath>@item.FileName</a>
-                    </td>
-                    <td>
-                        <h7>@item.InternalName</h7>
-                    </td>
-                    <td>
-                        <a asp-action="DeleteModuleFile" asp-route-id="@item.Id">Delete</a>
-                    </td>
+<div>
+    @if (Model.ModuleDocuments?.Count > 0)
+    {
+        string completeFilePath = "";
+        <h3>Files for the Module</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>File link</th>
+                    <th>Document name</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
-
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ModuleDocuments)
+                {
+                    completeFilePath = "/Documents/" + item.FileName;
+                    <tr class="p-3 mb-2 bg-light text-dark">
+                        <td>
+                            <a href=@completeFilePath>@item.FileName</a>
+                        </td>
+                        <td>
+                            <h7>@item.InternalName</h7>
+                        </td>
+                        <td>
+                            <a asp-action="DeleteModuleFile" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
 <br>
 
-<p>
-    <a asp-action="AddActivity" asp-route-id="@Model.Id">Add Activity</a>
-</p>
-
-@if (Model.Activities.Count > 0)
-{
+<div>
     <h3>List of Activities</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Activity Name</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Activities)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StartDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EndDate)
-                    </td>
-                    <td>
-                        <a asp-action="Details" asp-controller="CourseActivities" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Edit" asp-controller="CourseActivities" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Delete" asp-controller="CourseActivities" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+    <p>
+        <a asp-action="AddActivity" asp-route-id="@Model.Id">Add Activity</a>
+    </p>
 
+    @if (Model.Activities.Count > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Activity Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Activities)
+                {
+                    <tr>
+                        <td>
+                            <a asp-action="Details" asp-controller="CourseActivities" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndDate)
+                        </td>
+                        <td>
+                            @*<a asp-action="Details" asp-controller="CourseActivities" asp-route-id="@item.Id">Details</a> |*@
+                            <a asp-action="Edit" asp-controller="CourseActivities" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Delete" asp-controller="CourseActivities" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
