@@ -284,7 +284,7 @@ namespace LMS1.Controllers
         }
 
 
-        // GET: ApplicationUser/StudentList/+¤%¤#"!"#+*^
+        // GET: ApplicationUser/ListStudents/17
         public async Task<IActionResult> ListStudents(int? id)
         {
             //The list is to be for a course and id is key for the course
@@ -308,6 +308,19 @@ namespace LMS1.Controllers
 
             return View("ClassList", cl);
         }
+
+        public async Task<IActionResult> BackToCourse(int? id)
+        {
+            if (User.IsInRole("Teacher"))
+            {
+                return RedirectToAction("Details", "Courses", new { id });
+            }
+            else
+            {
+                return RedirectToAction("DetailsForStudent", "Courses", new { id });
+            }
+        }
+
 
         public async Task<IActionResult> RemoveUser( string id )
         {
