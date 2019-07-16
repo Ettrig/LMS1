@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190716065944_ActivityExerciseRequired")]
-    partial class ActivityExerciseRequired
+    [Migration("20190716101238_BugInHandlingBoolInCourseActivity")]
+    partial class BugInHandlingBoolInCourseActivity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,25 @@ namespace LMS1.Migrations
                 .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("LMS1.Models.ActivityDocument", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CourseActivityId");
+
+                    b.Property<string>("FileName");
+
+                    b.Property<string>("InternalName");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseActivityId");
+
+                    b.ToTable("ActivityDocument");
+                });
 
             modelBuilder.Entity("LMS1.Models.ApplicationUser", b =>
                 {
@@ -136,25 +155,6 @@ namespace LMS1.Migrations
                     b.ToTable("CourseActivity");
                 });
 
-            modelBuilder.Entity("LMS1.Models.CourseActivityDocument", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CourseActivityId");
-
-                    b.Property<string>("FileName");
-
-                    b.Property<string>("InternalName");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseActivityId");
-
-                    b.ToTable("CourseActivityDocument");
-                });
-
             modelBuilder.Entity("LMS1.Models.CourseDocument", b =>
                 {
                     b.Property<int>("Id")
@@ -200,39 +200,6 @@ namespace LMS1.Migrations
                     b.ToTable("CourseModule");
                 });
 
-            modelBuilder.Entity("LMS1.Models.Document", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("ActivityId");
-
-                    b.Property<int?>("CourseActivityId");
-
-                    b.Property<int?>("CourseId");
-
-                    b.Property<int?>("CourseModuleId");
-
-                    b.Property<string>("DisplayName");
-
-                    b.Property<string>("FileName");
-
-                    b.Property<string>("Filepath");
-
-                    b.Property<int?>("ModuleId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CourseActivityId");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("CourseModuleId");
-
-                    b.ToTable("Document");
-                });
-
             modelBuilder.Entity("LMS1.Models.ExerciseSubmission", b =>
                 {
                     b.Property<int>("Id")
@@ -254,6 +221,25 @@ namespace LMS1.Migrations
                     b.HasIndex("CourseActivityId");
 
                     b.ToTable("ExerciseSubmission");
+                });
+
+            modelBuilder.Entity("LMS1.Models.ModuleDocument", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CourseModuleId");
+
+                    b.Property<string>("FileName");
+
+                    b.Property<string>("InternalName");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseModuleId");
+
+                    b.ToTable("ModuleDocument");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -370,6 +356,14 @@ namespace LMS1.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("LMS1.Models.ActivityDocument", b =>
+                {
+                    b.HasOne("LMS1.Models.CourseActivity")
+                        .WithMany("ActivityDocuments")
+                        .HasForeignKey("CourseActivityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("LMS1.Models.ApplicationUser", b =>
                 {
                     b.HasOne("LMS1.Models.CourseActivity", "CourseActivity")
@@ -389,17 +383,9 @@ namespace LMS1.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("LMS1.Models.CourseActivityDocument", b =>
-                {
-                    b.HasOne("LMS1.Models.CourseActivity", "Activity")
-                        .WithMany()
-                        .HasForeignKey("CourseActivityId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("LMS1.Models.CourseDocument", b =>
                 {
-                    b.HasOne("LMS1.Models.Course", "Course")
+                    b.HasOne("LMS1.Models.Course")
                         .WithMany("CourseDocuments")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -413,21 +399,6 @@ namespace LMS1.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("LMS1.Models.Document", b =>
-                {
-                    b.HasOne("LMS1.Models.CourseActivity", "CourseActivity")
-                        .WithMany("Documents")
-                        .HasForeignKey("CourseActivityId");
-
-                    b.HasOne("LMS1.Models.Course", "Course")
-                        .WithMany("Documents")
-                        .HasForeignKey("CourseId");
-
-                    b.HasOne("LMS1.Models.CourseModule", "CourseModule")
-                        .WithMany("Documents")
-                        .HasForeignKey("CourseModuleId");
-                });
-
             modelBuilder.Entity("LMS1.Models.ExerciseSubmission", b =>
                 {
                     b.HasOne("LMS1.Models.ApplicationUser", "User")
@@ -437,6 +408,14 @@ namespace LMS1.Migrations
                     b.HasOne("LMS1.Models.CourseActivity", "Activity")
                         .WithMany("Submissions")
                         .HasForeignKey("CourseActivityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("LMS1.Models.ModuleDocument", b =>
+                {
+                    b.HasOne("LMS1.Models.CourseModule")
+                        .WithMany("ModuleDocuments")
+                        .HasForeignKey("CourseModuleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
