@@ -29,6 +29,7 @@ namespace LMS1.Models
         [StringLength(5000, MinimumLength = 2)]
         public string Description { get; set; }
 
+        [Display(Name = "Exercise Submission Required")]
         public bool ExerciseSubmissionRequired { get; set; }
 
         [Display(Name = "Exercise Text")]

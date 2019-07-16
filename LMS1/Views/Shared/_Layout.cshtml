@@ -27,21 +27,21 @@
                 <a class="navbar-brand" asp-area="" asp-controller="Courses" asp-action="StudentOrTeacher">
                     <img src="~/images/logo-lexicon-small_2x.gif" height="55" />
                 </a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                        <partial name="_LoginPartial" />
-                        <ul class="navbar-nav flex-grow-1">
-                            @*<li class="nav-item">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <partial name="_LoginPartial" />
+                    <ul class="navbar-nav flex-grow-1">
+                        @*<li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="CourseModules" asp-action="Index">Modules</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="CourseActivities" asp-action="Index">Activities</a>
                             </li>*@
-                        </ul>
-                    </div>
+                    </ul>
+                </div>
             </div>
         </nav>
     </header>
@@ -77,6 +77,12 @@
         </script>
     </environment>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+    <!-- Add icon library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Add font awesome icons to buttons  -->
 
     @RenderSection("Scripts", required: false)
 </body>
