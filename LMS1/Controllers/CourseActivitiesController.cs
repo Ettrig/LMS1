@@ -1,5 +1,6 @@
 ﻿using LMS1.Data;
 using LMS1.Models;
+using LMS1.OtherClasses;
 using LMS1.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -47,12 +48,27 @@ namespace LMS1.Controllers
                 .ThenInclude(s => s.User)
                 .Include(a => a.Module)
                 .ThenInclude(m => m.Course)
+                .ThenInclude(c => c.AttendingStudents)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (courseActivity == null)
             {
                 return NotFound();
             }
-            return View(courseActivity);
+
+            var actForT = new ActivityForTeacher();
+            actForT.activity = courseActivity;
+            //Make list of StudentSubmissions
+            actForT.studentSubmissions = new List<StudentSubmission>(); 
+            foreach (ApplicationUser student in courseActivity.Module.Course.AttendingStudents)
+            {
+                actForT.studentSubmissions.Add(
+                    new StudentSubmission() { student = student,
+                        submission = courseActivity
+                        .Submissions
+                        .FirstOrDefault(s => s.ApplicationUserId == student.Id) });
+            }
+
+            return View(actForT);
         }
 
         // GET: CourseActivities/DetailsForStudent/5
