@@ -51,7 +51,6 @@
 @if (Model.CourseDocuments?.Count > 0)
 {
     string completeFilePath = "";
-    @*<h3>Files for the course</h3>*@
     <table class="table">
         <thead>
             <tr>
@@ -71,7 +70,7 @@
                         <h7>@item.InternalName</h7>
                     </td>
                     <td>
-                        <a asp-action="DeleteCourseFile" asp-route-id="@item.Id">Delete</a>
+                        <a asp-action="DeleteCourseFile" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>
                     </td>
                 </tr>
             }
@@ -113,10 +112,9 @@
                         @Html.DisplayFor(modelItem => item.EndDate)
                     </td>
                     <td>
-                        @*<a asp-action="Details" asp-controller="CourseModules" asp-route-id="@item.Id">Details</a> |*@
-                        <a asp-action="Edit" asp-controller="CourseModules" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Delete" asp-controller="CourseModules" asp-route-id="@item.Id">Delete</a> |
-                        <a asp-action="AddActivity" asp-controller="CourseModules" asp-route-id="@item.Id">Add Activity</a>
+                        <a asp-action="Edit" asp-controller="CourseModules" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-edit"></i></button></a>
+                        <a asp-action="Delete" asp-controller="CourseModules" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>
+                        <a asp-action="AddActivity" asp-controller="CourseModules" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-plus"></i></button></a>
                     </td>
                 </tr>
                 @foreach (var item2 in item.Activities)
@@ -132,9 +130,8 @@
                             @Html.DisplayFor(modelItem => item2.EndDate)
                         </td>
                         <td>
-                            @*<a asp-action="Details" asp-controller="CourseActivities" asp-route-id="@item2.Id">Details</a> |*@
-                            <a asp-action="Edit" asp-controller="CourseActivities" asp-route-id="@item2.Id">Edit</a> |
-                            <a asp-action="Delete" asp-controller="CourseActivities" asp-route-id="@item2.Id">Delete</a>
+                            <a asp-action="Edit" asp-controller="CourseActivities" asp-route-id="@item2.Id"><button class="btn"><i class="fa fa-edit"></i></button></a>
+                            <a asp-action="Delete" asp-controller="CourseActivities" asp-route-id="@item2.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>
                         </td>
                     </tr>
                 }
