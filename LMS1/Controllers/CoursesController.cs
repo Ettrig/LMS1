@@ -93,6 +93,12 @@ namespace LMS1.Controllers
             {
                 return NotFound();
             }
+
+            course.Modules = course.Modules
+                .OrderBy(m => m.StartDate.Date)
+                .ThenBy(m => m.EndDate)
+                .ToList();
+
             foreach (CourseModule m in course.Modules)
                 m.Activities = m.Activities
                     .OrderBy(a => a.StartDate.Date)

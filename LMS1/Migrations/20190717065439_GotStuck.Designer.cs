@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190716142720_Init")]
-    partial class Init
+    [Migration("20190717065439_GotStuck")]
+    partial class GotStuck
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
