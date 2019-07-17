@@ -2,12 +2,12 @@
 using LMS1.Models;
 using LMS1.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,11 +18,13 @@ namespace LMS1.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHostingEnvironment hostingEnvironment;
 
-        public CoursesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public CoursesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
         public async Task<ActionResult> StudentOrTeacher()
@@ -32,13 +34,13 @@ namespace LMS1.Controllers
             {
                 var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
                 Course course;
-                if (user!=null && user.CourseId != null)
+                if (user != null && user.CourseId != null)
                 {
                     course = await _context.Course.FirstOrDefaultAsync(c => c.Id == user.CourseId);
-                    if (course!=null) return RedirectToAction("DetailsForStudent", new { id=course.Id } );
+                    if (course != null) return RedirectToAction("DetailsForStudent", new { id = course.Id });
                 }
             }
-            return RedirectToAction("Index", "Home"); 
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Courses
@@ -67,6 +69,11 @@ namespace LMS1.Controllers
                 return NotFound();
             }
 
+            course.Modules = course.Modules
+                        .OrderBy(m => m.StartDate.Date)
+                        .ThenBy(m => m.EndDate)
+                        .ToList();
+
             foreach (CourseModule m in course.Modules)
                 m.Activities = m.Activities
                     .OrderBy(a => a.StartDate.Date)
@@ -93,6 +100,12 @@ namespace LMS1.Controllers
             {
                 return NotFound();
             }
+
+            course.Modules = course.Modules
+                .OrderBy(m => m.StartDate.Date)
+                .ThenBy(m => m.EndDate)
+                .ToList();
+
             foreach (CourseModule m in course.Modules)
                 m.Activities = m.Activities
                     .OrderBy(a => a.StartDate.Date)
@@ -105,28 +118,28 @@ namespace LMS1.Controllers
             {
                 foreach (CourseActivity act in mod.Activities)
                 {
-                    if (act.Id==user.CourseActivityId)
+                    if (act.Id == user.CourseActivityId)
                     {
                         currentModuleId = act.ModuleId;
-                        break; 
+                        break;
                     }
                 }
-                if (currentModuleId != null) break; 
+                if (currentModuleId != null) break;
             }
 
             if (user.CourseActivityId == null)
             {
                 var firstModule = course.Modules.FirstOrDefault(m => true);
-                if (firstModule==null) return View(new CourseForStudent() { activeModuleId = null, activeActivityId = null, course = course }); 
+                if (firstModule == null) return View(new CourseForStudent() { activeModuleId = null, activeActivityId = null, course = course });
                 currentModuleId = firstModule.Id;
                 var firstActivity = firstModule.Activities.FirstOrDefault(a => true);
-                if (firstActivity==null) return View(new CourseForStudent() { activeModuleId = currentModuleId, activeActivityId = null, course = course });
+                if (firstActivity == null) return View(new CourseForStudent() { activeModuleId = currentModuleId, activeActivityId = null, course = course });
                 user.CourseActivityId = firstActivity.Id;
                 _context.Update(user);
                 _context.SaveChanges();
             }
 
-            var cfs = new CourseForStudent() { activeModuleId=currentModuleId, activeActivityId = user.CourseActivityId, course = course };
+            var cfs = new CourseForStudent() { activeModuleId = currentModuleId, activeActivityId = user.CourseActivityId, course = course };
 
             return View(cfs);
         }
@@ -243,8 +256,9 @@ namespace LMS1.Controllers
         {
             var course = await _context.Course
                 .Include(c => c.AttendingStudents)
-                .FirstOrDefaultAsync(c => c.Id==id);
-            foreach (ApplicationUser student in course.AttendingStudents) {
+                .FirstOrDefaultAsync(c => c.Id == id);
+            foreach (ApplicationUser student in course.AttendingStudents)
+            {
                 student.CourseId = null; // null == no course
                 _context.Update(student);
             }
@@ -264,27 +278,21 @@ namespace LMS1.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddFile(List<IFormFile> files, int courseId, string InternalName)
+        public async Task<IActionResult> AddFile(IFormFile file, int courseId, string InternalName)
         {
-            // We handle only one file at a time, so this foreach should not be needed. 
-            // Maybe just take the first item in the list. 
-            // Maybe change the .cshtml so that it does not return a list. 
-            foreach (var formFile in files)
+            var rootPath = hostingEnvironment.ContentRootPath;
+            var fileName = Path.GetFileName(file.FileName);
+            using (var stream = new FileStream(
+                $"{rootPath}//wwwroot//Documents//{fileName}",
+                FileMode.Create)
+            )
             {
-                if (formFile.Length > 0)
-                {
-                    using (var stream = new FileStream(
-                        "wwwroot/Documents/" + formFile.FileName,
-                        FileMode.Create)
-                    )
-                    {
-                        await formFile.CopyToAsync(stream);
-                    }
-                    var docRec = new CourseDocument() { FileName = formFile.FileName, CourseId = courseId, InternalName = InternalName };
-                    _context.CourseDocument.Add(docRec);
-                    _context.SaveChanges();
-                }
+                await file.CopyToAsync(stream);
             }
+            var docRec = new CourseDocument() { FileName = fileName, CourseId = courseId, InternalName = InternalName };
+            _context.CourseDocument.Add(docRec);
+            _context.SaveChanges();
+
             return RedirectToAction("Details", new { id = courseId });
         }
 
@@ -300,9 +308,9 @@ namespace LMS1.Controllers
 
             int courseId = fil.CourseId;
             _context.CourseDocument.Remove(fil);
-            _context.SaveChanges(); 
+            _context.SaveChanges();
 
-            return RedirectToAction( "Details", new { id = courseId });
+            return RedirectToAction("Details", new { id = courseId });
         }
 
         // GET: Courses/AddModule

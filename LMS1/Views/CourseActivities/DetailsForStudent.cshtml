@@ -4,6 +4,12 @@
     ViewData["Title"] = "Details";
 }
 
+<div>
+    <a asp-action="StudentBacktoModules" asp-route-id="@Model.activity.Id">Back to Module</a> |
+    <a asp-action="NextActivityForStudent" asp-route-id="@Model.activity.Id">Go to Next Activity</a>
+</div>
+<br>
+
 <h3>Activity Details</h3>
 <hr />
 
@@ -54,25 +60,57 @@
     </dl>
 </div>
 
-<p>
-    <a asp-action="UploadExercise" asp-route-id="@Model.activity.Id">Upload Exercise Result</a>
-</p>
-@if (Model.submissions.Count > 0)
+<div>
+    @if (Model.activity.ActivityDocuments?.Count > 0)
+    {
+        string completeFilePath = "";
+        <table class="table">
+            <thead >
+                <tr class="solid p-3 mb-2 bg-light text-dark">
+                    <th>File link</th>
+                    <th>Document name</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.activity.ActivityDocuments)
+                {
+                    completeFilePath = "/Documents/" + item.FileName;
+                    <tr>
+                        <td>
+                            <a href=@completeFilePath>@item.FileName</a>
+                        </td>
+                        <td>
+                            <h7>@item.InternalName</h7>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+<br>
+
+@if (Model.activity.ExerciseSubmissionRequired)
 {
     string completeFilePath = "";
+    <p>
+        <a asp-action="UploadExercise" asp-route-id="@Model.activity.Id">Upload Exercise Result</a>
+    </p>
     <h3>Exercise Submissions</h3>
     <table class="table">
-        <thead>
+        <thead class="p-3 mb-2 bg-light text-dark">
             <tr>
                 <th>File link</th>
                 <th>Student</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.submissions)
             { // A cleanup could change this to not work as if there are several. There is allways just one.
                 completeFilePath = "/Exercises/" + item.FileName;
-                <tr class="p-3 mb-2 bg-light text-dark">
+                <tr>
                     <td>
                         <a href=@completeFilePath>@item.FileName</a>
                     </td>
@@ -88,7 +126,10 @@
     </table>
 }
 
+<br>
 <div>
-    <a asp-action="NextActivityForStudent" asp-route-id="@Model.activity.Id">Go to Next Activity</a> |
-    <a asp-action="StudentBacktoModules" asp-route-id="@Model.activity.Id">Back to Module</a>
+    <a asp-action="StudentBacktoModules" asp-route-id="@Model.activity.Id">Back to Module</a> |
+    <a asp-action="NextActivityForStudent" asp-route-id="@Model.activity.Id">Go to Next Activity</a>
 </div>
+
+

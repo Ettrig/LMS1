@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LMS1.Models
 {
+    [DateConsistency]
     public class CourseActivity
     {
         [Key]
         public int Id { get; set; }
-
 
         [Required]
         [Display(Name = "Activity Name")]
