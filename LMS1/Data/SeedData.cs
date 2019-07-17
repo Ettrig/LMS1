@@ -12,21 +12,91 @@ namespace LMS1.Data
 {
     public class SeedData
     {
+        // target "database 'aspnet-LMS1-5EFFD6D3-9FE9-45C4-9CA5-C237D99606FC'
         const int maxCourses = 5;
         const int maxUsersRandom = 20;
-        internal static void Initialize(IServiceProvider services)
+        internal static async void InitializeAsync(IServiceProvider services)
         {
             var options = services.GetRequiredService<DbContextOptions<ApplicationDbContext>>();
             using (var context = new ApplicationDbContext(options))
             {
                 if (context.Course.Any()) return;
                 CleanDB(context);
-                List<Course> courses = SeedCourses();
-                context.Course.AddRange(courses);
-                List<CourseModule> courseModules = SeedModules(context, courses);
-                SeedActivities(context, courseModules);
-                context.SaveChanges();
+                if (true)
+                {
+                    List<Course> courses = SeedCourses();
+                    context.Course.AddRange(courses);
+                    List<CourseModule> courseModules = SeedModules(context, courses);
+                    SeedActivities(context, courseModules);
+                }
+                else
+                {
+                    List<Course> courses = CreateCourses();
+                    context.Course.AddRange(courses);
+
+                    List<CourseModule> courseModules = CreateModules(courses);
+                    context.CourseModule.AddRange(courseModules);
+
+                    List<CourseActivity> courseActivities = CreateActivities(courseModules);
+                    context.CourseActivity.AddRange(courseActivities);
+                }
+                await context.SaveChangesAsync();
             }
+        }
+
+        private static List<CourseActivity> CreateActivities(List<CourseModule> courseModules)
+        {
+            var genActivities = new List<CourseActivity>();
+            var title = new string[]
+                { "C01M01A01", "C01M01A02" };
+            var startDate = new System.DateTime[]
+                { System.DateTime.Today, DateTime.Today.AddDays(1) };
+            var endDate = new System.DateTime[]
+                { startDate[0].AddDays(1), startDate[1].AddDays(1) };
+            var description = new string[] 
+                { title[0], title[1] };
+            genActivities.Add(new CourseActivity
+                { Name = title[0], StartDate = startDate[0], EndDate = endDate[0], Description = description[0], ModuleId = courseModules[0].Id });
+            genActivities.Add(new CourseActivity
+                { Name = title[1], StartDate = startDate[1], EndDate = endDate[1], Description = description[1], ModuleId = courseModules[1].Id });
+            return genActivities;
+        }
+
+        private static List<CourseModule> CreateModules(List<Course> courses)
+        {
+            var genModules = new List<CourseModule>();
+            var title = new string[]
+                { "C01M01", "C01M02" };
+            var startDate = new System.DateTime[]
+                { courses[0].StartDate, courses[0].StartDate.AddDays(1) };
+            var endDate = new System.DateTime[]
+                { startDate[0].AddDays(1), startDate[1].AddDays(1) };
+            var description = new string[] 
+                { title[0], title[1] };
+            genModules.Add(new CourseModule
+                { Name = title[0], StartDate = startDate[0], EndDate = endDate[0], Description = description[0], CourseId = courses[0].Id });
+            genModules.Add(new CourseModule
+                { Name = title[1], StartDate = startDate[1], EndDate = endDate[1], Description = description[1], CourseId = courses[0].Id });
+            return genModules;
+        }
+
+        private static List<Course> CreateCourses()
+        {
+            var genCourses = new List<Course>();
+            var title = new string[]
+                { "Java Fundamentals", "Java Intermediate", "C# Fundamentals C# 5.0 Part 1", "C# Fundamentals C# 5.0 Part 2" };
+            var startDate = new System.DateTime[]
+                { System.DateTime.Today.AddDays(-5), DateTime.Today.AddDays(0), DateTime.Today.AddDays(-3), DateTime.Today.AddDays(2) };
+            var endDate = new System.DateTime[]
+                { startDate[0].AddDays(-1), startDate[1].AddDays(4), startDate[1].AddDays(1), startDate[1].AddDays(6) };
+            var description = new string[] 
+                { title[0], title[1], title[2], title[3] };
+            for (int i = 0; i < 4; i++)
+            {
+            genCourses.Add(new Course
+                { Name = title[i], StartDate = startDate[i], EndDate = endDate[i], Description = description[i] });
+            }
+            return genCourses;
         }
 
         private static void CleanDB(ApplicationDbContext context)
