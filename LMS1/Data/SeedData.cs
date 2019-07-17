@@ -19,15 +19,63 @@ namespace LMS1.Data
             var options = services.GetRequiredService<DbContextOptions<ApplicationDbContext>>();
             using (var context = new ApplicationDbContext(options))
             {
-                if (context.Course.Any()) return;
-                CleanDB(context);
-                List<Course> courses = SeedCourses();
-                context.Course.AddRange(courses);
-                List<CourseModule> courseModules = SeedModules(context, courses);
-                SeedActivities(context, courseModules);
+                //if (context.Course.Any()) return;
+                if (false)
+                {
+                    CleanDB(context);
+
+                    List<Course> courses = SeedCourses();
+                    context.Course.AddRange(courses);
+                    List<CourseModule> courseModules = SeedModules(context, courses);
+                    SeedActivities(context, courseModules);
+                    context.SaveChanges();
+                }
+
+                
+                context.Course.AddRange(CreateCourses());
+                context.CourseModule.AddRange(CreateModules());
+
                 context.SaveChanges();
+
+
+
             }
         }
+
+        private static List<CourseModule> CreateModules()
+        {
+            var genModules = new List<CourseModule>();
+
+            var courseName = new string[] { "C01", "C02" };
+            var startDate = new System.DateTime[]
+            { System.DateTime.Today, DateTime.Today.AddDays(1) };
+            var endDate = new System.DateTime[]
+            { startDate[0].AddDays(1), startDate[1].AddDays(1) };
+            var description = new string[] { courseName[0], courseName[1] };
+            genModules.Add(new CourseModule { Name = courseName[0], StartDate = startDate[0], EndDate = endDate[0], Description = description[0] });
+            genModules.Add(new CourseModule { Name = courseName[1], StartDate = startDate[1], EndDate = endDate[1], Description = description[1] });
+
+            return genModules;
+        }
+
+        private static List<Course> CreateCourses()
+        {
+            var genCourses = new List<Course>();
+
+            var courseName = new string[] { "C01", "C02" };
+            var startDate = new System.DateTime[]
+            { System.DateTime.Today, DateTime.Today.AddDays(1) };
+            var endDate = new System.DateTime[]
+            { startDate[0].AddDays(1), startDate[1].AddDays(1) };
+            var description = new string[] { courseName[0], courseName[1] };
+            genCourses.Add(new Course { Name = courseName[0], StartDate = startDate[0], EndDate = endDate[0], Description = description[0] });
+            genCourses.Add(new Course { Name = courseName[1], StartDate = startDate[1], EndDate = endDate[1], Description = description[1] });
+
+            return genCourses;
+        }
+
+
+
 
         private static void CleanDB(ApplicationDbContext context)
         {
