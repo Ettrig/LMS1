@@ -260,9 +260,9 @@ namespace LMS1.Controllers
             // Check that dates are within the dates of the module
             // Download the module
             var module = await _context.CourseModule.FindAsync(courseActivity.ModuleId);
-            if (courseActivity.StartDate > courseActivity.EndDate ||
-                courseActivity.StartDate < module.StartDate ||
-                courseActivity.EndDate > module.EndDate )
+            if (courseActivity.StartDate.Date > courseActivity.EndDate.Date ||
+                courseActivity.StartDate.Date < module.StartDate.Date ||
+                courseActivity.EndDate.Date > module.EndDate.Date )
             {
                 ModelState.AddModelError(string.Empty, "The activity must begin before it ends and be completely within the time span of the module.");
             }
