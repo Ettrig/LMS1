@@ -261,22 +261,28 @@ namespace LMS1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddActivity([Bind("Id,Name,StartDate,EndDate,Description,Exercise,ModuleId")] CourseActivity courseActivity)
         {
+            //// Check that dates are within the dates of the module
+            //// Download the module
+            //var module = await _context.CourseModule.FindAsync(courseActivity.ModuleId);
+            //if (courseActivity.StartDate.Date > courseActivity.EndDate.Date ||
+            //    courseActivity.StartDate.Date < module.StartDate.Date ||
+            //    courseActivity.EndDate.Date > module.EndDate.Date )
+            //{
+            //    ModelState.AddModelError(string.Empty, "The activity must begin before it ends and be completely within the time span of the module.");
+            //}
+                
             if (ModelState.IsValid)
             {
                 courseActivity.Id = 0;
                 _context.Add(courseActivity);
                 await _context.SaveChangesAsync();
-                //var courseModule = await _context.Course
-                //    .Include(c => c.Modules)
-                //    .FirstOrDefaultAsync(m => m.Id == courseActivity.ModuleId);
-                //if (courseModule == null)
-                //{
-                //    return NotFound();
-                //}
-                //return View("Details", courseModule);
+
                 return RedirectToAction(nameof(Details), new { id = courseActivity.ModuleId });
             }
-            ViewData["ModuleId"] = new SelectList(_context.Course, "Id", "Id", courseActivity.ModuleId);
+
+            // Ugly code:
+            ViewBag.ModuleId = courseActivity.ModuleId; 
+
             return View(courseActivity);
         }
 
