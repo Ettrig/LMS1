@@ -54,12 +54,12 @@
     </dl>
 </div>
 
-<p>
-    <a asp-action="UploadExercise" asp-route-id="@Model.activity.Id">Upload Exercise Result</a>
-</p>
-@if (Model.submissions.Count > 0)
+@if (Model.activity.ExerciseSubmissionRequired)
 {
     string completeFilePath = "";
+    <p>
+        <a asp-action="UploadExercise" asp-route-id="@Model.activity.Id">Upload Exercise Result</a>
+    </p>
     <h3>Exercise Submissions</h3>
     <table class="table">
         <thead>
@@ -92,3 +92,5 @@
     <a asp-action="NextActivityForStudent" asp-route-id="@Model.activity.Id">Go to Next Activity</a> |
     <a asp-action="StudentBacktoModules" asp-route-id="@Model.activity.Id">Back to Module</a>
 </div>
+
+
