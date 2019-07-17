@@ -366,7 +366,7 @@ namespace LMS1.Controllers
             return RedirectToAction("Details", new { id = activityId });
         }
 
-        //public async Task<IActionResult> DeleteModuleFile(int? id)
+        //public async Task<IActionResult> DeleteActivityFile(int? id)
         [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> DeleteActivityFile(int? id)
         {
@@ -378,11 +378,11 @@ namespace LMS1.Controllers
             //Not nice that EF reuses the name "File" in the controller
             System.IO.File.Delete("wwwroot/Documents/" + fil.FileName);
 
-            int moduleId = fil.CourseActivityId;
+            int activityId = fil.CourseActivityId;
             _context.ActivityDocument.Remove(fil);
             _context.SaveChanges();
 
-            return RedirectToAction("Details", new { id = moduleId });
+            return RedirectToAction("Details", new { id = activityId });
         }
 
 

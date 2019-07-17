@@ -32,13 +32,13 @@ namespace LMS1.Controllers
             {
                 var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
                 Course course;
-                if (user!=null && user.CourseId != null)
+                if (user != null && user.CourseId != null)
                 {
                     course = await _context.Course.FirstOrDefaultAsync(c => c.Id == user.CourseId);
-                    if (course!=null) return RedirectToAction("DetailsForStudent", new { id=course.Id } );
+                    if (course != null) return RedirectToAction("DetailsForStudent", new { id = course.Id });
                 }
             }
-            return RedirectToAction("Index", "Home"); 
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Courses
@@ -67,6 +67,11 @@ namespace LMS1.Controllers
                 return NotFound();
             }
 
+            course.Modules = course.Modules
+                        .OrderBy(m => m.StartDate.Date)
+                        .ThenBy(m => m.EndDate)
+                        .ToList();
+
             foreach (CourseModule m in course.Modules)
                 m.Activities = m.Activities
                     .OrderBy(a => a.StartDate.Date)
@@ -93,6 +98,12 @@ namespace LMS1.Controllers
             {
                 return NotFound();
             }
+
+            course.Modules = course.Modules
+                .OrderBy(m => m.StartDate.Date)
+                .ThenBy(m => m.EndDate)
+                .ToList();
+
             foreach (CourseModule m in course.Modules)
                 m.Activities = m.Activities
                     .OrderBy(a => a.StartDate.Date)
@@ -105,28 +116,28 @@ namespace LMS1.Controllers
             {
                 foreach (CourseActivity act in mod.Activities)
                 {
-                    if (act.Id==user.CourseActivityId)
+                    if (act.Id == user.CourseActivityId)
                     {
                         currentModuleId = act.ModuleId;
-                        break; 
+                        break;
                     }
                 }
-                if (currentModuleId != null) break; 
+                if (currentModuleId != null) break;
             }
 
             if (user.CourseActivityId == null)
             {
                 var firstModule = course.Modules.FirstOrDefault(m => true);
-                if (firstModule==null) return View(new CourseForStudent() { activeModuleId = null, activeActivityId = null, course = course }); 
+                if (firstModule == null) return View(new CourseForStudent() { activeModuleId = null, activeActivityId = null, course = course });
                 currentModuleId = firstModule.Id;
                 var firstActivity = firstModule.Activities.FirstOrDefault(a => true);
-                if (firstActivity==null) return View(new CourseForStudent() { activeModuleId = currentModuleId, activeActivityId = null, course = course });
+                if (firstActivity == null) return View(new CourseForStudent() { activeModuleId = currentModuleId, activeActivityId = null, course = course });
                 user.CourseActivityId = firstActivity.Id;
                 _context.Update(user);
                 _context.SaveChanges();
             }
 
-            var cfs = new CourseForStudent() { activeModuleId=currentModuleId, activeActivityId = user.CourseActivityId, course = course };
+            var cfs = new CourseForStudent() { activeModuleId = currentModuleId, activeActivityId = user.CourseActivityId, course = course };
 
             return View(cfs);
         }
@@ -243,8 +254,9 @@ namespace LMS1.Controllers
         {
             var course = await _context.Course
                 .Include(c => c.AttendingStudents)
-                .FirstOrDefaultAsync(c => c.Id==id);
-            foreach (ApplicationUser student in course.AttendingStudents) {
+                .FirstOrDefaultAsync(c => c.Id == id);
+            foreach (ApplicationUser student in course.AttendingStudents)
+            {
                 student.CourseId = null; // null == no course
                 _context.Update(student);
             }
@@ -300,9 +312,9 @@ namespace LMS1.Controllers
 
             int courseId = fil.CourseId;
             _context.CourseDocument.Remove(fil);
-            _context.SaveChanges(); 
+            _context.SaveChanges();
 
-            return RedirectToAction( "Details", new { id = courseId });
+            return RedirectToAction("Details", new { id = courseId });
         }
 
         // GET: Courses/AddModule
