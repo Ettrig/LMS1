@@ -20,10 +20,10 @@ namespace LMS1.Data
             var options = services.GetRequiredService<DbContextOptions<ApplicationDbContext>>();
             using (var context = new ApplicationDbContext(options))
             {
-                if (context.Course.Any()) return;
-                CleanDB(context);
-                if (true)
+                if (false)
                 {
+                    if (context.Course.Any()) return;
+                    CleanDB(context);
                     List<Course> courses = SeedCourses();
                     context.Course.AddRange(courses);
                     List<CourseModule> courseModules = SeedModules(context, courses);
@@ -31,14 +31,33 @@ namespace LMS1.Data
                 }
                 else
                 {
-                    List<Course> courses = CreateCourses();
-                    context.Course.AddRange(courses);
+                    CleanDB(context);
+                    var course = new Course
+                    {
+                        Name = "Java Fundamentals",
+                        StartDate = System.DateTime.Today.AddDays(-5),
+                        EndDate = System.DateTime.Today.AddDays(0),
+                        Description = "Desc"
+                    };
+                    context.Course.AddRange(course);
 
-                    List<CourseModule> courseModules = CreateModules(courses);
-                    context.CourseModule.AddRange(courseModules);
+                    context.CourseModule.AddRange(new CourseModule
+                    { Name = "Introduction to OOAD for Java Developers",
+                        StartDate = System.DateTime.Today.AddDays(-5),
+                        EndDate = System.DateTime.Today.AddDays(-3),
+                        Description = "Desc",
+                        CourseId = course.Id
+                    });
 
-                    List<CourseActivity> courseActivities = CreateActivities(courseModules);
-                    context.CourseActivity.AddRange(courseActivities);
+
+                    //List<Course> courses = CreateCourses();
+                    //context.Course.AddRange(courses);
+
+                    //List<CourseModule> courseModules = CreateModules(courses);
+                    //context.CourseModule.AddRange(courseModules);
+
+                    //List<CourseActivity> courseActivities = CreateActivities(courseModules);
+                    //context.CourseActivity.AddRange(courseActivities);
                 }
                 await context.SaveChangesAsync();
             }
@@ -66,35 +85,46 @@ namespace LMS1.Data
         {
             var genModules = new List<CourseModule>();
             var title = new string[]
-                { "C01M01", "C01M02" };
+                { "Introduction to OOAD for Java Developers",
+                    "Classes and Objects in Java",
+
+                    "Object Design and Programming with Java",
+                    "Fundamental Programming Structures in Java",
+                "Java Interfaces",
+                "Java Exception Handling"};
             var startDate = new System.DateTime[]
-                { courses[0].StartDate, courses[0].StartDate.AddDays(1) };
+                { courses[0].StartDate.AddDays(0), courses[0].StartDate.AddDays(3) };
             var endDate = new System.DateTime[]
-                { startDate[0].AddDays(1), startDate[1].AddDays(1) };
+                { startDate[0].AddDays(2), startDate[1].AddDays(4) };
             var description = new string[] 
                 { title[0], title[1] };
             genModules.Add(new CourseModule
                 { Name = title[0], StartDate = startDate[0], EndDate = endDate[0], Description = description[0], CourseId = courses[0].Id });
             genModules.Add(new CourseModule
                 { Name = title[1], StartDate = startDate[1], EndDate = endDate[1], Description = description[1], CourseId = courses[0].Id });
+
+
+
+
             return genModules;
         }
 
-        private static List<Course> CreateCourses()
+        private static List<Course> CreateCourses(int num)
         {
+
+            //if(num)
             var genCourses = new List<Course>();
             var title = new string[]
                 { "Java Fundamentals", "Java Intermediate", "C# Fundamentals C# 5.0 Part 1", "C# Fundamentals C# 5.0 Part 2" };
             var startDate = new System.DateTime[]
                 { System.DateTime.Today.AddDays(-5), DateTime.Today.AddDays(0), DateTime.Today.AddDays(-3), DateTime.Today.AddDays(2) };
-            var endDate = new System.DateTime[]
-                { startDate[0].AddDays(-1), startDate[1].AddDays(4), startDate[1].AddDays(1), startDate[1].AddDays(6) };
+            var endDate = new System.DateTime[] // Note! End date = StartDate + x days
+                { startDate[0].AddDays(5), startDate[1].AddDays(5), startDate[2].AddDays(5), startDate[3].AddDays(5) };
             var description = new string[] 
                 { title[0], title[1], title[2], title[3] };
             for (int i = 0; i < 4; i++)
             {
-            genCourses.Add(new Course
-                { Name = title[i], StartDate = startDate[i], EndDate = endDate[i], Description = description[i] });
+            genCourses.Add(new Course { Name = title[i], StartDate = startDate[i], EndDate = endDate[i], Description = description[i] });
             }
             return genCourses;
         }

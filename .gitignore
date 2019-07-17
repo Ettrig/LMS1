@@ -261,3 +261,6 @@ __pycache__/
 *.pyc
 /LMS1/wwwroot/Documents
 *.jpg
+/LMS1/Migrations/20190717172024_initlms31.cs
+/LMS1/Migrations/20190717172024_initlms31.Designer.cs
+/LMS1/Migrations
