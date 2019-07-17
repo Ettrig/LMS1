@@ -3,6 +3,7 @@ using LMS1.Models;
 using LMS1.OtherClasses;
 using LMS1.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,11 +22,13 @@ namespace LMS1.Controllers
 
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHostingEnvironment hostingEnvironment;
 
-        public CourseActivitiesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public CourseActivitiesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
         // GET: CourseActivities
@@ -342,27 +345,25 @@ namespace LMS1.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddFile(List<IFormFile> files, int activityId, string InternalName)
+        public async Task<IActionResult> AddFile(IFormFile file, int activityId, string InternalName)
         {
             // We handle only one file at a time, so this foreach should not be needed. 
             // Maybe just take the first item in the list. 
             // Maybe change the .cshtml so that it does not return a list. 
-            foreach (var formFile in files)
-            {
-                if (formFile.Length > 0)
-                {
+            var rootPath = hostingEnvironment.ContentRootPath;
+            var fileName = Path.GetFileName(file.FileName);
                     using (var stream = new FileStream(
-                        "wwwroot/Documents/" + formFile.FileName,
+                        $"{rootPath}//wwwroot//Documents//{fileName}",
                         FileMode.Create)
                     )
                     {
-                        await formFile.CopyToAsync(stream);
+                        await file.CopyToAsync(stream);
                     }
-                    var docRec = new ActivityDocument() { FileName = formFile.FileName, CourseActivityId = activityId, InternalName = InternalName };
+                    var docRec = new ActivityDocument() { FileName = fileName, CourseActivityId = activityId, InternalName = InternalName };
                     _context.ActivityDocument.Add(docRec);
                     _context.SaveChanges();
-                }
-            }
+                
+            
             return RedirectToAction("Details", new { id = activityId });
         }
 

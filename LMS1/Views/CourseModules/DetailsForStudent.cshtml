@@ -58,7 +58,7 @@
         string completeFilePath = "";
         <h3>Files for the Module</h3>
         <table class="table">
-            <thead>
+            <thead class="solid p-3 mb-2 bg-light text-dark">
                 <tr>
                     <th>File link</th>
                     <th>Document name</th>
@@ -68,7 +68,7 @@
                 @foreach (var item in Model.ModuleDocuments)
                 {
                     completeFilePath = "/Documents/" + item.FileName;
-                    <tr class="p-3 mb-2 bg-light text-dark">
+                    <tr>
                         <td>
                             <a href=@completeFilePath>@item.FileName</a>
                         </td>
@@ -93,7 +93,7 @@
         {
             <h3>List of Activities</h3>
             <table class="table">
-                <thead>
+                <thead class="solid p-3 mb-2 bg-light text-dark">
                     <tr>
                         <th>Activity Name</th>
                         <th>Start Date</th>

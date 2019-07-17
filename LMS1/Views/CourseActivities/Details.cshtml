@@ -69,31 +69,32 @@
     @if (Model.activity.ActivityDocuments?.Count > 0)
     {
         string completeFilePath = "";
-        <table class="table">
-            <thead>
+    <table class="table">
+        <thead>
+            <tr class="solid p-3 mb-2 bg-light text-dark">
+                <th>File link</th>
+                <th>Document name</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.activity.ActivityDocuments)
+            {
+                completeFilePath = "/Documents/" + item.FileName;
                 <tr>
-                    <th>File link</th>
-                    <th>Document name</th>
+                    <td>
+                        <a href=@completeFilePath>@item.FileName</a>
+                    </td>
+                    <td>
+                        <h7>@item.InternalName</h7>
+                    </td>
+                    <td>
+                        <a asp-action="DeleteActivityFile" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.activity.ActivityDocuments)
-                {
-                    completeFilePath = "/Documents/" + item.FileName;
-                    <tr class="p-3 mb-2 bg-light text-dark">
-                        <td>
-                            <a href=@completeFilePath>@item.FileName</a>
-                        </td>
-                        <td>
-                            <h7>@item.InternalName</h7>
-                        </td>
-                        <td>
-                            <a asp-action="DeleteActivityFile" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+            }
+        </tbody>
+    </table>
     }
 </div>
 <br>
@@ -104,35 +105,38 @@
     <h3>Exercise Submissions</h3>
     <table class="table">
         <thead>
-            <tr>
+            <tr class="p-3 mb-2 bg-light text-dark">
                 <th>Student</th>
                 <th>File link</th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.studentSubmissions)
             {
-                <tr class="p-3 mb-2 bg-light text-dark">
-                    <td>
-                        @Html.DisplayFor(model => item.student.LmsName)
-                    </td>
-                    <td>
-                        @if (item.submission != null)
-                        {
-                            completeFilePath = "/Exercises/" + item.submission.FileName;
-                            <a href=@completeFilePath>@item.submission.FileName</a>
-                        }
-                        else
-                        {
-                            <span>Nothing submitted</span>
-                        }
-                    </td>
-                    <td>
-                        @if (item.submission != null)
-                        {
-                            <a asp-action="DeleteSubmission" asp-route-id="@item.submission.Id">Delete file</a>
-                        }
-                    </td>
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => item.student.LmsName)
+                </td>
+                <td>
+                    @if (item.submission != null)
+                    {
+                        completeFilePath = "/Exercises/" + item.submission.FileName;
+                        <a href=@completeFilePath>@item.submission.FileName</a>
+                    }
+                    else
+                    {
+                        <span>Nothing submitted</span>
+                    }
+                </td>
+                <td>
+                    @if (item.submission != null)
+                    {
+                        <a asp-action="DeleteSubmission" asp-route-id="@item.submission.Id">Delete file</a>
+                        @*<a asp-action="DeleteSubmission" asp-route-id="@item.submission.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>*@
+
+                    }
+                </td>
                 </tr>
             }
         </tbody>

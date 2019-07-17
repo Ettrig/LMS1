@@ -56,31 +56,32 @@
     @if (Model.ModuleDocuments?.Count > 0)
     {
         string completeFilePath = "";
-        <table class="table">
-            <thead>
+    <table class="table">
+        <thead class="solid p-3 mb-2 bg-light text-dark">
+            <tr>
+                <th>File link</th>
+                <th>Document name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ModuleDocuments)
+            {
+                completeFilePath = "/Documents/" + item.FileName;
                 <tr>
-                    <th>File link</th>
-                    <th>Document name</th>
+                    <td>
+                        <a href=@completeFilePath>@item.FileName</a>
+                    </td>
+                    <td>
+                        <h7>@item.InternalName</h7>
+                    </td>
+                    <td>
+                        <a asp-action="DeleteModuleFile" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.ModuleDocuments)
-                {
-                    completeFilePath = "/Documents/" + item.FileName;
-                    <tr class="p-3 mb-2 bg-light text-dark">
-                        <td>
-                            <a href=@completeFilePath>@item.FileName</a>
-                        </td>
-                        <td>
-                            <h7>@item.InternalName</h7>
-                        </td>
-                        <td>
-                            <a asp-action="DeleteModuleFile" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+            }
+        </tbody>
+    </table>
     }
 </div>
 <br>
@@ -95,7 +96,7 @@
     {
         <table class="table">
             <thead>
-                <tr>
+                <tr class="solid p-3 mb-2 bg-light text-dark">
                     <th>Activity Name</th>
                     <th>Start Date</th>
                     <th>End Date</th>

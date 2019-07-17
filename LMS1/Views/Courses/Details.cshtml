@@ -52,17 +52,18 @@
 {
     string completeFilePath = "";
     <table class="table">
-        <thead>
+        <thead class="solid p-3 mb-2 bg-light text-dark">
             <tr>
                 <th>File link</th>
                 <th>Document name</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.CourseDocuments)
             {
                 completeFilePath = "/Documents/" + item.FileName;
-                <tr class="p-3 mb-2 bg-light text-dark">
+                <tr>
                     <td>
                         <a href=@completeFilePath>@item.FileName</a>
                     </td>
@@ -90,18 +91,18 @@
 @if (Model.Modules.Count > 0)
 {
     <table class="table">
-        <thead>
+        @*<thead class="solid">
             <tr>
                 <th>Module Name</th>
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th></th>
             </tr>
-        </thead>
+        </thead>*@
         <tbody>
             @foreach (var item in Model.Modules)
             {
-                <tr class="p-3 mb-2 bg-light text-dark">
+                <tr class="solid p-3 mb-2 bg-light text-dark">
                     <td>
                         <h5><a asp-action="Details" asp-controller="CourseModules" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a></h5>
                     </td>
