@@ -260,17 +260,7 @@ namespace LMS1.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddActivity([Bind("Id,Name,StartDate,EndDate,Description,Exercise,ModuleId")] CourseActivity courseActivity)
-        {
-            //// Check that dates are within the dates of the module
-            //// Download the module
-            //var module = await _context.CourseModule.FindAsync(courseActivity.ModuleId);
-            //if (courseActivity.StartDate.Date > courseActivity.EndDate.Date ||
-            //    courseActivity.StartDate.Date < module.StartDate.Date ||
-            //    courseActivity.EndDate.Date > module.EndDate.Date )
-            //{
-            //    ModelState.AddModelError(string.Empty, "The activity must begin before it ends and be completely within the time span of the module.");
-            //}
-                
+        {              
             if (ModelState.IsValid)
             {
                 courseActivity.Id = 0;

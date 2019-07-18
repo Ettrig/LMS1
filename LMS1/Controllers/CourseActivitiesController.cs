@@ -237,6 +237,9 @@ namespace LMS1.Controllers
             {
                 return NotFound();
             }
+
+            ViewBag.ModuleId = courseActivity.ModuleId;
+
             return View(courseActivity);
         }
 
@@ -280,7 +283,7 @@ namespace LMS1.Controllers
                 }
                 return RedirectToAction(nameof(Details), "CourseModules", new { id = newModuleID });
             }
-            ViewData["ModuleId"] = new SelectList(_context.CourseModule, "Id", "Id", courseActivity.ModuleId);
+            ViewBag.ModuleId = courseActivity.ModuleId;
             return View(courseActivity);
         }
 
