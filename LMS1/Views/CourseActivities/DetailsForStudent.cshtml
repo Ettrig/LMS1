@@ -4,132 +4,150 @@
     ViewData["Title"] = "Details";
 }
 
-<div>
-    <a asp-action="StudentBacktoModules" asp-route-id="@Model.activity.Id">Back to Module</a> |
-    <a asp-action="NextActivityForStudent" asp-route-id="@Model.activity.Id">Go to Next Activity</a>
-</div>
-<br>
 
-<h3>Activity Details</h3>
-<hr />
 
-<div>
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.activity.Module.Course.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.activity.Module.Course.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.activity.Module.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.activity.Module.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.activity.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.activity.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.activity.StartDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.activity.StartDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.activity.EndDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.activity.EndDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.activity.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.activity.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.activity.Exercise)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.activity.Exercise)
-        </dd>
-    </dl>
-</div>
+<div class="card">
+    <div class="card-header">
 
-<div>
-    @if (Model.activity.ActivityDocuments?.Count > 0)
-    {
-        string completeFilePath = "";
-        <table class="table">
-            <thead >
-                <tr class="solid p-3 mb-2 bg-light text-dark">
-                    <th>File link</th>
-                    <th>Document name</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.activity.ActivityDocuments)
+        <h3>Activity Details</h3>
+
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+
+            <div>
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.activity.Module.Course.Name)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.activity.Module.Course.Name)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.activity.Module.Name)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.activity.Module.Name)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.activity.Name)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.activity.Name)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.activity.StartDate)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.activity.StartDate)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.activity.EndDate)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.activity.EndDate)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.activity.Description)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.activity.Description)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.activity.Exercise)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.activity.Exercise)
+                    </dd>
+                </dl>
+            </div>
+
+
+        </li>
+        <li class="list-group-item">
+
+
+            <div>
+                @if (Model.activity.ActivityDocuments?.Count > 0)
                 {
-                    completeFilePath = "/Documents/" + item.FileName;
-                    <tr>
-                        <td>
-                            <a href=@completeFilePath>@item.FileName</a>
-                        </td>
-                        <td>
-                            <h7>@item.InternalName</h7>
-                        </td>
-                    </tr>
+                    string completeFilePath = "";
+                    <table class="table">
+                        <thead>
+                            <tr class="p-3 mb-2 bg-light text-dark">
+                                <th>File link</th>
+                                <th>Document name</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.activity.ActivityDocuments)
+                            {
+                                completeFilePath = "/Documents/" + item.FileName;
+                                <tr>
+                                    <td>
+                                        <a href=@completeFilePath>@item.FileName</a>
+                                    </td>
+                                    <td>
+                                        <h7>@item.InternalName</h7>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 }
-            </tbody>
-        </table>
-    }
-</div>
-<br>
+            </div>
 
-@if (Model.activity.ExerciseSubmissionRequired)
-{
-    string completeFilePath = "";
-    <p>
-        <a asp-action="UploadExercise" asp-route-id="@Model.activity.Id">Upload Exercise Result</a>
-    </p>
-    <h3>Exercise Submissions</h3>
-    <table class="table">
-        <thead class="p-3 mb-2 bg-light text-dark">
-            <tr>
-                <th>File link</th>
-                <th>Student</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.submissions)
-            { // A cleanup could change this to not work as if there are several. There is allways just one.
-                completeFilePath = "/Exercises/" + item.FileName;
-                <tr>
-                    <td>
-                        <a href=@completeFilePath>@item.FileName</a>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(model => item.User.LmsName)
-                    </td>
-                    <td>
-                        <a asp-action="StudentDeleteSubmission" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                </tr>
+
+
+        </li>
+        <li class="list-group-item">
+
+            @if (Model.activity.ExerciseSubmissionRequired)
+            {
+                string completeFilePath = "";
+
+                <h3>Exercise Submissions</h3>
+
+                <p>
+                    <a asp-action="UploadExercise" asp-route-id="@Model.activity.Id">Upload Exercise Result</a>
+                </p>
+
+                <table class="table">
+                    <thead>
+                        <tr class="p-3 mb-2 bg-light text-dark">
+                            <th>File link</th>
+                            <th>Student</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.submissions)
+                        { // A cleanup could change this to not work as if there are several. There is allways just one.
+                            completeFilePath = "/Exercises/" + item.FileName;
+                            <tr>
+                                <td>
+                                    <a href=@completeFilePath>@item.FileName</a>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => item.User.LmsName)
+                                </td>
+                                <td>
+                                    <a asp-action="StudentDeleteSubmission" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Delete Exercise File"><i class="fa fa-trash"></i></button></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             }
-        </tbody>
-    </table>
-}
 
-<br>
-<div>
-    <a asp-action="StudentBacktoModules" asp-route-id="@Model.activity.Id">Back to Module</a> |
-    <a asp-action="NextActivityForStudent" asp-route-id="@Model.activity.Id">Go to Next Activity</a>
+        </li>
+        <li class="list-group-item">
+
+            <div>
+                <a asp-action="StudentBacktoModules" asp-route-id="@Model.activity.Id"><button type="button" class="btn btn-info">Back to Module</button></a>
+                <a asp-action="NextActivityForStudent" asp-route-id="@Model.activity.Id"><button type="button" class="btn btn-info">Go to Next Activity</button></a>
+            </div>
+
+        </li>
+    </ul>
 </div>
-
-

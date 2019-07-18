@@ -47,15 +47,18 @@
 
 
         <li class="list-group-item">
-
             <br>
+
+
+
             @if (Model.course.CourseDocuments.Count > 0)
             {
                 string completeFilePath = "";
                 <h3>Files for the course</h3>
+
                 <table class="table">
-                    <thead class="solid p-3 mb-2 bg-light text-dark">
-                        <tr>
+                    <thead>
+                        <tr class="p-3 mb-2 bg-light text-dark">
                             <th>File link</th>
                             <th>Document name</th>
                         </tr>
@@ -76,24 +79,26 @@
                     </tbody>
                 </table>
             }
+
+
+
+
         </li>
-
-
         <li class="list-group-item">
             <br>
+
+
+
             @if (Model.course.Modules.Count > 0)
             {
-                <h3>List of modules</h3>
-
+                <h3>Modules and Activities</h3>
                 <table class="table">
-                    @*<thead>
-                        </thead>*@
                     <tbody>
                         @foreach (var item in Model.course.Modules)
                         {
                             if (item.Id == Model.activeModuleId)
                             {
-                                <tr class="solid p-3 mb-2 bg-light text-dark">
+                                <tr class="p-3 mb-2 bg-light text-dark">
                                     <td>
                                         <h5><a asp-action="DetailsForStudent" asp-controller="CourseModules" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a></h5>
                                     </td>
@@ -103,14 +108,11 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.EndDate)
                                     </td>
-                                    @*<td>
-                                            <a asp-action="DetailsForStudent" asp-controller="CourseModules" asp-route-id="@item.Id">Details</a>
-                                        </td>*@
                                 </tr>
                             }
                             else
                             {
-                                <tr class="solid p-3 mb-2 bg-light text-dark">
+                                <tr>
                                     <td>
                                         <h5><a asp-action="DetailsForStudent" asp-controller="CourseModules" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a></h5>
                                     </td>
@@ -121,9 +123,6 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.EndDate)
                                     </td>
-                                    @*<td>
-                                            <a asp-action="DetailsForStudent" asp-controller="CourseModules" asp-route-id="@item.Id">Details</a>
-                                        </td>*@
                                 </tr>
 
                             }
@@ -133,7 +132,7 @@
                                 {
                                     if (item2.Id == Model.activeActivityId)
                                     {
-                                        <tr class="p-3 mb-2 bg-warning text-dark">
+                                        <tr>
                                             <td>
                                                 <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item2.Id">@Html.DisplayFor(modelItem => item2.Name)</a>
                                             </td>
@@ -143,9 +142,6 @@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item2.EndDate)
                                             </td>
-                                            @*<td>
-                                                    <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item2.Id">Details</a>
-                                                </td>*@
                                         </tr>
                                     }
                                     else
@@ -160,9 +156,6 @@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item2.EndDate)
                                             </td>
-                                            @*<td>
-                                                    <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item2.Id">Details</a>
-                                                </td>*@
                                         </tr>
                                     }
                                 }

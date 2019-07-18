@@ -3,126 +3,133 @@
 @{
     ViewData["Title"] = "Details";
 }
-<div>
-    <a asp-action="StudentBacktoModules" asp-route-id="@Model.Id">Back to Course</a>
-</div>
-
-<hr />
-
-<h3>Module Details</h3>
-<hr />
-
-<div>
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Course.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Course.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-    </dl>
-</div>
 
 
+<div class="card">
+    <div class="card-header">
+
+        <h3>Module Details</h3>
 
 
-
-
-<div>
-    @if (Model.ModuleDocuments?.Count > 0)
-    {
-        string completeFilePath = "";
-        <h3>Files for the Module</h3>
-        <table class="table">
-            <thead class="solid p-3 mb-2 bg-light text-dark">
-                <tr>
-                    <th>File link</th>
-                    <th>Document name</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.ModuleDocuments)
-                {
-                    completeFilePath = "/Documents/" + item.FileName;
-                    <tr>
-                        <td>
-                            <a href=@completeFilePath>@item.FileName</a>
-                        </td>
-                        <td>
-                            <h7>@item.InternalName</h7>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-</div>
-
-
-
-
-
-
-
-    <div>
-        @if (Model.Activities.Count > 0)
-        {
-            <h3>List of Activities</h3>
-            <table class="table">
-                <thead class="solid p-3 mb-2 bg-light text-dark">
-                    <tr>
-                        <th>Activity Name</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Activities)
-                    {
-                        <tr>
-                            @*<td>
-
-                            </td>*@
-                            <td>
-                                <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.StartDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.EndDate)
-                            </td>
-                            @*<td>
-                                <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item.Id">Details</a>
-                            </td>*@
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
     </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+
+            <div>
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Course.Name)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Course.Name)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.StartDate)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.StartDate)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.EndDate)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.EndDate)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Description)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Description)
+                    </dd>
+                </dl>
+            </div>
+
+
+        </li>
+        <li class="list-group-item">
+
+            <div>
+                @if (Model.ModuleDocuments?.Count > 0)
+                {
+                    string completeFilePath = "";
+                    <h3>Files for the Module</h3>
+                    <table class="table">
+                        <thead>
+                            <tr class="p-3 mb-2 bg-light text-dark">
+                                <th>File link</th>
+                                <th>Document name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ModuleDocuments)
+                            {
+                                completeFilePath = "/Documents/" + item.FileName;
+                                <tr>
+                                    <td>
+                                        <a href=@completeFilePath>@item.FileName</a>
+                                    </td>
+                                    <td>
+                                        <h7>@item.InternalName</h7>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+
+
+
+
+        </li>
+        <li class="list-group-item">
+
+
+            <div>
+                @if (Model.Activities.Count > 0)
+                {
+                    <h3>List of Activities</h3>
+                    <table class="table">
+                        <thead>
+                            <tr class="p-3 mb-2 bg-light text-dark">
+                                <th>Activity Name</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Activities)
+                            {
+                                <tr>
+                                    <td>
+                                        <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.StartDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EndDate)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+
+
+        </li>
+
+        <div>
+            <a asp-action="StudentBacktoModules" asp-route-id="@Model.Id"><button type="button" class="btn btn-info">Back to Course</button></a>
+        </div>
+        </li>
+    </ul>
+</div>

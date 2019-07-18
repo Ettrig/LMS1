@@ -3,23 +3,34 @@
     ViewData["Title"] = "AddFile";
 }
 
-<h1>Add File to Course</h1>
+<div class="card">
+    <div class="card-header">
 
-<form method="post" enctype="multipart/form-data" asp-controller="Courses" asp-action="AddFile">
-    <input type="hidden" name="CourseId" value="@ViewBag.CourseId" />
-    <div class="form-group">
-        <p>Give the file a descriptive name</p>
-        <input type="text" name="InternalName" />
+        <h1>Add File to Course</h1>
+
     </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            <p>Upload one or more files using this form:</p>
-            <input type="file" name="file">
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-10">
-            <input type="submit" value="Save">
-        </div>
-    </div>
-</form>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+
+            <form method="post" enctype="multipart/form-data" asp-controller="Courses" asp-action="AddFile">
+                <input type="hidden" name="CourseId" value="@ViewBag.CourseId" />
+                <div class="form-group">
+                    <p>Give the file a descriptive name</p>
+                    <input type="text" name="InternalName" />
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <p>Upload one or more files using this form:</p>
+                        <input type="file" name="file">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="submit" value="Save">
+                    </div>
+                </div>
+            </form>
+
+        </li>
+    </ul>
+</div>

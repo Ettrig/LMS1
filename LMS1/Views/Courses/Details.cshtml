@@ -4,134 +4,151 @@
     ViewData["Title"] = "Details";
 }
 
-<h3>Course description</h3>
-<h2>@Html.DisplayFor(model => model.Name)</h2>
-
-<div>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-    </dl>
-</div>
-
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit these data</a> |
-    <a asp-controller="ApplicationUsers" asp-action="Create" asp-route-id="@Model.Id">Add student</a> |
-    <a asp-controller="ApplicationUsers" asp-action="ListStudents" asp-route-id="@Model.Id">Show students</a> |
-    <a asp-action="Index">Back to list of courses</a>
-</div>
-
-<br>
 
 
+<div class="card">
+    <div class="card-header">
 
-<h3>Files for the course</h3>
+        <h3>Course description</h3>
+        <h2>@Html.DisplayFor(model => model.Name)</h2>
 
-<p>
-    <a asp-action="AddFile" asp-route-id="@Model.Id">Add File</a>
-</p>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <div>
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.StartDate)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.StartDate)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.EndDate)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.EndDate)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Description)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Description)
+                    </dd>
+                </dl>
+            </div>
 
-@if (Model.CourseDocuments?.Count > 0)
-{
-    string completeFilePath = "";
-    <table class="table">
-        <thead>
-            <tr class="solid p-3 mb-2 bg-light text-dark">
-                <th>File link</th>
-                <th>Document name</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.CourseDocuments)
+            
+            
+            
+            
+            <div>
+                <a asp-action="Edit" asp-route-id="@Model.Id"><button type="button" class="btn btn-info">Edit these data</button></a> 
+                <a asp-controller="ApplicationUsers" asp-action="Create" asp-route-id="@Model.Id"><button type="button" class="btn btn-info">Add student</button></a> 
+                <a asp-controller="ApplicationUsers" asp-action="ListStudents" asp-route-id="@Model.Id"><button type="button" class="btn btn-info">Show students</button></a> 
+                <a asp-action="Index"><button type="button" class="btn btn-info">Back to list of courses</button></a>
+            </div>
+
+        </li>
+        <li class="list-group-item">
+
+
+
+
+            <h3>Files for the course</h3>
+
+            <p>
+                <a asp-action="AddFile" asp-route-id="@Model.Id"><button type="button" class="btn btn-info">Add File</button></a>
+            </p>
+
+            @if (Model.CourseDocuments?.Count > 0)
             {
-                completeFilePath = "/Documents/" + item.FileName;
-                <tr>
-                    <td>
-                        <a href=@completeFilePath>@item.FileName</a>
-                    </td>
-                    <td>
-                        <h7>@item.InternalName</h7>
-                    </td>
-                    <td>
-                        <a asp-action="DeleteCourseFile" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Delete File"><i class="fa fa-trash"></i></button></a>
-                    </td>
-                </tr>
+                string completeFilePath = "";
+                <table class="table">
+                    <thead>
+                        <tr class="p-3 mb-2 bg-light text-dark">
+                            <th>File link</th>
+                            <th>Document name</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.CourseDocuments)
+                        {
+                            completeFilePath = "/Documents/" + item.FileName;
+                            <tr>
+                                <td>
+                                    <a href=@completeFilePath>@item.FileName</a>
+                                </td>
+                                <td>
+                                    <h7>@item.InternalName</h7>
+                                </td>
+                                <td>
+                                    <a asp-action="DeleteCourseFile" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Delete File"><i class="fa fa-trash"></i></button></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             }
-        </tbody>
-    </table>
-}
 
-<br>
+        </li>
+        <li class="list-group-item">
 
+            <h3>Modules and Activities</h3>
 
-<h3>List of modules</h3>
+            <p>
+                <a asp-action="AddModule" asp-route-id="@Model.Id"><button type="button" class="btn btn-info">Add Module</button></a>
+            </p>
 
-<p>
-    <a asp-action="AddModule" asp-route-id="@Model.Id">Add Module</a>
-</p>
-
-@if (Model.Modules.Count > 0)
-{
-    <table class="table">
-        <tbody>
-            @foreach (var item in Model.Modules)
+            @if (Model.Modules.Count > 0)
             {
-                <tr class="solid p-3 mb-2 bg-light text-dark">
-                    <td>
-                        <h5><a asp-action="Details" asp-controller="CourseModules" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a></h5>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StartDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EndDate)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-controller="CourseModules" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Edit Module"><i class="fa fa-edit"></i></button></a>
-                        <a asp-action="Delete" asp-controller="CourseModules" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Delete Module"><i class="fa fa-trash"></i></button></a>
-                        <a asp-action="AddActivity" asp-controller="CourseModules" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Add Activity"><i class="fa fa-trash"></i></button></a>
-                    </td>
+                <table class="table">
+                    <tbody>
+                        @foreach (var item in Model.Modules)
+                        {
+                            <tr class="p-3 mb-2 bg-light text-dark">
+                                <td>
+                                    <h5><a asp-action="Details" asp-controller="CourseModules" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a></h5>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.StartDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EndDate)
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-controller="CourseModules" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Edit Module"><i class="fa fa-edit"></i></button></a>
+                                    <a asp-action="Delete" asp-controller="CourseModules" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Delete Module"><i class="fa fa-trash"></i></button></a>
+                                    <a asp-action="AddActivity" asp-controller="CourseModules" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Add Activity"><i class="fa fa-plus"></i></button></a>
+                                </td>
 
 
 
-                </tr>
-                @foreach (var item2 in item.Activities)
-                {
-                    <tr>
-                        <td>
-                            <h7><a asp-action="Details" asp-controller="CourseActivities" asp-route-id="@item2.Id">@Html.DisplayFor(modelItem => item2.Name)</a></h7>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item2.StartDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item2.EndDate)
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-controller="CourseActivities" asp-route-id="@item2.Id"><button class="btn"><i class="fa fa-edit"></i></button></a>
-                            <a asp-action="Delete" asp-controller="CourseActivities" asp-route-id="@item2.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>
-                        </td>
-                    </tr>
-                }
+                            </tr>
+                            @foreach (var item2 in item.Activities)
+                            {
+                                <tr>
+                                    <td>
+                                        <h7><a asp-action="Details" asp-controller="CourseActivities" asp-route-id="@item2.Id">@Html.DisplayFor(modelItem => item2.Name)</a></h7>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item2.StartDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item2.EndDate)
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-controller="CourseActivities" asp-route-id="@item2.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Edit Activity"><i class="fa fa-edit"></i></button></a>
+                                        <a asp-action="Delete" asp-controller="CourseActivities" asp-route-id="@item2.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Delete Activity"><i class="fa fa-trash"></i></button></a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
             }
-        </tbody>
-    </table>
-}
+
+        </li>
+    </ul>
+</div>

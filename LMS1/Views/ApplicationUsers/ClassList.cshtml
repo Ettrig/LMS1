@@ -4,35 +4,52 @@
     ViewData["Title"] = "List of users";
 }
 
-<h4>List of Students in <br>Course: <b> @Model.CourseName </b></h4>
-@*<h2>@Model.CourseName</h2>*@
-<br>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Email address
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Students) {
-        <tr>
-            <td>
-                @item.LmsName
-            </td>
-            <td>
-                @item.Email
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
 
-<div>
-    <a asp-controller="ApplicationUsers" asp-action="BackToCourse" asp-route-id="@Model.CourseId">Back to course</a>
+<div class="card">
+    <div class="card-header">
+
+        <h4>List of Students in <br>Course: <b> @Model.CourseName </b></h4>
+
+
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Email address
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Students)
+                    {
+                        <tr>
+                            <td>
+                                @item.LmsName
+                            </td>
+                            <td>
+                                @item.Email
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+
+        </li>
+        <li class="list-group-item">
+
+            <div>
+                <a asp-controller="ApplicationUsers" asp-action="BackToCourse" asp-route-id="@Model.CourseId"><button type="button" class="btn btn-info">Back to course</button></a>
+            </div>
+        </li>
+    </ul>
 </div>

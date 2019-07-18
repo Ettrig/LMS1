@@ -4,43 +4,48 @@
     ViewData["Title"] = "User Details";
 }
 
-<h3>User Details</h3>
-<hr />
+<div class="card">
+    <div class="card-header">
 
-<div>
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.LmsName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.LmsName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CourseName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CourseName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Role)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Role)
-        </dd>
-    </dl>
-</div>
+        <h3>User Details</h3>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
 
-@*<p>
-    <a asp-action="AddActivity" asp-route-id="@Model.Id">Add User</a>
-</p>*@
-
-<div>
-    <a asp-controller="ApplicationUsers" asp-action="Index">Users</a> | 
-    <a asp-controller="Courses" asp-action="Index">Courses</a>
+            <div>
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.LmsName)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.LmsName)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Email)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Email)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.CourseName)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.CourseName)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Role)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Role)
+                    </dd>
+                </dl>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div>
+                <a asp-controller="ApplicationUsers" asp-action="Index"><button type="button" class="btn btn-info">Users</button></a>
+                <a asp-controller="Courses" asp-action="Index"><button type="button" class="btn btn-info">Courses</button></a>
+            </div>
+        </li>
+    </ul>
 </div>

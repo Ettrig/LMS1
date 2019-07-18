@@ -4,53 +4,66 @@
     ViewData["Title"] = "Edit";
 }
 
-<h3>Activity</h3>
-<hr />
+<div class="card">
+    <div class="card-header">
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" name="ModuleId" value="@ViewBag.ModuleId" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Exercise" class="control-label"></label>
-                <input asp-for="Exercise" class="form-control" />
-                <span asp-validation-for="Exercise" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="ExerciseSubmissionRequired" /> @Html.DisplayNameFor(model => model.ExerciseSubmissionRequired)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        <h3>Activity</h3>
+
     </div>
-</div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
 
-<div>
-    <a asp-action="BacktoModules" asp-route-id="@Model.Id">Back to Module</a>
+            <div class="row">
+                <div class="col-md-4">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" name="ModuleId" value="@ViewBag.ModuleId" />
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="StartDate" class="control-label"></label>
+                            <input asp-for="StartDate" class="form-control" />
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EndDate" class="control-label"></label>
+                            <input asp-for="EndDate" class="form-control" />
+                            <span asp-validation-for="EndDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Description" class="control-label"></label>
+                            <input asp-for="Description" class="form-control" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Exercise" class="control-label"></label>
+                            <input asp-for="Exercise" class="form-control" />
+                            <span asp-validation-for="Exercise" class="text-danger"></span>
+                        </div>
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="ExerciseSubmissionRequired" /> @Html.DisplayNameFor(model => model.ExerciseSubmissionRequired)
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </li>
+        <li class="list-group-item">
+
+            <div>
+                <a asp-action="BacktoModules" asp-route-id="@Model.Id">Back to Module</a>
+            </div>
+
+        </li>
+    </ul>
 </div>
 
 @section Scripts {

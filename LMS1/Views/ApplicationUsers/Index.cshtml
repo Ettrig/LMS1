@@ -4,44 +4,54 @@
     ViewData["Title"] = "List of users";
 }
 
-<h2>List of Registered Users</h2>
-<br>
+<div class="card">
+    <div class="card-header">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.ActionLink("Name", "ResortIndex", new { columnToSort = "User", sortState = ViewBag.SortState })
-            </th>
-            <th>
-                @Html.ActionLink("Course", "ResortIndex", new { columnToSort = "Course", sortState = ViewBag.SortState })
-            </th>
-            <th>
-                @Html.ActionLink("Role", "ResortIndex", new { columnToSort = "Role", sortState = ViewBag.SortState })
-            </th>
-            <th>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.LmsName)</a> 
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CourseName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Edit User"><i class="fa fa-edit"></i></button></a>
-                <a asp-action="RemoveUser" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Delete User"><i class="fa fa-trash"></i></button></a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        <h2>List of Registered Users</h2>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
 
 
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.ActionLink("Name", "ResortIndex", new { columnToSort = "User", sortState = ViewBag.SortState })
+                        </th>
+                        <th>
+                            @Html.ActionLink("Course", "ResortIndex", new { columnToSort = "Course", sortState = ViewBag.SortState })
+                        </th>
+                        <th>
+                            @Html.ActionLink("Role", "ResortIndex", new { columnToSort = "Role", sortState = ViewBag.SortState })
+                        </th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.LmsName)</a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CourseName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Role)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Edit User"><i class="fa fa-edit"></i></button></a>
+                                <a asp-action="RemoveUser" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Delete User"><i class="fa fa-trash"></i></button></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+
+        </li>
+    </ul>
+</div>
