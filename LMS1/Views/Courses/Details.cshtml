@@ -52,11 +52,11 @@
 {
     string completeFilePath = "";
     <table class="table">
-        <thead class="solid p-3 mb-2 bg-light text-dark">
-            <tr>
+        <thead>
+            <tr class="solid p-3 mb-2 bg-light text-dark">
                 <th>File link</th>
                 <th>Document name</th>
-                <th></th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -71,7 +71,7 @@
                         <h7>@item.InternalName</h7>
                     </td>
                     <td>
-                        <a asp-action="DeleteCourseFile" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>
+                        <a asp-action="DeleteCourseFile" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Delete File"><i class="fa fa-trash"></i></button></a>
                     </td>
                 </tr>
             }
@@ -91,14 +91,6 @@
 @if (Model.Modules.Count > 0)
 {
     <table class="table">
-        @*<thead class="solid">
-            <tr>
-                <th>Module Name</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th></th>
-            </tr>
-        </thead>*@
         <tbody>
             @foreach (var item in Model.Modules)
             {
@@ -113,10 +105,13 @@
                         @Html.DisplayFor(modelItem => item.EndDate)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-controller="CourseModules" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-edit"></i></button></a>
-                        <a asp-action="Delete" asp-controller="CourseModules" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>
-                        <a asp-action="AddActivity" asp-controller="CourseModules" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-plus"></i></button></a>
+                        <a asp-action="Edit" asp-controller="CourseModules" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Edit Module"><i class="fa fa-edit"></i></button></a>
+                        <a asp-action="Delete" asp-controller="CourseModules" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Delete Module"><i class="fa fa-trash"></i></button></a>
+                        <a asp-action="AddActivity" asp-controller="CourseModules" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Add Activity"><i class="fa fa-trash"></i></button></a>
                     </td>
+
+
+
                 </tr>
                 @foreach (var item2 in item.Activities)
                 {

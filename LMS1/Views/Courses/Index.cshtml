@@ -21,9 +21,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.EndDate)
             </th>
-            @*<th>
-                    @Html.DisplayNameFor(model => model.Description)
-                </th>*@
             <th></th>
         </tr>
     </thead>
@@ -44,9 +41,8 @@
                         @Html.DisplayFor(modelItem => item.Description)
                     </td>*@
                 <td>
-                    @*<a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
-                    <a asp-action="Edit" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-edit"></i></button></a>
-                    <a asp-action="Delete" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>
+                    <a asp-action="Edit" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Edit Course"><i class="fa fa-edit"></i></button></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Delete Course"><i class="fa fa-trash"></i></button></a>
                 </td>
             </tr>
         }

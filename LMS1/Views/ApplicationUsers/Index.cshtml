@@ -19,6 +19,8 @@
             <th>
                 @Html.ActionLink("Role", "ResortIndex", new { columnToSort = "Role", sortState = ViewBag.SortState })
             </th>
+            <th>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -34,8 +36,8 @@
                 @Html.DisplayFor(modelItem => item.Role)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-edit"></i></button></a>
-                <a asp-action="RemoveUser" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>
+                <a asp-action="Edit" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Edit User"><i class="fa fa-edit"></i></button></a>
+                <a asp-action="RemoveUser" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Delete User"><i class="fa fa-trash"></i></button></a>
             </td>
         </tr>
 }

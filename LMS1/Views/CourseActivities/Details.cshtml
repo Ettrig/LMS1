@@ -89,7 +89,7 @@
                         <h7>@item.InternalName</h7>
                     </td>
                     <td>
-                        <a asp-action="DeleteActivityFile" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>
+                        <a asp-action="DeleteActivityFile" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Delete File"><i class="fa fa-trash"></i></button></a>
                     </td>
                 </tr>
             }

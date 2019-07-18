@@ -61,7 +61,7 @@
             <tr>
                 <th>File link</th>
                 <th>Document name</th>
-                <th></th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
@@ -76,7 +76,7 @@
                         <h7>@item.InternalName</h7>
                     </td>
                     <td>
-                        <a asp-action="DeleteModuleFile" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>
+                        <a asp-action="DeleteModuleFile" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Delete File"><i class="fa fa-trash"></i></button></a>
                     </td>
                 </tr>
             }
@@ -117,8 +117,8 @@
                             @Html.DisplayFor(modelItem => item.EndDate)
                         </td>
                         <td>
-                            <a asp-action="Edit" asp-controller="CourseActivities" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-edit"></i></button></a>
-                            <a asp-action="Delete" asp-controller="CourseActivities" asp-route-id="@item.Id"><button class="btn"><i class="fa fa-trash"></i></button></a>
+                            <a asp-action="Edit" asp-controller="CourseActivities" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Edit Activity"><i class="fa fa-edit"></i></button></a>
+                            <a asp-action="Delete" asp-controller="CourseActivities" asp-route-id="@item.Id"><button class="btn" data-toggle="tooltip" data-placement="top" title="Delete Activity"><i class="fa fa-trash"></i></button></a>
                         </td>
                     </tr>
                 }
