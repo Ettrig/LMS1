@@ -112,7 +112,7 @@
                             }
                             else
                             {
-                                <tr>
+                                <tr class="p-3 mb-2 bg-light text-dark">
                                     <td>
                                         <h5><a asp-action="DetailsForStudent" asp-controller="CourseModules" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a></h5>
                                     </td>
@@ -132,7 +132,7 @@
                                 {
                                     if (item2.Id == Model.activeActivityId)
                                     {
-                                        <tr>
+                                        <tr class="p-3 mb-2 bg-warning text-dark">
                                             <td>
                                                 <a asp-action="DetailsForStudent" asp-controller="CourseActivities" asp-route-id="@item2.Id">@Html.DisplayFor(modelItem => item2.Name)</a>
                                             </td>
